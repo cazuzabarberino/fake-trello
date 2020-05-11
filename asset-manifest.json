@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/fake-trello/static/css/main.5f361e03.chunk.css",
+    "main.js": "/fake-trello/static/js/main.df0d86c5.chunk.js",
+    "main.js.map": "/fake-trello/static/js/main.df0d86c5.chunk.js.map",
+    "runtime-main.js": "/fake-trello/static/js/runtime-main.aab6ef71.js",
+    "runtime-main.js.map": "/fake-trello/static/js/runtime-main.aab6ef71.js.map",
+    "static/js/2.c16c94f8.chunk.js": "/fake-trello/static/js/2.c16c94f8.chunk.js",
+    "static/js/2.c16c94f8.chunk.js.map": "/fake-trello/static/js/2.c16c94f8.chunk.js.map",
+    "index.html": "/fake-trello/index.html",
+    "precache-manifest.6b7671e7b216e160484e7dcba277c2e4.js": "/fake-trello/precache-manifest.6b7671e7b216e160484e7dcba277c2e4.js",
+    "service-worker.js": "/fake-trello/service-worker.js",
+    "static/css/main.5f361e03.chunk.css.map": "/fake-trello/static/css/main.5f361e03.chunk.css.map",
+    "static/js/2.c16c94f8.chunk.js.LICENSE.txt": "/fake-trello/static/js/2.c16c94f8.chunk.js.LICENSE.txt",
+    "static/media/logo.svg": "/fake-trello/static/media/logo.5d5d9eef.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.aab6ef71.js",
+    "static/js/2.c16c94f8.chunk.js",
+    "static/css/main.5f361e03.chunk.css",
+    "static/js/main.df0d86c5.chunk.js"
+  ]
+}
