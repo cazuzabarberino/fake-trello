@@ -55,7 +55,7 @@ export const HeaderBox = styled.div.attrs(
   transition: background 0.2s;
 
   &:hover {
-    background: ${(props) => darken(0.2, props.color)};
+    background: ${({ color }) => darken(0.2, color as string)};
   }
 `;
 
