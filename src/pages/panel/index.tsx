@@ -22,29 +22,62 @@ const mock = [
   },
 ];
 
+const rectContains = (rect: DOMRect, coord: Coord): boolean => {
+  return (
+    coord.x >= rect.x &&
+    coord.x <= rect.x + rect.width &&
+    coord.y >= rect.y &&
+    coord.y <= rect.y + rect.height
+  );
+};
+
+const rectInRangeX = (rect: DOMRect, coord: Coord): boolean => {
+  return coord.x >= rect.x && coord.x <= rect.x + rect.width;
+};
+
 const Panel = (props: Props) => {
   const [allLists, setList] = React.useState<List[]>(() => {
     return mock.map((list) => ({
       ...list,
       id: shortid.generate(),
-      rect: new DOMRect(),
     }));
   });
 
+  const rects = React.useRef<DOMRect[]>(new Array(3));
+
   const draggingList = React.useCallback(
-    (draggedIndex: number) => (cood: Coord) => {
-      for (let index = 0; index < allLists.length; index++) {
-        if (draggedIndex === index) continue;
-      }
+    (draggedIndex: number) => (coord: Coord, globalCoord: Coord): boolean => {
+      const indexOff = draggedIndex + coord.x / Math.abs(coord.x) || 0;
+
+      if (
+        indexOff < 0 ||
+        indexOff >= allLists.length ||
+        !rectInRangeX(rects.current[indexOff], globalCoord)
+      )
+        return false;
+
+      // console.log("Coord: ", globalCoord);
+      // console.log("Rect: ", rects.current[indexOff]);
+      // console.log("=============");
+
+      const newArr = [...allLists];
+      const tmp = newArr[indexOff];
+      newArr[indexOff] = newArr[draggedIndex];
+      newArr[draggedIndex] = tmp;
+
+      setList(newArr);
+      return true;
     },
     [allLists]
   );
 
   const saveRect = React.useCallback((index: number, rect: DOMRect) => {
-    const newList = [...allLists];
-    newList[index].rect = rect;
-    setList(newList);
-  }, [allLists]);
+    rects.current[index] = rect;
+    // console.log("saving...");
+    // console.log("index ", index);
+    // console.log("rect ", rect);
+    // console.log("===================");
+  }, []);
 
   return (
     <Container>

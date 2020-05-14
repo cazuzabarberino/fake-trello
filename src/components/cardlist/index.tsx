@@ -9,24 +9,31 @@ interface Props {
   list: List;
   index: number;
   saveRect: (index: number, rect: DOMRect) => void;
-  draggingList: (coord: Coord) => void;
+  draggingList: (coord: Coord, globalCoord: Coord) => boolean;
 }
 
-const CardList = ({ list, saveRect, index }: Props) => {
-  const { coord, dragging, handleMouseDown } = useDnD();
-  const { rect, elementRef } = useElementRect();
-
-  if (dragging) {
-  }
+const CardList = ({ list, saveRect, index, draggingList }: Props) => {
+  const [containerRect, containerRef] = useElementRect(index);
+  const [cardRect, cardRef] = useElementRect(index);
+  const { coord, dragging, handleMouseDown, globalCoord } = useDnD(
+    containerRect
+  );
 
   React.useLayoutEffect(() => {
-    saveRect(index, rect);
-  }, [rect]);
+    saveRect(index, containerRect);
+  }, [containerRect, saveRect, index]);
+
+  React.useLayoutEffect(() => {
+    if (dragging) {
+      if (draggingList(coord, globalCoord)) {
+      }
+    }
+  }, [coord]);
 
   return (
-    <Container height={rect.height}>
+    <Container height={cardRect.height} ref={containerRef}>
       <Card
-        ref={elementRef}
+        ref={cardRef}
         style={{
           top: coord.y,
           left: coord.x,
@@ -38,5 +45,4 @@ const CardList = ({ list, saveRect, index }: Props) => {
     </Container>
   );
 };
-
 export default CardList;

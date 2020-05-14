@@ -1,9 +1,9 @@
 import React from "react";
 
 import { BsFillGrid3X3GapFill } from "react-icons/bs";
-import { AiOutlineHome, AiOutlinePlus } from "react-icons/ai";
+import { AiOutlineHome } from "react-icons/ai";
 import { FaTrello } from "react-icons/fa";
-import { FiAlertCircle } from "react-icons/fi";
+import { FiAlertCircle, FiPlus } from "react-icons/fi";
 import { DiTrello } from "react-icons/di";
 import { MdNotificationsNone } from "react-icons/md";
 import {
@@ -38,7 +38,7 @@ const Header = (props: Props) => {
       </HeaderTitle>
       <HeaderBtnWrapper right>
         <HeaderBox as="button">
-          <AiOutlinePlus size={20} color="white" />
+          <FiPlus size={20} color="white" />
         </HeaderBox>
         <HeaderBox as="button">
           <FiAlertCircle size={20} color="white" />
