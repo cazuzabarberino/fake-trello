@@ -10,15 +10,20 @@ interface Props {}
 const mock = [
   {
     title: "Backlog",
-    tasks: [],
+    tasks: [
+      "backlog task",
+      "anothter backlog task",
+      "very long task with a lot of blank space to test the text wrapper",
+      "A very looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong task",
+    ],
   },
   {
     title: "To dos",
-    tasks: [],
+    tasks: ["a todo task"],
   },
   {
     title: "Done",
-    tasks: [],
+    tasks: ["a done task"],
   },
 ];
 
@@ -40,6 +45,10 @@ const Panel = (props: Props) => {
     return mock.map((list) => ({
       ...list,
       id: shortid.generate(),
+      tasks: list.tasks.map((task) => ({
+        id: shortid.generate(),
+        title: task,
+      })),
     }));
   });
 
@@ -59,10 +68,6 @@ const Panel = (props: Props) => {
       )
         return false;
 
-      // console.log("Coord: ", globalCoord);
-      // console.log("Rect: ", rects.current[indexOff]);
-      // console.log("=============");
-
       const newArr = [...allLists];
       const tmp = newArr[indexOff];
       newArr[indexOff] = newArr[draggedIndex];
@@ -76,11 +81,9 @@ const Panel = (props: Props) => {
 
   const saveRect = React.useCallback((index: number, rect: DOMRect) => {
     rects.current[index] = rect;
-    // console.log("saving...");
-    // console.log("index ", index);
-    // console.log("rect ", rect);
-    // console.log("===================");
   }, []);
+
+  console.log(allLists);
 
   return (
     <Container>

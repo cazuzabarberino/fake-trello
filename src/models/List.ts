@@ -1,5 +1,7 @@
+import Task from "./Task";
+
 export default interface List {
   title: string;
-  tasks: string[];
+  tasks: Task[];
   id: string;
 }

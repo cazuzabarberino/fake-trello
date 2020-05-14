@@ -1,9 +1,17 @@
 import React from "react";
-import { Container, Card } from "./styled";
-import List from "../../models/List";
 import useDnD from "../../hooks/useDnD";
 import useElementRect from "../../hooks/useElementRect";
 import Coord from "../../models/Coord";
+import List from "../../models/List";
+import {
+  ElementContainer,
+  ElementShadow,
+  Card,
+  CardContainer,
+  ElementHeader,
+  NewCardBtn,
+} from "./styled";
+import { FiPlus } from "react-icons/fi";
 
 interface Props {
   list: List;
@@ -13,19 +21,19 @@ interface Props {
 }
 
 const CardList = ({ list, saveRect, index, draggingList }: Props) => {
+  const [shadowRect, shadowRef] = useElementRect(index);
   const [containerRect, containerRef] = useElementRect(index);
-  const [cardRect, cardRef] = useElementRect(index);
   const {
     coord,
     dragging,
     handleMouseDown,
     mouseCoord,
     moveDirection,
-  } = useDnD(containerRect);
+  } = useDnD(shadowRect);
 
   React.useLayoutEffect(() => {
-    saveRect(index, containerRect);
-  }, [containerRect, saveRect, index]);
+    saveRect(index, shadowRect);
+  }, [shadowRect, saveRect, index]);
 
   React.useLayoutEffect(() => {
     if (dragging) {
@@ -35,9 +43,9 @@ const CardList = ({ list, saveRect, index, draggingList }: Props) => {
   }, [coord]);
 
   return (
-    <Container height={cardRect.height} ref={containerRef}>
-      <Card
-        ref={cardRef}
+    <ElementShadow height={containerRect.height} ref={shadowRef}>
+      <ElementContainer
+        ref={containerRef}
         style={
           dragging
             ? {
@@ -47,11 +55,21 @@ const CardList = ({ list, saveRect, index, draggingList }: Props) => {
               }
             : {}
         }
-        onMouseDown={handleMouseDown}
       >
-        <p>{list.title}</p>
-      </Card>
-    </Container>
+        <ElementHeader onMouseDown={handleMouseDown}>
+          <p>{list.title}</p>
+        </ElementHeader>
+        <CardContainer>
+          {list.tasks.map((task) => (
+            <Card key={task.id}>{task.title}</Card>
+          ))}
+        </CardContainer>
+        <NewCardBtn>
+          <FiPlus />
+          <p>Adicionar outro cartão</p>
+        </NewCardBtn>
+      </ElementContainer>
+    </ElementShadow>
   );
 };
 export default CardList;
