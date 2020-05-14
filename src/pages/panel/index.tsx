@@ -46,13 +46,16 @@ const Panel = (props: Props) => {
   const rects = React.useRef<DOMRect[]>(new Array(3));
 
   const draggingList = React.useCallback(
-    (draggedIndex: number) => (coord: Coord, globalCoord: Coord): boolean => {
-      const indexOff = draggedIndex + coord.x / Math.abs(coord.x) || 0;
+    (draggedIndex: number) => (
+      xDirection: number,
+      mouseCoord: Coord
+    ): boolean => {
+      const indexOff = draggedIndex + xDirection;
 
       if (
         indexOff < 0 ||
         indexOff >= allLists.length ||
-        !rectInRangeX(rects.current[indexOff], globalCoord)
+        !rectInRangeX(rects.current[indexOff], mouseCoord)
       )
         return false;
 

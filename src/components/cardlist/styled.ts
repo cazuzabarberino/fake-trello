@@ -5,7 +5,7 @@ interface ContainerProps {
 }
 
 export const Container = styled.div<ContainerProps>`
-  position: relative;
+  /* position: relative; */
   min-width: 272px;
   background: #555;
   border-radius: 4px;
@@ -13,8 +13,7 @@ export const Container = styled.div<ContainerProps>`
 `;
 
 export const Card = styled.div`
-  position: absolute;
-  width: 100%;
+  min-width: 272px;
   background: #ddd;
   padding: 4px;
   border-radius: 4px;

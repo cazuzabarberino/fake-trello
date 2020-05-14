@@ -9,7 +9,7 @@ export const useDnD = (rect: DOMRect) => {
 
   const [dragging, setDragging] = React.useState(false);
 
-  const globalCoord = React.useRef<Coord>({
+  const mouseCoord = React.useRef<Coord>({
     x: 0,
     y: 0,
   });
@@ -19,37 +19,47 @@ export const useDnD = (rect: DOMRect) => {
     y: 0,
   });
 
-  const mouseLocalOffset = React.useRef({
+  const moveDirection = React.useRef({
     x: 0,
     y: 0,
   });
+
+  const rectRef = React.useRef(rect);
 
   const handleMouseMove = (ev: MouseEvent) => {
     // console.log("offset: ", mouseOffset.current);
     // console.log("blocking: ", blockUpdate.current);
     // console.log("================");
 
-    globalCoord.current.x = ev.clientX;
-    globalCoord.current.y = ev.clientY;
+    mouseCoord.current.x = ev.clientX;
+    mouseCoord.current.y = ev.clientY;
 
-    const relativeX = ev.clientX - mouseOffset.current.x;
-    const relativeY = ev.clientY - mouseOffset.current.y;
+    settinPosition(ev.clientX, ev.clientY);
+  };
+
+  const settinPosition = (x: number, y: number) => {
+    const posX = x - mouseOffset.current.x;
+    const posY = y - mouseOffset.current.y;
+
+    const relativeX = x - rectRef.current.x - mouseOffset.current.x;
+    const relativeY = y - rectRef.current.y - mouseOffset.current.y;
+
+    moveDirection.current.x = relativeX / Math.abs(relativeX) || 0;
+    moveDirection.current.y = relativeY / Math.abs(relativeY) || 0;
 
     setCoord({
-      x: relativeX,
-      y: relativeY,
+      x: posX,
+      y: posY,
     });
   };
 
   const handleMouseDown = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    mouseOffset.current.x = event.clientX;
-    mouseOffset.current.y = event.clientY;
+    mouseOffset.current.x = event.clientX - rectRef.current.x;
+    mouseOffset.current.y = event.clientY - rectRef.current.y;
 
-    mouseLocalOffset.current.x = event.clientX - rect.x;
-    mouseLocalOffset.current.y = event.clientY - rect.y;
-
+    settinPosition(event.clientX, event.clientY);
     setDragging(true);
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseup", handleMouseUp);
@@ -63,22 +73,15 @@ export const useDnD = (rect: DOMRect) => {
   };
 
   React.useEffect(() => {
-    mouseOffset.current.x = mouseLocalOffset.current.x + rect.x;
-    mouseOffset.current.y = mouseLocalOffset.current.y + rect.y;
-    // console.log("updating offset...");
-    // console.log("mouseOffset ", mouseOffset);
-    // console.log("localoffset ", mouseLocalOffset);
-    // console.log("rect ", rect);
+    rectRef.current = rect;
   }, [rect]);
-
 
   return {
     coord,
     dragging,
     handleMouseDown,
-    globalCoord: globalCoord.current,
-    mouseOffset,
-    
+    mouseCoord: mouseCoord.current,
+    moveDirection: moveDirection.current,
   };
 };
 
