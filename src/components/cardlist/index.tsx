@@ -9,6 +9,7 @@ import {
   ElementHeader,
   CardContainer,
   NewCardBtn,
+  MovingShadow,
 } from "./styled";
 import { FiPlus } from "react-icons/fi";
 import TaskCard from "../taskCard";
@@ -29,7 +30,7 @@ const CardList = ({ list, saveRect, index, draggingList }: Props) => {
     handleMouseDown,
     mouseCoord,
     moveDirection,
-  } = useDnD(shadowRect);
+  } = useDnD(shadowRef);
 
   React.useLayoutEffect(() => {
     saveRect(index, shadowRect);
@@ -42,19 +43,22 @@ const CardList = ({ list, saveRect, index, draggingList }: Props) => {
     }
   }, [coord]);
 
-
   return (
-    <ElementShadow height={containerRect.height} ref={shadowRef}>
+    <ElementShadow index={index} height={containerRect.height} ref={shadowRef}>
       <ElementContainer
         ref={containerRef}
         style={
           dragging
             ? {
-                position: "fixed",
                 top: coord.y,
                 left: coord.x,
+                zIndex: 2,
+                transition: "0s",
               }
-            : {}
+            : {
+                top: shadowRect.y,
+                left: shadowRect.x,
+              }
         }
       >
         <ElementHeader onMouseDown={handleMouseDown}>
@@ -70,6 +74,11 @@ const CardList = ({ list, saveRect, index, draggingList }: Props) => {
           <p>Adicionar outro cartão</p>
         </NewCardBtn>
       </ElementContainer>
+      <MovingShadow
+        x={shadowRect.x}
+        y={shadowRect.y}
+        height={containerRect.height}
+      />
     </ElementShadow>
   );
 };

@@ -1,7 +1,9 @@
 import React from "react";
 import Coord from "../models/Coord";
 
-export const useDnD = (rect: DOMRect) => {
+export const useDnD = (
+  elementRef: React.MutableRefObject<HTMLDivElement | null>
+) => {
   const [coord, setCoord] = React.useState<Coord>({
     x: 0,
     y: 0,
@@ -24,12 +26,15 @@ export const useDnD = (rect: DOMRect) => {
     y: 0,
   });
 
-  const rectRef = React.useRef(rect);
+  const rectRef = React.useRef<DOMRect>(new DOMRect());
 
   const handleMouseDown = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     event.preventDefault();
+
+    rectRef.current = (elementRef.current as HTMLDivElement).getBoundingClientRect();
+
     mouseOffset.current.x = event.clientX - rectRef.current.x;
     mouseOffset.current.y = event.clientY - rectRef.current.y;
     settinPosition(event.clientX, event.clientY);
@@ -64,9 +69,10 @@ export const useDnD = (rect: DOMRect) => {
     });
   };
 
-  React.useEffect(() => {
-    rectRef.current = rect;
-  }, [rect]);
+  // React.useEffect(() => {
+  //   rectRef.current = rect;
+  //   console.log("UpdateRect ", rect);
+  // }, [rect]);
 
   return {
     coord,

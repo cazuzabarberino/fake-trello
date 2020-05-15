@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   position: relative;
-  background: white;
   flex: 1;
   overflow-x: auto;
 `;

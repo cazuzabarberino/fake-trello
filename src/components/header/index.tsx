@@ -43,7 +43,7 @@ const Header = (props: Props) => {
         <HeaderBox as="button">
           <FiAlertCircle size={20} color="white" />
         </HeaderBox>
-        <HeaderBox as="button" color="red">
+        <HeaderBox as="button" color="#eb5a46">
           <MdNotificationsNone size={20} color="white" />
         </HeaderBox>
         <HeaderAvatar />

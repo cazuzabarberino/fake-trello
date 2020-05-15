@@ -17,7 +17,7 @@ const TaskCard = ({ task }: Props) => {
     handleMouseDown,
     mouseCoord,
     moveDirection,
-  } = useDnD(shadowRect);
+  } = useDnD(shadowRef);
 
   // console.log("=====");
   // console.log(containerRect);

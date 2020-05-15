@@ -12,6 +12,10 @@ export const GlobalStyles = createGlobalStyle`
     font-family: sans-serif;
   }
 
+  body{
+    color: #172b4d;
+  }
+
   button {
     cursor: pointer;
   }

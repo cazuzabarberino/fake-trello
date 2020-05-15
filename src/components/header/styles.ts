@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { darken } from "polished";
+import { transparentize } from "polished";
 
 export const Container = styled.div`
   position: relative;
@@ -8,7 +8,7 @@ export const Container = styled.div`
   padding: 4px;
 
   display: flex;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.32);
 `;
 
 interface HeaderBtnWrapperProps {
@@ -36,7 +36,7 @@ interface HeaderBoxProps {
 
 export const HeaderBox = styled.div.attrs(
   ({ color }): HeaderBoxProps => ({
-    color: color || "#aaa",
+    color: color || "rgba(255, 255, 255, .32)",
   })
 )`
   border: none;
@@ -55,7 +55,7 @@ export const HeaderBox = styled.div.attrs(
   transition: background 0.2s;
 
   &:hover {
-    background: ${({ color }) => darken(0.2, color as string)};
+    background: ${({ color }) => transparentize(0.1, color as string)};
   }
 `;
 
