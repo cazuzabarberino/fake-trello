@@ -26,17 +26,13 @@ export const useDnD = (
     y: 0,
   });
 
-  const rectRef = React.useRef<DOMRect>(new DOMRect());
-
   const handleMouseDown = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     event.preventDefault();
-
-    rectRef.current = (elementRef.current as HTMLDivElement).getBoundingClientRect();
-
-    mouseOffset.current.x = event.clientX - rectRef.current.x;
-    mouseOffset.current.y = event.clientY - rectRef.current.y;
+    const rect = (elementRef.current as HTMLDivElement).getBoundingClientRect();
+    mouseOffset.current.x = event.clientX - rect.x;
+    mouseOffset.current.y = event.clientY - rect.y;
     settinPosition(event.clientX, event.clientY);
     setDragging(true);
     window.addEventListener("mousemove", handleMouseMove);
@@ -59,8 +55,9 @@ export const useDnD = (
   const settinPosition = (x: number, y: number) => {
     const posX = x - mouseOffset.current.x;
     const posY = y - mouseOffset.current.y;
-    const relativeX = x - rectRef.current.x - mouseOffset.current.x;
-    const relativeY = y - rectRef.current.y - mouseOffset.current.y;
+    const rect = (elementRef.current as HTMLDivElement).getBoundingClientRect();
+    const relativeX = x - rect.x - mouseOffset.current.x;
+    const relativeY = y - rect.y - mouseOffset.current.y;
     moveDirection.current.x = relativeX / Math.abs(relativeX) || 0;
     moveDirection.current.y = relativeY / Math.abs(relativeY) || 0;
     setCoord({
@@ -68,11 +65,6 @@ export const useDnD = (
       y: posY,
     });
   };
-
-  // React.useEffect(() => {
-  //   rectRef.current = rect;
-  //   console.log("UpdateRect ", rect);
-  // }, [rect]);
 
   return {
     coord,
