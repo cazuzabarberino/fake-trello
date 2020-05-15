@@ -28,22 +28,15 @@ export const ElementHeader = styled.div`
   font-weight: 700;
 `;
 
+export const NewCardBtn = styled.div`
+  display: flex;
+  padding: 12px 16px;
+`;
+
 export const CardContainer = styled.div`
   /* border: 1px solid blue; */
   display: flex;
   flex-direction: column;
   row-gap: 8px;
   padding: 0 8px 8px 8px;
-`;
-
-export const Card = styled.div`
-  background: white;
-  padding: 8px;
-  border-radius: 4px;
-  border-bottom: 1px solid #aaa;
-`;
-
-export const NewCardBtn = styled.div`
-  display: flex;
-  padding: 12px 16px;
 `;

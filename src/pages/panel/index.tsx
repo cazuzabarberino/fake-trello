@@ -83,8 +83,6 @@ const Panel = (props: Props) => {
     rects.current[index] = rect;
   }, []);
 
-  console.log(allLists);
-
   return (
     <Container>
       <ListContainter>

@@ -6,12 +6,12 @@ import List from "../../models/List";
 import {
   ElementContainer,
   ElementShadow,
-  Card,
-  CardContainer,
   ElementHeader,
+  CardContainer,
   NewCardBtn,
 } from "./styled";
 import { FiPlus } from "react-icons/fi";
+import TaskCard from "../taskCard";
 
 interface Props {
   list: List;
@@ -42,6 +42,7 @@ const CardList = ({ list, saveRect, index, draggingList }: Props) => {
     }
   }, [coord]);
 
+
   return (
     <ElementShadow height={containerRect.height} ref={shadowRef}>
       <ElementContainer
@@ -61,7 +62,7 @@ const CardList = ({ list, saveRect, index, draggingList }: Props) => {
         </ElementHeader>
         <CardContainer>
           {list.tasks.map((task) => (
-            <Card key={task.id}>{task.title}</Card>
+            <TaskCard key={task.id} task={task} />
           ))}
         </CardContainer>
         <NewCardBtn>
