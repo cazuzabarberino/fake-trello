@@ -6,9 +6,11 @@ import { Card, Shadow } from "./styled";
 
 interface Props {
   task: Task;
+  listIndex: number;
+  index: number;
 }
 
-const TaskCard = ({ task }: Props) => {
+const TaskCard = ({ task, listIndex, index }: Props) => {
   const [shadowRect, shadowRef] = useElementRect();
   const [containerRect, containerRef] = useElementRect();
   const {
@@ -18,10 +20,6 @@ const TaskCard = ({ task }: Props) => {
     mouseCoord,
     moveDirection,
   } = useDnD(shadowRef);
-
-  // console.log("=====");
-  // console.log(containerRect);
-  // console.log(shadowRect);
 
   return (
     <Shadow height={containerRect.height} ref={shadowRef}>

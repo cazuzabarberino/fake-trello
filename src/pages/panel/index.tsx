@@ -52,7 +52,7 @@ const Panel = (props: Props) => {
     }));
   });
 
-  const rects = React.useRef<DOMRect[]>(new Array(3));
+  const rects = React.useRef<DOMRect[]>(new Array(mock.length));
 
   const draggingList = React.useCallback(
     (draggedIndex: number) => (

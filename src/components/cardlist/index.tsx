@@ -4,12 +4,12 @@ import useElementRect from "../../hooks/useElementRect";
 import Coord from "../../models/Coord";
 import List from "../../models/List";
 import {
+  ElementContent,
   ElementContainer,
-  ElementShadow,
   ElementHeader,
   CardContainer,
   NewCardBtn,
-  MovingShadow,
+  ElementShadow,
 } from "./styled";
 import { FiPlus } from "react-icons/fi";
 import TaskCard from "../taskCard";
@@ -22,19 +22,19 @@ interface Props {
 }
 
 const CardList = ({ list, saveRect, index, draggingList }: Props) => {
-  const [shadowRect, shadowRef] = useElementRect(index);
   const [containerRect, containerRef] = useElementRect(index);
+  const [contentRect, contentRef] = useElementRect(index);
   const {
     coord,
     dragging,
     handleMouseDown,
     mouseCoord,
     moveDirection,
-  } = useDnD(shadowRef);
+  } = useDnD(containerRef);
 
   React.useLayoutEffect(() => {
-    saveRect(index, shadowRect);
-  }, [shadowRect, saveRect, index]);
+    saveRect(index, containerRect);
+  }, [containerRect, saveRect, index]);
 
   React.useLayoutEffect(() => {
     if (dragging) {
@@ -44,20 +44,25 @@ const CardList = ({ list, saveRect, index, draggingList }: Props) => {
   }, [coord]);
 
   return (
-    <ElementShadow index={index} height={containerRect.height} ref={shadowRef}>
-      <ElementContainer
-        ref={containerRef}
+    <ElementContainer
+      index={index}
+      height={contentRect.height}
+      ref={containerRef}
+    >
+      <ElementContent
+        ref={contentRef}
         style={
           dragging
             ? {
+                position: "fixed",
                 top: coord.y,
                 left: coord.x,
                 zIndex: 2,
                 transition: "0s",
               }
             : {
-                top: shadowRect.y,
-                left: shadowRect.x,
+                top: containerRect.y,
+                left: containerRect.x,
               }
         }
       >
@@ -65,21 +70,27 @@ const CardList = ({ list, saveRect, index, draggingList }: Props) => {
           <p>{list.title}</p>
         </ElementHeader>
         <CardContainer>
-          {list.tasks.map((task) => (
-            <TaskCard key={task.id} task={task} />
+          {list.tasks.map((task, index) => (
+            <TaskCard
+              key={task.id}
+              task={task}
+              listIndex={index}
+              index={index}
+            />
           ))}
         </CardContainer>
         <NewCardBtn>
           <FiPlus />
           <p>Adicionar outro cartão</p>
         </NewCardBtn>
-      </ElementContainer>
-      <MovingShadow
-        x={shadowRect.x}
-        y={shadowRect.y}
-        height={containerRect.height}
+      </ElementContent>
+      <ElementShadow
+        dragging={dragging}
+        x={containerRect.x}
+        y={containerRect.y}
+        height={contentRect.height}
       />
-    </ElementShadow>
+    </ElementContainer>
   );
 };
 export default CardList;
