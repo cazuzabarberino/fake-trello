@@ -2,8 +2,6 @@ import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyles = createGlobalStyle`
 
-
-
   * {
     padding: 0;
     margin: 0;
@@ -21,5 +19,15 @@ export const GlobalStyles = createGlobalStyle`
   }
 
 `;
+
+interface PanelConfig {
+  listWidth: number;
+  listMargin: number;
+}
+
+export const panelConfig: PanelConfig = {
+  listWidth: 272,
+  listMargin: 8,
+};
 
 export const theme = {};
