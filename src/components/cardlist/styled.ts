@@ -1,6 +1,4 @@
-import styled from "styled-components";
-
-const transitionDuration = ".2s ease-out";
+import styled, { css } from "styled-components";
 
 interface ElementContainerProps {
   height: number;
@@ -13,16 +11,28 @@ export const ElementContainer = styled.div<ElementContainerProps>`
   height: ${({ height }) => height + "px"};
 `;
 
-export const ElementContent = styled.div`
-  /* position: fixed; */
-  /* z-index: 1; */
+interface ElementContentProps {
+  dragging: boolean;
+}
+
+export const ElementContent = styled.div<ElementContentProps>`
   width: 272px;
   flex: none;
   background: #ebecf0;
 
   font-size: 14px;
   border-radius: 4px;
-  transition: ${transitionDuration};
+
+  transition: box-shadow 0.2s, transform 0.2s;
+
+  ${({ dragging }) =>
+    dragging &&
+    css`
+      z-index: 2;
+      transform: rotate(5deg);
+      position: fixed;
+      box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+    `}
 `;
 
 interface ElementShadowProps {
@@ -34,17 +44,14 @@ interface ElementShadowProps {
 
 export const ElementShadow = styled.div<ElementShadowProps>`
   display: ${({ dragging }) => (dragging ? "block" : "none")};
-  /* position: fixed; */
   top: ${({ y }) => y + "px"};
   left: ${({ x }) => x + "px"};
-  transition: ${transitionDuration};
   background: rgba(0, 0, 0, 0.32);
   width: 272px;
   height: ${({ height }) => height + "px"};
 `;
 
 export const ElementHeader = styled.div`
-  /* border: 1px solid red; */
   padding: 12px 16px;
   color: #172b4d;
   font-weight: 700;
@@ -56,7 +63,6 @@ export const NewCardBtn = styled.div`
 `;
 
 export const CardContainer = styled.div`
-  /* border: 1px solid blue; */
   display: flex;
   flex-direction: column;
   row-gap: 8px;

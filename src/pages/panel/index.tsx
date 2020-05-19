@@ -1,6 +1,6 @@
 import React from "react";
 import CardList from "../../components/cardlist";
-import List from "../../models/List";
+import TaskList from "../../models/List";
 import { Container, ListContainter } from "./styles";
 import shortid from "shortid";
 import Coord from "../../models/Coord";
@@ -41,7 +41,7 @@ const rectInRangeX = (rect: DOMRect, coord: Coord): boolean => {
 };
 
 const Panel = (props: Props) => {
-  const [allLists, setList] = React.useState<List[]>(() => {
+  const [allLists, setList] = React.useState<TaskList[]>(() => {
     return mock.map((list) => ({
       ...list,
       id: shortid.generate(),
@@ -79,6 +79,45 @@ const Panel = (props: Props) => {
     [allLists]
   );
 
+  const draggingTaskToOtherList = React.useCallback(
+    (
+      taskIndex: number,
+      listIndex: number,
+      xDirection: number,
+      mouseCoord: Coord
+    ): boolean => {
+      const indexOff = listIndex + xDirection;
+
+      if (
+        indexOff < 0 ||
+        indexOff >= allLists.length ||
+        !rectInRangeX(rects.current[indexOff], mouseCoord)
+      )
+        return false;
+
+      const newArr = [...allLists];
+      const task = newArr[listIndex].tasks[taskIndex];
+      newArr[listIndex].tasks.splice(taskIndex, 1);
+      newArr[indexOff].tasks.push(task);
+
+      setList(newArr);
+      return true;
+    },
+    [allLists]
+  );
+
+  const swapChild = React.useCallback(
+    (listIndex: number, taskIndex1: number, taskIndex2: number) => {
+      const newArr = [...allLists];
+      const tmp = newArr[listIndex].tasks[taskIndex1];
+      newArr[listIndex].tasks[taskIndex1] = newArr[listIndex].tasks[taskIndex2];
+      newArr[listIndex].tasks[taskIndex2] = tmp;
+
+      setList(newArr);
+    },
+    [allLists]
+  );
+
   const saveRect = React.useCallback((index: number, rect: DOMRect) => {
     rects.current[index] = rect;
   }, []);
@@ -93,6 +132,8 @@ const Panel = (props: Props) => {
             key={list.id}
             index={index}
             list={list}
+            swapChild={swapChild}
+            draggingTaskToOtherList={draggingTaskToOtherList}
           />
         ))}
       </ListContainter>

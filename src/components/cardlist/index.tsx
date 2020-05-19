@@ -2,7 +2,7 @@ import React from "react";
 import useDnD from "../../hooks/useDnD";
 import useElementRect from "../../hooks/useElementRect";
 import Coord from "../../models/Coord";
-import List from "../../models/List";
+import TaskList from "../../models/List";
 import {
   ElementContent,
   ElementContainer,
@@ -14,14 +14,44 @@ import {
 import { FiPlus } from "react-icons/fi";
 import TaskCard from "../taskCard";
 
+const rectInRangeY = (
+  rect: DOMRect,
+  coord: Coord,
+  yDirection: number
+): boolean => {
+  if (yDirection > 0) {
+    return coord.y >= rect.y + rect.height * 0.5;
+  } else {
+    return coord.y <= rect.y + rect.height * 0.5;
+  }
+};
+
 interface Props {
-  list: List;
+  list: TaskList;
   index: number;
   saveRect: (index: number, rect: DOMRect) => void;
   draggingList: (xDirection: number, globalCoord: Coord) => boolean;
+  swapChild: (
+    listIndex: number,
+    taskIndex1: number,
+    taskIndex2: number
+  ) => void;
+  draggingTaskToOtherList: (
+    taskIndex: number,
+    listIndex: number,
+    xDirection: number,
+    mouseCoord: Coord
+  ) => boolean;
 }
 
-const CardList = ({ list, saveRect, index, draggingList }: Props) => {
+const CardList = ({
+  list,
+  saveRect,
+  index,
+  draggingList,
+  swapChild,
+  draggingTaskToOtherList,
+}: Props) => {
   const [containerRect, containerRef] = useElementRect(index);
   const [contentRect, contentRef] = useElementRect(index);
   const {
@@ -31,6 +61,8 @@ const CardList = ({ list, saveRect, index, draggingList }: Props) => {
     mouseCoord,
     moveDirection,
   } = useDnD(containerRef);
+
+  //===
 
   React.useLayoutEffect(() => {
     saveRect(index, containerRect);
@@ -43,6 +75,42 @@ const CardList = ({ list, saveRect, index, draggingList }: Props) => {
     }
   }, [coord]);
 
+  //===
+
+  const childRects = React.useRef<DOMRect[]>(new Array(list.tasks.length));
+
+  const saveChildRect = React.useCallback((index: number, rect: DOMRect) => {
+    childRects.current[index] = rect;
+    // console.log("saving child rect...");
+    // console.log(index);
+    // console.log(rect);
+    // console.log("==============");
+  }, []);
+
+  const draggingTask = React.useCallback(
+    (
+      taskIndex: number,
+      direction: { x: number; y: number },
+      mouseCoord: Coord
+    ): boolean => {
+      draggingTaskToOtherList(taskIndex, index, direction.x, mouseCoord);
+
+      const indexOff = taskIndex + direction.y;
+
+      if (
+        indexOff < 0 ||
+        indexOff >= list.tasks.length ||
+        !rectInRangeY(childRects.current[indexOff], mouseCoord, direction.y)
+      )
+        return false;
+
+      swapChild(index, taskIndex, indexOff);
+
+      return true;
+    },
+    []
+  );
+
   return (
     <ElementContainer
       index={index}
@@ -51,14 +119,12 @@ const CardList = ({ list, saveRect, index, draggingList }: Props) => {
     >
       <ElementContent
         ref={contentRef}
+        dragging={dragging}
         style={
           dragging
             ? {
-                position: "fixed",
                 top: coord.y,
                 left: coord.x,
-                zIndex: 2,
-                transition: "0s",
               }
             : {
                 top: containerRect.y,
@@ -76,6 +142,8 @@ const CardList = ({ list, saveRect, index, draggingList }: Props) => {
               task={task}
               listIndex={index}
               index={index}
+              saveChildRect={saveChildRect}
+              draggingTask={draggingTask}
             />
           ))}
         </CardContainer>
