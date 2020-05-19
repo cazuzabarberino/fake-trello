@@ -1,11 +1,9 @@
 import React from "react";
+import CardList from "../../components/cardlist";
 import TaskList from "../../models/List";
-import Task from "../../models/Task";
 import { Container, ListContainter } from "./styles";
 import shortid from "shortid";
 import Coord from "../../models/Coord";
-import CardList from "../../components/cardlist";
-import { panelConfig } from "../../styles";
 
 interface Props {}
 
@@ -29,143 +27,118 @@ const mock = [
   },
 ];
 
+const rectContains = (rect: DOMRect, coord: Coord): boolean => {
+  return (
+    coord.x >= rect.x &&
+    coord.x <= rect.x + rect.width &&
+    coord.y >= rect.y &&
+    coord.y <= rect.y + rect.height
+  );
+};
+
+const rectInRangeX = (rect: DOMRect, coord: Coord): boolean => {
+  return coord.x >= rect.x && coord.x <= rect.x + rect.width;
+};
+
 const Panel = (props: Props) => {
-  const [taskLists, setTaskLists] = React.useState<TaskList[]>(() => {
-    return mock.map((list, index) => ({
+  const [allLists, setList] = React.useState<TaskList[]>(() => {
+    return mock.map((list) => ({
       ...list,
       id: shortid.generate(),
-      index,
+      tasks: list.tasks.map((task) => ({
+        id: shortid.generate(),
+        title: task,
+      })),
     }));
   });
 
-  const [taskCards, setTaskCards] = React.useState<Task[]>(() =>
-    mock
-      .map((list, listIndex) =>
-        list.tasks.map<Task>((task, taskIndex) => ({
-          id: shortid.generate(),
-          title: task,
-          listIndex,
-          taskIndex,
-        }))
+  const rects = React.useRef<DOMRect[]>(new Array(mock.length));
+
+  const draggingList = React.useCallback(
+    (draggedIndex: number) => (
+      xDirection: number,
+      mouseCoord: Coord
+    ): boolean => {
+      const indexOff = draggedIndex + xDirection;
+
+      if (
+        indexOff < 0 ||
+        indexOff >= allLists.length ||
+        !rectInRangeX(rects.current[indexOff], mouseCoord)
       )
-      .flat()
+        return false;
+
+      const newArr = [...allLists];
+      const tmp = newArr[indexOff];
+      newArr[indexOff] = newArr[draggedIndex];
+      newArr[draggedIndex] = tmp;
+
+      setList(newArr);
+      return true;
+    },
+    [allLists]
   );
 
-  const listRects = React.useRef<DOMRect[]>(new Array(taskLists.length));
-  const taskRects = React.useRef<DOMRect[]>(new Array(taskCards.length));
+  const draggingTaskToOtherList = React.useCallback(
+    (
+      taskIndex: number,
+      listIndex: number,
+      xDirection: number,
+      mouseCoord: Coord
+    ): boolean => {
+      const indexOff = listIndex + xDirection;
 
-  const [containerRect, setContainerRect] = React.useState<DOMRect>(
-    new DOMRect()
+      if (
+        indexOff < 0 ||
+        indexOff >= allLists.length ||
+        !rectInRangeX(rects.current[indexOff], mouseCoord)
+      )
+        return false;
+
+      const newArr = [...allLists];
+      const task = newArr[listIndex].tasks[taskIndex];
+      newArr[listIndex].tasks.splice(taskIndex, 1);
+      newArr[indexOff].tasks.push(task);
+
+      setList(newArr);
+      return true;
+    },
+    [allLists]
   );
-  const containerRef = React.useRef<HTMLDivElement | null>(null);
-  React.useLayoutEffect(() => {
-    setContainerRect(
-      (containerRef.current as HTMLDivElement).getBoundingClientRect()
-    );
+
+  const swapChild = React.useCallback(
+    (listIndex: number, taskIndex1: number, taskIndex2: number) => {
+      const newArr = [...allLists];
+      const tmp = newArr[listIndex].tasks[taskIndex1];
+      newArr[listIndex].tasks[taskIndex1] = newArr[listIndex].tasks[taskIndex2];
+      newArr[listIndex].tasks[taskIndex2] = tmp;
+
+      setList(newArr);
+    },
+    [allLists]
+  );
+
+  const saveRect = React.useCallback((index: number, rect: DOMRect) => {
+    rects.current[index] = rect;
   }, []);
-
-  // const draggingList = React.useCallback(
-  //   (draggedIndex: number) => (
-  //     xDirection: number,
-  //     mouseCoord: Coord
-  //   ): boolean => {
-  //     const indexOff = draggedIndex + xDirection;
-
-  //     if (
-  //       indexOff < 0 ||
-  //       indexOff >= taskLists.length ||
-  //       !rectInRangeX(rects.current[indexOff], mouseCoord)
-  //     )
-  //       return false;
-
-  //     const newArr = [...taskLists];
-  //     const tmp = newArr[indexOff];
-  //     newArr[indexOff] = newArr[draggedIndex];
-  //     newArr[draggedIndex] = tmp;
-
-  //     setTaskLists(newArr);
-  //     return true;
-  //   },
-  //   [taskLists]
-  // );
-
-  // const draggingTaskToOtherList = React.useCallback(
-  //   (
-  //     taskIndex: number,
-  //     listIndex: number,
-  //     xDirection: number,
-  //     mouseCoord: Coord
-  //   ): boolean => {
-  //     const indexOff = listIndex + xDirection;
-
-  //     if (
-  //       indexOff < 0 ||
-  //       indexOff >= taskLists.length ||
-  //       !rectInRangeX(rects.current[indexOff], mouseCoord)
-  //     )
-  //       return false;
-
-  //     const newArr = [...taskLists];
-  //     const task = newArr[listIndex].tasks[taskIndex];
-  //     newArr[listIndex].tasks.splice(taskIndex, 1);
-  //     newArr[indexOff].tasks.push(task);
-
-  //     setTaskLists(newArr);
-  //     return true;
-  //   },
-  //   [taskLists]
-  // );
-
-  // const swapChild = React.useCallback(
-  //   (listIndex: number, taskIndex1: number, taskIndex2: number) => {
-  //     const newArr = [...taskLists];
-  //     const tmp = newArr[listIndex].tasks[taskIndex1];
-  //     newArr[listIndex].tasks[taskIndex1] = newArr[listIndex].tasks[taskIndex2];
-  //     newArr[listIndex].tasks[taskIndex2] = tmp;
-
-  //     setTaskLists(newArr);
-  //   },
-  //   [taskLists]
-  // );
-
-  // const saveRect = React.useCallback((index: number, rect: DOMRect) => {
-  //   rects.current[index] = rect;
-  // }, []);
 
   return (
     <Container>
-      <ListContainter ref={containerRef}>
-        {taskLists.map((list) => (
+      <ListContainter>
+        {allLists.map((list, index) => (
           <CardList
+            draggingList={draggingList(index)}
+            saveRect={saveRect}
             key={list.id}
+            index={index}
             list={list}
-            x={
-              containerRect.left +
-              panelConfig.listWidth * list.index +
-              panelConfig.listMargin * list.index
-            }
-            y={containerRect.top}
+            swapChild={swapChild}
+            draggingTaskToOtherList={draggingTaskToOtherList}
           />
         ))}
       </ListContainter>
     </Container>
   );
 };
-
-function rectInRangeY(
-  rect: DOMRect,
-  coord: Coord,
-  yDirection: number
-): boolean {
-  if (yDirection > 0) {
-    return coord.y >= rect.y + rect.height * 0.5;
-  } else {
-    return coord.y <= rect.y + rect.height * 0.5;
-  }
-}
-
-function rectInRangeX(rect: DOMRect, coord: Coord): boolean {
-  return coord.x >= rect.x && coord.x <= rect.x + rect.width;
-}
 
 export default Panel;

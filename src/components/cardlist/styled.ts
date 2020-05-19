@@ -1,16 +1,11 @@
 import styled, { css } from "styled-components";
 
 interface ElementContainerProps {
-  x: number;
-  y: number;
   height: number;
+  index: number;
 }
 
 export const ElementContainer = styled.div<ElementContainerProps>`
-  position: fixed;
-  left: ${({ x }) => x + "px"};
-  top: ${({ y }) => y + "px"};
-
   width: 272px;
   border-radius: 4px;
   height: ${({ height }) => height + "px"};
@@ -21,7 +16,6 @@ interface ElementContentProps {
 }
 
 export const ElementContent = styled.div<ElementContentProps>`
-  position: fixed;
   width: 272px;
   flex: none;
   background: #ebecf0;
@@ -36,6 +30,7 @@ export const ElementContent = styled.div<ElementContentProps>`
     css`
       z-index: 2;
       transform: rotate(5deg);
+      position: fixed;
       box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
     `}
 `;
@@ -48,7 +43,7 @@ interface ElementShadowProps {
 }
 
 export const ElementShadow = styled.div<ElementShadowProps>`
-  position: fixed;
+  display: ${({ dragging }) => (dragging ? "block" : "none")};
   top: ${({ y }) => y + "px"};
   left: ${({ x }) => x + "px"};
   background: rgba(0, 0, 0, 0.32);
