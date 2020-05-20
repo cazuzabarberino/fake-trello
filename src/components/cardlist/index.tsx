@@ -19,11 +19,9 @@ const rectInRangeY = (
   coord: Coord,
   yDirection: number
 ): boolean => {
-  if (yDirection > 0) {
-    return coord.y >= rect.y + rect.height * 0.5;
-  } else {
-    return coord.y <= rect.y + rect.height * 0.5;
-  }
+  return yDirection > 0
+    ? coord.y >= rect.y + rect.height * 0.6
+    : coord.y <= rect.y + rect.height * 0.4;
 };
 
 interface Props {
@@ -31,17 +29,12 @@ interface Props {
   index: number;
   saveRect: (index: number, rect: DOMRect) => void;
   draggingList: (xDirection: number, globalCoord: Coord) => boolean;
-  swapChild: (
-    listIndex: number,
-    taskIndex1: number,
-    taskIndex2: number
-  ) => void;
-  draggingTaskToOtherList: (
+  beginTaskDrag: (
     taskIndex: number,
     listIndex: number,
-    xDirection: number,
-    mouseCoord: Coord
-  ) => boolean;
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    rect: DOMRect
+  ) => void;
 }
 
 const CardList = ({
@@ -49,8 +42,7 @@ const CardList = ({
   saveRect,
   index,
   draggingList,
-  swapChild,
-  draggingTaskToOtherList,
+  beginTaskDrag,
 }: Props) => {
   const [containerRect, containerRef] = useElementRect(index);
   const [contentRect, contentRef] = useElementRect(index);
@@ -76,40 +68,6 @@ const CardList = ({
   }, [coord]);
 
   //===
-
-  const childRects = React.useRef<DOMRect[]>(new Array(list.tasks.length));
-
-  const saveChildRect = React.useCallback((index: number, rect: DOMRect) => {
-    childRects.current[index] = rect;
-    // console.log("saving child rect...");
-    // console.log(index);
-    // console.log(rect);
-    // console.log("==============");
-  }, []);
-
-  const draggingTask = React.useCallback(
-    (
-      taskIndex: number,
-      direction: { x: number; y: number },
-      mouseCoord: Coord
-    ): boolean => {
-      draggingTaskToOtherList(taskIndex, index, direction.x, mouseCoord);
-
-      const indexOff = taskIndex + direction.y;
-
-      if (
-        indexOff < 0 ||
-        indexOff >= list.tasks.length ||
-        !rectInRangeY(childRects.current[indexOff], mouseCoord, direction.y)
-      )
-        return false;
-
-      swapChild(index, taskIndex, indexOff);
-
-      return true;
-    },
-    []
-  );
 
   return (
     <ElementContainer
@@ -142,8 +100,7 @@ const CardList = ({
               task={task}
               listIndex={index}
               index={index}
-              saveChildRect={saveChildRect}
-              draggingTask={draggingTask}
+              beginTaskDrag={beginTaskDrag}
             />
           ))}
         </CardContainer>

@@ -14,3 +14,10 @@ export const ListContainter = styled.div`
   height: 100%;
   align-items: flex-start;
 `;
+
+export const FakeCard = styled.div`
+  position: fixed;
+  background: red;
+  width: 272px;
+  height: 50px;
+`;

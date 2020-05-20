@@ -9,58 +9,26 @@ interface Props {
   task: Task;
   listIndex: number;
   index: number;
-  saveChildRect: (index: number, rect: DOMRect) => void;
-  draggingTask: (
+  beginTaskDrag: (
     taskIndex: number,
-    direction: { x: number; y: number },
-    mouseCoord: Coord
-  ) => boolean;
+    listIndex: number,
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    rect: DOMRect
+  ) => void;
 }
 
-const TaskCard = ({
-  task,
-  listIndex,
-  index,
-  saveChildRect,
-  draggingTask,
-}: Props) => {
+const TaskCard = ({ task, listIndex, index, beginTaskDrag }: Props) => {
   const [shadowRect, shadowRef] = useElementRect();
   const [containerRect, containerRef] = useElementRect();
-  const {
-    coord,
-    dragging,
-    handleMouseDown,
-    mouseCoord,
-    moveDirection,
-  } = useDnD(shadowRef);
-
-  React.useLayoutEffect(() => {
-    saveChildRect(
-      index,
-      (shadowRef.current as HTMLDivElement).getBoundingClientRect()
-    );
-  }, [shadowRect, listIndex, index]);
-
-  React.useLayoutEffect(() => {
-    if (dragging) {
-      draggingTask(index, moveDirection, mouseCoord);
-    }
-  }, [coord]);
 
   return (
     <Shadow height={containerRect.height} ref={shadowRef}>
       <Card
         ref={containerRef}
-        onMouseDown={handleMouseDown}
-        style={
-          dragging
-            ? {
-                position: "fixed",
-                top: coord.y,
-                left: coord.x,
-              }
-            : {}
-        }
+        onMouseDown={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+          event.preventDefault();
+          beginTaskDrag(index, listIndex, event, shadowRect);
+        }}
       >
         {task.title}
       </Card>

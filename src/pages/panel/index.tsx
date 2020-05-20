@@ -1,7 +1,7 @@
 import React from "react";
 import CardList from "../../components/cardlist";
 import TaskList from "../../models/List";
-import { Container, ListContainter } from "./styles";
+import { Container, ListContainter, FakeCard } from "./styles";
 import shortid from "shortid";
 import Coord from "../../models/Coord";
 
@@ -27,15 +27,6 @@ const mock = [
   },
 ];
 
-const rectContains = (rect: DOMRect, coord: Coord): boolean => {
-  return (
-    coord.x >= rect.x &&
-    coord.x <= rect.x + rect.width &&
-    coord.y >= rect.y &&
-    coord.y <= rect.y + rect.height
-  );
-};
-
 const rectInRangeX = (rect: DOMRect, coord: Coord): boolean => {
   return coord.x >= rect.x && coord.x <= rect.x + rect.width;
 };
@@ -53,6 +44,10 @@ const Panel = (props: Props) => {
   });
 
   const rects = React.useRef<DOMRect[]>(new Array(mock.length));
+
+  const saveRect = React.useCallback((index: number, rect: DOMRect) => {
+    rects.current[index] = rect;
+  }, []);
 
   const draggingList = React.useCallback(
     (draggedIndex: number) => (
@@ -79,48 +74,91 @@ const Panel = (props: Props) => {
     [allLists]
   );
 
-  const draggingTaskToOtherList = React.useCallback(
-    (
-      taskIndex: number,
-      listIndex: number,
-      xDirection: number,
-      mouseCoord: Coord
-    ): boolean => {
-      const indexOff = listIndex + xDirection;
+  //--------------------------
+  const [taskDragging, setTaskDragging] = React.useState(false);
+  const [coord, setCoord] = React.useState<Coord>({
+    x: 0,
+    y: 0,
+  });
 
-      if (
-        indexOff < 0 ||
-        indexOff >= allLists.length ||
-        !rectInRangeX(rects.current[indexOff], mouseCoord)
-      )
-        return false;
+  const mouseOffset = React.useRef<Coord>({
+    x: 0,
+    y: 0,
+  });
 
-      const newArr = [...allLists];
-      const task = newArr[listIndex].tasks[taskIndex];
-      newArr[listIndex].tasks.splice(taskIndex, 1);
-      newArr[indexOff].tasks.push(task);
+  const mouseCoord = React.useRef<Coord>({
+    x: 0,
+    y: 0,
+  });
 
-      setList(newArr);
-      return true;
-    },
-    [allLists]
-  );
+  const dragIndexes = React.useRef({
+    taskIndex: 0,
+    listIndex: 0,
+  });
 
-  const swapChild = React.useCallback(
-    (listIndex: number, taskIndex1: number, taskIndex2: number) => {
-      const newArr = [...allLists];
-      const tmp = newArr[listIndex].tasks[taskIndex1];
-      newArr[listIndex].tasks[taskIndex1] = newArr[listIndex].tasks[taskIndex2];
-      newArr[listIndex].tasks[taskIndex2] = tmp;
+  const beginTaskDrag = (
+    taskIndex: number,
+    listIndex: number,
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    rect: DOMRect
+  ) => {
+    mouseOffset.current = {
+      x: event.clientX - rect.x,
+      y: event.clientY - rect.y,
+    };
+    dragIndexes.current = {
+      taskIndex,
+      listIndex,
+    };
+    setTaskDragging(true);
+    setPosition(rect.x, rect.y);
+    window.addEventListener("mousemove", mouseMove);
+    window.addEventListener("mouseup", mouseUp);
+  };
 
-      setList(newArr);
-    },
-    [allLists]
-  );
-
-  const saveRect = React.useCallback((index: number, rect: DOMRect) => {
-    rects.current[index] = rect;
+  const mouseMove = React.useCallback((ev: MouseEvent) => {
+    setPosition(ev.clientX, ev.clientY);
   }, []);
+
+  const setPosition = React.useCallback((x: number, y: number) => {
+    mouseCoord.current = { x, y };
+    setCoord({ x: x - mouseOffset.current.x, y: y - mouseOffset.current.y });
+  }, []);
+
+  const mouseUp = React.useCallback(() => {
+    setTaskDragging(false);
+    window.removeEventListener("mousemove", mouseMove);
+    window.removeEventListener("mouseup", mouseUp);
+  }, []);
+
+  React.useLayoutEffect(() => {
+    if (horizontalCheck()) {
+    }
+  }, [coord]);
+
+  const horizontalCheck = React.useCallback((): boolean => {
+    const relativeX =
+      mouseCoord.current.x -
+      mouseOffset.current.x -
+      rects.current[dragIndexes.current.listIndex].x;
+
+    const xDir = relativeX / Math.abs(relativeX) || 0;
+
+    if (!xDir) return false;
+
+    const indexOff = dragIndexes.current.listIndex + xDir;
+
+    if (
+      indexOff < 0 ||
+      indexOff > rects.current.length - 1 ||
+      !rectInRangeX(rects.current[indexOff], mouseCoord.current)
+    )
+      return false;
+
+    return true;
+  }, []);
+
+  //--------------------------
 
   return (
     <Container>
@@ -132,11 +170,23 @@ const Panel = (props: Props) => {
             key={list.id}
             index={index}
             list={list}
-            swapChild={swapChild}
-            draggingTaskToOtherList={draggingTaskToOtherList}
+            beginTaskDrag={beginTaskDrag}
           />
         ))}
       </ListContainter>
+      <FakeCard
+        style={
+          taskDragging
+            ? {
+                left: coord.x,
+                top: coord.y,
+              }
+            : {
+                left: 0,
+                top: 0,
+              }
+        }
+      />
     </Container>
   );
 };
