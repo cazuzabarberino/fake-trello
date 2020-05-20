@@ -26,7 +26,7 @@ const rectInRangeY = (
 
 interface Props {
   list: TaskList;
-  index: number;
+  listIndex: number;
   saveRect: (index: number, rect: DOMRect) => void;
   draggingList: (xDirection: number, globalCoord: Coord) => boolean;
   beginTaskDrag: (
@@ -40,12 +40,12 @@ interface Props {
 const CardList = ({
   list,
   saveRect,
-  index,
+  listIndex,
   draggingList,
   beginTaskDrag,
 }: Props) => {
-  const [containerRect, containerRef] = useElementRect(index);
-  const [contentRect, contentRef] = useElementRect(index);
+  const [containerRect, containerRef] = useElementRect(listIndex);
+  const [contentRect, contentRef] = useElementRect(listIndex);
   const {
     coord,
     dragging,
@@ -57,8 +57,8 @@ const CardList = ({
   //===
 
   React.useLayoutEffect(() => {
-    saveRect(index, containerRect);
-  }, [containerRect, saveRect, index]);
+    saveRect(listIndex, containerRect);
+  }, [containerRect, saveRect, listIndex]);
 
   React.useLayoutEffect(() => {
     if (dragging) {
@@ -71,7 +71,7 @@ const CardList = ({
 
   return (
     <ElementContainer
-      index={index}
+      index={listIndex}
       height={contentRect.height}
       ref={containerRef}
     >
@@ -94,12 +94,12 @@ const CardList = ({
           <p>{list.title}</p>
         </ElementHeader>
         <CardContainer>
-          {list.tasks.map((task, index) => (
+          {list.tasks.map((task, taskIndex) => (
             <TaskCard
               key={task.id}
               task={task}
-              listIndex={index}
-              index={index}
+              listIndex={listIndex}
+              index={taskIndex}
               beginTaskDrag={beginTaskDrag}
             />
           ))}

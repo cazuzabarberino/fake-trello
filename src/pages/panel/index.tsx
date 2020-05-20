@@ -32,7 +32,7 @@ const rectInRangeX = (rect: DOMRect, coord: Coord): boolean => {
 };
 
 const Panel = (props: Props) => {
-  const [allLists, setList] = React.useState<TaskList[]>(() => {
+  const [allLists, setAllLists] = React.useState<TaskList[]>(() => {
     return mock.map((list) => ({
       ...list,
       id: shortid.generate(),
@@ -68,7 +68,7 @@ const Panel = (props: Props) => {
       newArr[indexOff] = newArr[draggedIndex];
       newArr[draggedIndex] = tmp;
 
-      setList(newArr);
+      setAllLists(newArr);
       return true;
     },
     [allLists]
@@ -110,8 +110,9 @@ const Panel = (props: Props) => {
       taskIndex,
       listIndex,
     };
+
     setTaskDragging(true);
-    setPosition(rect.x, rect.y);
+    setPosition(event.clientX, event.clientY);
     window.addEventListener("mousemove", mouseMove);
     window.addEventListener("mouseup", mouseUp);
   };
@@ -132,11 +133,6 @@ const Panel = (props: Props) => {
   }, []);
 
   React.useLayoutEffect(() => {
-    if (horizontalCheck()) {
-    }
-  }, [coord]);
-
-  const horizontalCheck = React.useCallback((): boolean => {
     const relativeX =
       mouseCoord.current.x -
       mouseOffset.current.x -
@@ -144,19 +140,47 @@ const Panel = (props: Props) => {
 
     const xDir = relativeX / Math.abs(relativeX) || 0;
 
-    if (!xDir) return false;
+    if (!xDir) return;
 
-    const indexOff = dragIndexes.current.listIndex + xDir;
+    const toIndex = dragIndexes.current.listIndex + xDir;
 
+    if (horizontalCheck(toIndex)) {
+      moveTaskHorizontally(toIndex);
+    }
+  }, [coord]);
+
+  const horizontalCheck = React.useCallback((toIndex: number): boolean => {
     if (
-      indexOff < 0 ||
-      indexOff > rects.current.length - 1 ||
-      !rectInRangeX(rects.current[indexOff], mouseCoord.current)
+      toIndex < 0 ||
+      toIndex > rects.current.length - 1 ||
+      !rectInRangeX(rects.current[toIndex], mouseCoord.current)
     )
       return false;
 
     return true;
   }, []);
+
+  const moveTaskHorizontally = (toIndex: number) => {
+    const newList = [...allLists];
+
+    newList[toIndex].tasks.push(
+      newList[dragIndexes.current.listIndex].tasks[
+        dragIndexes.current.taskIndex
+      ]
+    );
+
+    newList[dragIndexes.current.listIndex].tasks.splice(
+      dragIndexes.current.taskIndex,
+      1
+    );
+
+    dragIndexes.current = {
+      listIndex: toIndex,
+      taskIndex: newList[toIndex].tasks.length - 1,
+    };
+
+    setAllLists(newList);
+  };
 
   //--------------------------
 
@@ -168,7 +192,7 @@ const Panel = (props: Props) => {
             draggingList={draggingList(index)}
             saveRect={saveRect}
             key={list.id}
-            index={index}
+            listIndex={index}
             list={list}
             beginTaskDrag={beginTaskDrag}
           />

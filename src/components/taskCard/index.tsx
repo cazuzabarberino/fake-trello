@@ -27,7 +27,12 @@ const TaskCard = ({ task, listIndex, index, beginTaskDrag }: Props) => {
         ref={containerRef}
         onMouseDown={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
           event.preventDefault();
-          beginTaskDrag(index, listIndex, event, shadowRect);
+          beginTaskDrag(
+            index,
+            listIndex,
+            event,
+            (shadowRef.current as HTMLDivElement).getBoundingClientRect()
+          );
         }}
       >
         {task.title}
