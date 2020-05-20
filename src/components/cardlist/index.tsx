@@ -14,15 +14,6 @@ import {
 import { FiPlus } from "react-icons/fi";
 import TaskCard from "../taskCard";
 
-const rectInRangeY = (
-  rect: DOMRect,
-  coord: Coord,
-  yDirection: number
-): boolean => {
-  return yDirection > 0
-    ? coord.y >= rect.y + rect.height * 0.6
-    : coord.y <= rect.y + rect.height * 0.4;
-};
 
 interface Props {
   list: TaskList;

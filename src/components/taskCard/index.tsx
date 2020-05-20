@@ -4,6 +4,7 @@ import useElementRect from "../../hooks/useElementRect";
 import Task from "../../models/Task";
 import Coord from "../../models/Coord";
 import { Card, Shadow } from "./styled";
+import { saveTaskRect } from "../../util";
 
 interface Props {
   task: Task;
@@ -20,6 +21,14 @@ interface Props {
 const TaskCard = ({ task, listIndex, index, beginTaskDrag }: Props) => {
   const [shadowRect, shadowRef] = useElementRect();
   const [containerRect, containerRef] = useElementRect();
+
+  React.useLayoutEffect(() => {
+    saveTaskRect(
+      listIndex,
+      index,
+      (shadowRef.current as HTMLDivElement).getBoundingClientRect()
+    );
+  }, [listIndex, index, task]);
 
   return (
     <Shadow height={containerRect.height} ref={shadowRef}>

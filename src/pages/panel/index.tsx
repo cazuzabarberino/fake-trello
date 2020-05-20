@@ -4,6 +4,7 @@ import TaskList from "../../models/List";
 import { Container, ListContainter, FakeCard } from "./styles";
 import shortid from "shortid";
 import Coord from "../../models/Coord";
+import { initTaskRect, taskRects } from "../../util";
 
 interface Props {}
 
@@ -31,7 +32,20 @@ const rectInRangeX = (rect: DOMRect, coord: Coord): boolean => {
   return coord.x >= rect.x && coord.x <= rect.x + rect.width;
 };
 
+const rectInRangeY = (
+  rect: DOMRect,
+  coord: Coord,
+  yDirection: number
+): boolean => {
+  return yDirection > 0
+    ? coord.y >= rect.y + rect.height * 0.6
+    : coord.y <= rect.y + rect.height * 0.4;
+};
+
 const Panel = (props: Props) => {
+  if (!taskRects)
+    initTaskRect(mock.map((list) => list.tasks.map((_) => new DOMRect())));
+
   const [allLists, setAllLists] = React.useState<TaskList[]>(() => {
     return mock.map((list) => ({
       ...list,
@@ -117,37 +131,23 @@ const Panel = (props: Props) => {
     window.addEventListener("mouseup", mouseUp);
   };
 
-  const mouseMove = React.useCallback((ev: MouseEvent) => {
-    setPosition(ev.clientX, ev.clientY);
-  }, []);
-
   const setPosition = React.useCallback((x: number, y: number) => {
     mouseCoord.current = { x, y };
     setCoord({ x: x - mouseOffset.current.x, y: y - mouseOffset.current.y });
   }, []);
 
+  const mouseMove = React.useCallback(
+    (ev: MouseEvent) => {
+      setPosition(ev.clientX, ev.clientY);
+    },
+    [setPosition]
+  );
+
   const mouseUp = React.useCallback(() => {
     setTaskDragging(false);
     window.removeEventListener("mousemove", mouseMove);
     window.removeEventListener("mouseup", mouseUp);
-  }, []);
-
-  React.useLayoutEffect(() => {
-    const relativeX =
-      mouseCoord.current.x -
-      mouseOffset.current.x -
-      rects.current[dragIndexes.current.listIndex].x;
-
-    const xDir = relativeX / Math.abs(relativeX) || 0;
-
-    if (!xDir) return;
-
-    const toIndex = dragIndexes.current.listIndex + xDir;
-
-    if (horizontalCheck(toIndex)) {
-      moveTaskHorizontally(toIndex);
-    }
-  }, [coord]);
+  }, [mouseMove]);
 
   const horizontalCheck = React.useCallback((toIndex: number): boolean => {
     if (
@@ -181,6 +181,71 @@ const Panel = (props: Props) => {
 
     setAllLists(newList);
   };
+
+  const verticalCheck = React.useCallback(
+    (toTaskIndex: number, yDir: number): boolean => {
+      if (
+        toTaskIndex < 0 ||
+        toTaskIndex >
+          allLists[dragIndexes.current.listIndex].tasks.length - 1 ||
+        !rectInRangeY(
+          taskRects[dragIndexes.current.listIndex][toTaskIndex],
+          mouseCoord.current,
+          yDir
+        )
+      )
+        return false;
+
+      return true;
+    },
+    []
+  );
+
+  const moveTaskVertically = (toTaskIndex: number) => {
+    const newList = [...allLists];
+
+    const tmp =
+      newList[dragIndexes.current.listIndex].tasks[
+        dragIndexes.current.taskIndex
+      ];
+
+    newList[dragIndexes.current.listIndex].tasks[
+      dragIndexes.current.taskIndex
+    ] = newList[dragIndexes.current.listIndex].tasks[toTaskIndex];
+
+    newList[dragIndexes.current.listIndex].tasks[toTaskIndex] = tmp;
+
+    dragIndexes.current.taskIndex = toTaskIndex;
+
+    setAllLists(newList);
+  };
+
+  React.useLayoutEffect(() => {
+    if (taskDragging) {
+      const relativeX =
+        mouseCoord.current.x -
+        mouseOffset.current.x -
+        rects.current[dragIndexes.current.listIndex].x;
+
+      const relativeY =
+        mouseCoord.current.y -
+        mouseOffset.current.y -
+        taskRects[dragIndexes.current.listIndex][dragIndexes.current.taskIndex]
+          .y;
+
+      const xDir = relativeX / Math.abs(relativeX) || 0;
+      const yDir = relativeY / Math.abs(relativeY) || 0;
+
+      const toListIndex = dragIndexes.current.listIndex + xDir;
+      const toTaskIndex = dragIndexes.current.taskIndex + yDir;
+
+      if (xDir && horizontalCheck(toListIndex)) {
+        moveTaskHorizontally(toListIndex);
+      } else if (yDir && verticalCheck(toTaskIndex, yDir)) {
+        moveTaskVertically(toTaskIndex);
+      }
+    }
+  }, [taskDragging, coord, horizontalCheck, moveTaskHorizontally]);
 
   //--------------------------
 
