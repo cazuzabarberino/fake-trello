@@ -29,6 +29,10 @@ export const ElementContent = styled.div<ElementContentProps>`
 
   transition: box-shadow 0.2s, transform 0.2s;
 
+  display: flex;
+  flex-direction: column;
+  max-height: 500px;
+
   ${({ dragging }) =>
     dragging &&
     css`
@@ -66,8 +70,10 @@ export const NewCardBtn = styled.div`
   padding: 12px 16px;
 `;
 
-export const CardContainer = styled.div`
+export const TaskContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 8px 8px 8px;
+  flex: 1 1 auto;
+  overflow-y: auto;
 `;

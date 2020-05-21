@@ -21,13 +21,11 @@ export const HeaderBtnWrapper = styled.div.attrs(
   })
 )`
   width: 50%;
-  display: flex;
+  display: grid;
+  column-gap: 4px;
+  grid-auto-flow: column;
   align-items: center;
   justify-content: ${({ right }) => (right ? "flex-end" : "flex-start")};
-
-  button {
-    margin: 0 4px;
-  }
 `;
 
 interface HeaderBoxProps {

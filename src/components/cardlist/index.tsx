@@ -7,7 +7,7 @@ import {
   ElementContent,
   ElementContainer,
   ElementHeader,
-  CardContainer,
+  TaskContainer,
   NewCardBtn,
   ElementShadow,
 } from "./styled";
@@ -67,7 +67,7 @@ const CardList = ({ list, listIndex, draggingList }: Props) => {
         <ElementHeader onMouseDown={handleMouseDown}>
           <p>{list.title}</p>
         </ElementHeader>
-        <CardContainer>
+        <TaskContainer>
           {list.tasks.map((task, taskIndex) => (
             <TaskCard
               key={task.id}
@@ -76,7 +76,7 @@ const CardList = ({ list, listIndex, draggingList }: Props) => {
               index={taskIndex}
             />
           ))}
-        </CardContainer>
+        </TaskContainer>
         <NewCardBtn>
           <FiPlus />
           <p>Adicionar outro cartão</p>

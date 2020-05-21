@@ -78,27 +78,30 @@ export const useDndTask = (
     return true;
   }, []);
 
-  const moveTaskHorizontally = (toIndex: number) => {
-    const newList = [...allLists];
+  const moveTaskHorizontally = React.useCallback(
+    (toIndex: number) => {
+      const newList = [...allLists];
 
-    newList[toIndex].tasks.push(
-      newList[dragIndexes.current.listIndex].tasks[
-        dragIndexes.current.taskIndex
-      ]
-    );
+      newList[toIndex].tasks.push(
+        newList[dragIndexes.current.listIndex].tasks[
+          dragIndexes.current.taskIndex
+        ]
+      );
 
-    newList[dragIndexes.current.listIndex].tasks.splice(
-      dragIndexes.current.taskIndex,
-      1
-    );
+      newList[dragIndexes.current.listIndex].tasks.splice(
+        dragIndexes.current.taskIndex,
+        1
+      );
 
-    dragIndexes.current = {
-      listIndex: toIndex,
-      taskIndex: newList[toIndex].tasks.length - 1,
-    };
+      dragIndexes.current = {
+        listIndex: toIndex,
+        taskIndex: newList[toIndex].tasks.length - 1,
+      };
 
-    setAllLists(newList);
-  };
+      setAllLists(newList);
+    },
+    [allLists, setAllLists]
+  );
 
   const verticalCheck = React.useCallback(
     (toTaskIndex: number, yDir: number): boolean => {
@@ -116,27 +119,30 @@ export const useDndTask = (
 
       return true;
     },
-    []
+    [allLists]
   );
 
-  const moveTaskVertically = (toTaskIndex: number) => {
-    const newList = [...allLists];
+  const moveTaskVertically = React.useCallback(
+    (toTaskIndex: number) => {
+      const newList = [...allLists];
 
-    const tmp =
+      const tmp =
+        newList[dragIndexes.current.listIndex].tasks[
+          dragIndexes.current.taskIndex
+        ];
+
       newList[dragIndexes.current.listIndex].tasks[
         dragIndexes.current.taskIndex
-      ];
+      ] = newList[dragIndexes.current.listIndex].tasks[toTaskIndex];
 
-    newList[dragIndexes.current.listIndex].tasks[
-      dragIndexes.current.taskIndex
-    ] = newList[dragIndexes.current.listIndex].tasks[toTaskIndex];
+      newList[dragIndexes.current.listIndex].tasks[toTaskIndex] = tmp;
 
-    newList[dragIndexes.current.listIndex].tasks[toTaskIndex] = tmp;
+      dragIndexes.current.taskIndex = toTaskIndex;
 
-    dragIndexes.current.taskIndex = toTaskIndex;
-
-    setAllLists(newList);
-  };
+      setAllLists(newList);
+    },
+    [allLists, setAllLists]
+  );
 
   React.useLayoutEffect(() => {
     if (taskDragging) {
@@ -163,7 +169,14 @@ export const useDndTask = (
         moveTaskVertically(toTaskIndex);
       }
     }
-  }, [taskDragging, coord, horizontalCheck, moveTaskHorizontally]);
+  }, [
+    taskDragging,
+    coord,
+    horizontalCheck,
+    moveTaskHorizontally,
+    moveTaskVertically,
+    verticalCheck,
+  ]);
 
   return {
     taskDragging,

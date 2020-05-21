@@ -4,6 +4,7 @@ export const Container = styled.div`
   position: relative;
   flex: 1;
   overflow-x: auto;
+  overflow-y: hidden;
 `;
 
 export const ListContainter = styled.div`
