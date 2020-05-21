@@ -2,39 +2,39 @@ import React from "react";
 import useDnD from "../../hooks/useDnD";
 import useElementRect from "../../hooks/useElementRect";
 import Coord from "../../models/Coord";
-import List from "../../models/List";
+import TaskList from "../../models/List";
 import {
+  ElementContent,
   ElementContainer,
-  ElementShadow,
   ElementHeader,
   CardContainer,
   NewCardBtn,
-  MovingShadow,
+  ElementShadow,
 } from "./styled";
 import { FiPlus } from "react-icons/fi";
 import TaskCard from "../taskCard";
+import { saveListRect } from "../../util";
 
 interface Props {
-  list: List;
-  index: number;
-  saveRect: (index: number, rect: DOMRect) => void;
+  list: TaskList;
+  listIndex: number;
   draggingList: (xDirection: number, globalCoord: Coord) => boolean;
 }
 
-const CardList = ({ list, saveRect, index, draggingList }: Props) => {
-  const [shadowRect, shadowRef] = useElementRect(index);
-  const [containerRect, containerRef] = useElementRect(index);
+const CardList = ({ list, listIndex, draggingList }: Props) => {
+  const [containerRect, containerRef] = useElementRect(listIndex);
+  const [contentRect, contentRef] = useElementRect(listIndex);
   const {
     coord,
     dragging,
     handleMouseDown,
     mouseCoord,
     moveDirection,
-  } = useDnD(shadowRef);
+  } = useDnD(containerRef);
 
   React.useLayoutEffect(() => {
-    saveRect(index, shadowRect);
-  }, [shadowRect, saveRect, index]);
+    saveListRect(listIndex, containerRect);
+  }, [containerRect, listIndex]);
 
   React.useLayoutEffect(() => {
     if (dragging) {
@@ -44,20 +44,23 @@ const CardList = ({ list, saveRect, index, draggingList }: Props) => {
   }, [coord]);
 
   return (
-    <ElementShadow index={index} height={containerRect.height} ref={shadowRef}>
-      <ElementContainer
-        ref={containerRef}
+    <ElementContainer
+      index={listIndex}
+      height={contentRect.height}
+      ref={containerRef}
+    >
+      <ElementContent
+        ref={contentRef}
+        dragging={dragging}
         style={
           dragging
             ? {
                 top: coord.y,
                 left: coord.x,
-                zIndex: 2,
-                transition: "0s",
               }
             : {
-                top: shadowRect.y,
-                left: shadowRect.x,
+                top: containerRect.y,
+                left: containerRect.x,
               }
         }
       >
@@ -65,21 +68,27 @@ const CardList = ({ list, saveRect, index, draggingList }: Props) => {
           <p>{list.title}</p>
         </ElementHeader>
         <CardContainer>
-          {list.tasks.map((task) => (
-            <TaskCard key={task.id} task={task} />
+          {list.tasks.map((task, taskIndex) => (
+            <TaskCard
+              key={task.id}
+              task={task}
+              listIndex={listIndex}
+              index={taskIndex}
+            />
           ))}
         </CardContainer>
         <NewCardBtn>
           <FiPlus />
           <p>Adicionar outro cartão</p>
         </NewCardBtn>
-      </ElementContainer>
-      <MovingShadow
-        x={shadowRect.x}
-        y={shadowRect.y}
-        height={containerRect.height}
+      </ElementContent>
+      <ElementShadow
+        dragging={dragging}
+        x={containerRect.x}
+        y={containerRect.y}
+        height={contentRect.height}
       />
-    </ElementShadow>
+    </ElementContainer>
   );
 };
 export default CardList;

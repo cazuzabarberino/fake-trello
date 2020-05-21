@@ -1,9 +1,14 @@
 import React from "react";
 import CardList from "../../components/cardlist";
-import List from "../../models/List";
-import { Container, ListContainter } from "./styles";
+import TaskList from "../../models/List";
+import { Container, ListContainter, FakeCard } from "./styles";
 import shortid from "shortid";
 import Coord from "../../models/Coord";
+import { initTaskRect, taskRects, rectInRangeX, listRects } from "../../util";
+import { useDndTask } from "../../hooks/useDndTask";
+import DndTaskContext, {
+  DndTaskContextValue,
+} from "../../Contexts/DndTaskContext";
 
 interface Props {}
 
@@ -27,21 +32,11 @@ const mock = [
   },
 ];
 
-const rectContains = (rect: DOMRect, coord: Coord): boolean => {
-  return (
-    coord.x >= rect.x &&
-    coord.x <= rect.x + rect.width &&
-    coord.y >= rect.y &&
-    coord.y <= rect.y + rect.height
-  );
-};
-
-const rectInRangeX = (rect: DOMRect, coord: Coord): boolean => {
-  return coord.x >= rect.x && coord.x <= rect.x + rect.width;
-};
-
 const Panel = (props: Props) => {
-  const [allLists, setList] = React.useState<List[]>(() => {
+  if (!taskRects)
+    initTaskRect(mock.map((list) => list.tasks.map((_) => new DOMRect())));
+
+  const [allLists, setAllLists] = React.useState<TaskList[]>(() => {
     return mock.map((list) => ({
       ...list,
       id: shortid.generate(),
@@ -52,7 +47,10 @@ const Panel = (props: Props) => {
     }));
   });
 
-  const rects = React.useRef<DOMRect[]>(new Array(3));
+  const { beginTaskDrag, coord, taskDragging, dragIndexes } = useDndTask(
+    allLists,
+    setAllLists
+  );
 
   const draggingList = React.useCallback(
     (draggedIndex: number) => (
@@ -64,7 +62,7 @@ const Panel = (props: Props) => {
       if (
         indexOff < 0 ||
         indexOff >= allLists.length ||
-        !rectInRangeX(rects.current[indexOff], mouseCoord)
+        !rectInRangeX(listRects[indexOff], mouseCoord)
       )
         return false;
 
@@ -73,30 +71,50 @@ const Panel = (props: Props) => {
       newArr[indexOff] = newArr[draggedIndex];
       newArr[draggedIndex] = tmp;
 
-      setList(newArr);
+      setAllLists(newArr);
       return true;
     },
     [allLists]
   );
 
-  const saveRect = React.useCallback((index: number, rect: DOMRect) => {
-    rects.current[index] = rect;
-  }, []);
+  const dndContextValue: DndTaskContextValue = React.useMemo(
+    () => ({
+      beginTaskDrag,
+      taskDragging,
+      taskIndex: dragIndexes.taskIndex,
+      listIndex: dragIndexes.listIndex,
+    }),
+    [dragIndexes.taskIndex, dragIndexes.listIndex, taskDragging, beginTaskDrag]
+  );
 
   return (
-    <Container>
-      <ListContainter>
-        {allLists.map((list, index) => (
-          <CardList
-            draggingList={draggingList(index)}
-            saveRect={saveRect}
-            key={list.id}
-            index={index}
-            list={list}
-          />
-        ))}
-      </ListContainter>
-    </Container>
+    <DndTaskContext.Provider value={dndContextValue}>
+      <Container>
+        <ListContainter>
+          {allLists.map((list, index) => (
+            <CardList
+              draggingList={draggingList(index)}
+              key={list.id}
+              listIndex={index}
+              list={list}
+            />
+          ))}
+        </ListContainter>
+        <FakeCard
+          style={
+            taskDragging
+              ? {
+                  left: coord.x,
+                  top: coord.y,
+                }
+              : {
+                  left: 0,
+                  top: 0,
+                }
+          }
+        />
+      </Container>
+    </DndTaskContext.Provider>
   );
 };
 

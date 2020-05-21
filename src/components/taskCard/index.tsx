@@ -1,46 +1,47 @@
 import React from "react";
-import useDnD from "../../hooks/useDnD";
-import useElementRect from "../../hooks/useElementRect";
+import DndTaskContext, {
+  DndTaskContextValue,
+} from "../../Contexts/DndTaskContext";
 import Task from "../../models/Task";
-import { Card, Shadow } from "./styled";
+import { saveTaskRect } from "../../util";
+import { Card } from "./styled";
 
 interface Props {
   task: Task;
+  listIndex: number;
+  index: number;
 }
 
-const TaskCard = ({ task }: Props) => {
-  const [shadowRect, shadowRef] = useElementRect();
-  const [containerRect, containerRef] = useElementRect();
-  const {
-    coord,
-    dragging,
-    handleMouseDown,
-    mouseCoord,
-    moveDirection,
-  } = useDnD(shadowRef);
+const TaskCard = ({ task, listIndex, index }: Props) => {
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
 
-  // console.log("=====");
-  // console.log(containerRect);
-  // console.log(shadowRect);
+  const { beginTaskDrag } = React.useContext(
+    DndTaskContext
+  ) as DndTaskContextValue;
+
+  React.useLayoutEffect(() => {
+    saveTaskRect(
+      listIndex,
+      index,
+      (containerRef.current as HTMLDivElement).getBoundingClientRect()
+    );
+  }, [listIndex, index, task]);
 
   return (
-    <Shadow height={containerRect.height} ref={shadowRef}>
-      <Card
-        ref={containerRef}
-        onMouseDown={handleMouseDown}
-        style={
-          dragging
-            ? {
-                position: "fixed",
-                top: coord.y,
-                left: coord.x,
-              }
-            : {}
-        }
-      >
-        {task.title}
-      </Card>
-    </Shadow>
+    <Card
+      ref={containerRef}
+      onMouseDown={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        event.preventDefault();
+        beginTaskDrag(
+          index,
+          listIndex,
+          event,
+          (containerRef.current as HTMLDivElement).getBoundingClientRect()
+        );
+      }}
+    >
+      {task.title}
+    </Card>
   );
 };
 
