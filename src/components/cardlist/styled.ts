@@ -9,6 +9,10 @@ export const ElementContainer = styled.div<ElementContainerProps>`
   width: 272px;
   border-radius: 4px;
   height: ${({ height }) => height + "px"};
+
+  & + div {
+    margin-left: 8px;
+  }
 `;
 
 interface ElementContentProps {

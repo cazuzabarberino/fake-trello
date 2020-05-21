@@ -1,52 +1,47 @@
 import React from "react";
-import useDnD from "../../hooks/useDnD";
-import useElementRect from "../../hooks/useElementRect";
+import DndTaskContext, {
+  DndTaskContextValue,
+} from "../../Contexts/DndTaskContext";
 import Task from "../../models/Task";
-import Coord from "../../models/Coord";
-import { Card, Shadow } from "./styled";
 import { saveTaskRect } from "../../util";
+import { Card } from "./styled";
 
 interface Props {
   task: Task;
   listIndex: number;
   index: number;
-  beginTaskDrag: (
-    taskIndex: number,
-    listIndex: number,
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    rect: DOMRect
-  ) => void;
 }
 
-const TaskCard = ({ task, listIndex, index, beginTaskDrag }: Props) => {
-  const [shadowRect, shadowRef] = useElementRect();
-  const [containerRect, containerRef] = useElementRect();
+const TaskCard = ({ task, listIndex, index }: Props) => {
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
+
+  const { beginTaskDrag } = React.useContext(
+    DndTaskContext
+  ) as DndTaskContextValue;
 
   React.useLayoutEffect(() => {
     saveTaskRect(
       listIndex,
       index,
-      (shadowRef.current as HTMLDivElement).getBoundingClientRect()
+      (containerRef.current as HTMLDivElement).getBoundingClientRect()
     );
   }, [listIndex, index, task]);
 
   return (
-    <Shadow height={containerRect.height} ref={shadowRef}>
-      <Card
-        ref={containerRef}
-        onMouseDown={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-          event.preventDefault();
-          beginTaskDrag(
-            index,
-            listIndex,
-            event,
-            (shadowRef.current as HTMLDivElement).getBoundingClientRect()
-          );
-        }}
-      >
-        {task.title}
-      </Card>
-    </Shadow>
+    <Card
+      ref={containerRef}
+      onMouseDown={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        event.preventDefault();
+        beginTaskDrag(
+          index,
+          listIndex,
+          event,
+          (containerRef.current as HTMLDivElement).getBoundingClientRect()
+        );
+      }}
+    >
+      {task.title}
+    </Card>
   );
 };
 

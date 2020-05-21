@@ -13,28 +13,15 @@ import {
 } from "./styled";
 import { FiPlus } from "react-icons/fi";
 import TaskCard from "../taskCard";
-
+import { saveListRect } from "../../util";
 
 interface Props {
   list: TaskList;
   listIndex: number;
-  saveRect: (index: number, rect: DOMRect) => void;
   draggingList: (xDirection: number, globalCoord: Coord) => boolean;
-  beginTaskDrag: (
-    taskIndex: number,
-    listIndex: number,
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    rect: DOMRect
-  ) => void;
 }
 
-const CardList = ({
-  list,
-  saveRect,
-  listIndex,
-  draggingList,
-  beginTaskDrag,
-}: Props) => {
+const CardList = ({ list, listIndex, draggingList }: Props) => {
   const [containerRect, containerRef] = useElementRect(listIndex);
   const [contentRect, contentRef] = useElementRect(listIndex);
   const {
@@ -45,11 +32,9 @@ const CardList = ({
     moveDirection,
   } = useDnD(containerRef);
 
-  //===
-
   React.useLayoutEffect(() => {
-    saveRect(listIndex, containerRect);
-  }, [containerRect, saveRect, listIndex]);
+    saveListRect(listIndex, containerRect);
+  }, [containerRect, listIndex]);
 
   React.useLayoutEffect(() => {
     if (dragging) {
@@ -57,8 +42,6 @@ const CardList = ({
       }
     }
   }, [coord]);
-
-  //===
 
   return (
     <ElementContainer
@@ -91,7 +74,6 @@ const CardList = ({
               task={task}
               listIndex={listIndex}
               index={taskIndex}
-              beginTaskDrag={beginTaskDrag}
             />
           ))}
         </CardContainer>
