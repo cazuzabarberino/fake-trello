@@ -43,7 +43,6 @@ export const useDndTask = (
       listIndex,
     };
 
-    setTaskDragging(true);
     setPosition(event.clientX, event.clientY);
     window.addEventListener("mousemove", mouseMove);
     window.addEventListener("mouseup", mouseUp);
@@ -56,6 +55,7 @@ export const useDndTask = (
 
   const mouseMove = React.useCallback(
     (ev: MouseEvent) => {
+      setTaskDragging(true);
       setPosition(ev.clientX, ev.clientY);
     },
     [setPosition]

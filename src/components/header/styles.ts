@@ -24,9 +24,9 @@ export const HeaderBtnWrapper = styled.div.attrs(
   display: flex;
   align-items: center;
   justify-content: ${({ right }) => (right ? "flex-end" : "flex-start")};
-  column-gap: 4px;
 
   button {
+    margin: 0 4px;
   }
 `;
 

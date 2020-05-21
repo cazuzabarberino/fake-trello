@@ -69,6 +69,5 @@ export const NewCardBtn = styled.div`
 export const CardContainer = styled.div`
   display: flex;
   flex-direction: column;
-  row-gap: 8px;
   padding: 0 8px 8px 8px;
 `;

@@ -1,14 +1,13 @@
 import React from "react";
-import CardList from "../../components/cardlist";
-import TaskList from "../../models/List";
-import { Container, ListContainter, FakeCard } from "./styles";
 import shortid from "shortid";
-import Coord from "../../models/Coord";
-import { initTaskRect, taskRects, rectInRangeX, listRects } from "../../util";
+import CardList from "../../components/cardlist";
+import VisualTaskCard from "../../components/taskCard/VisualTaskCard";
+import DndTaskContext, { DndTaskContextValue } from "../../Contexts/DndTaskContext";
 import { useDndTask } from "../../hooks/useDndTask";
-import DndTaskContext, {
-  DndTaskContextValue,
-} from "../../Contexts/DndTaskContext";
+import Coord from "../../models/Coord";
+import TaskList from "../../models/List";
+import { initTaskRect, listRects, rectInRangeX, taskRects } from "../../util";
+import { Container, ListContainter } from "./styles";
 
 interface Props {}
 
@@ -100,19 +99,13 @@ const Panel = (props: Props) => {
             />
           ))}
         </ListContainter>
-        <FakeCard
-          style={
-            taskDragging
-              ? {
-                  left: coord.x,
-                  top: coord.y,
-                }
-              : {
-                  left: 0,
-                  top: 0,
-                }
-          }
-        />
+        {taskDragging && (
+          <VisualTaskCard
+            task={allLists[dragIndexes.listIndex].tasks[dragIndexes.taskIndex]}
+            left={coord.x}
+            top={coord.y}
+          />
+        )}
       </Container>
     </DndTaskContext.Provider>
   );

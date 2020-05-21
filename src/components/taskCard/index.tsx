@@ -4,7 +4,7 @@ import DndTaskContext, {
 } from "../../Contexts/DndTaskContext";
 import Task from "../../models/Task";
 import { saveTaskRect } from "../../util";
-import { Card } from "./styled";
+import { Card, Shadow } from "./styled";
 
 interface Props {
   task: Task;
@@ -15,9 +15,12 @@ interface Props {
 const TaskCard = ({ task, listIndex, index }: Props) => {
   const containerRef = React.useRef<HTMLDivElement | null>(null);
 
-  const { beginTaskDrag } = React.useContext(
-    DndTaskContext
-  ) as DndTaskContextValue;
+  const {
+    beginTaskDrag,
+    taskDragging,
+    listIndex: lindex,
+    taskIndex,
+  } = React.useContext(DndTaskContext) as DndTaskContextValue;
 
   React.useLayoutEffect(() => {
     saveTaskRect(
@@ -27,8 +30,11 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
     );
   }, [listIndex, index, task]);
 
+  const dragging = taskDragging && lindex === listIndex && taskIndex === index;
+
   return (
     <Card
+      dragging={dragging}
       ref={containerRef}
       onMouseDown={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         event.preventDefault();
@@ -41,6 +47,7 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
       }}
     >
       {task.title}
+      <Shadow dragging={dragging} />
     </Card>
   );
 };
