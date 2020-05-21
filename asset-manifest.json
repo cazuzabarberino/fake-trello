@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "/fake-trello/static/js/main.d694da3c.chunk.js",
-    "main.js.map": "/fake-trello/static/js/main.d694da3c.chunk.js.map",
+    "main.js": "/fake-trello/static/js/main.59f9622e.chunk.js",
+    "main.js.map": "/fake-trello/static/js/main.59f9622e.chunk.js.map",
     "runtime-main.js": "/fake-trello/static/js/runtime-main.aab6ef71.js",
     "runtime-main.js.map": "/fake-trello/static/js/runtime-main.aab6ef71.js.map",
-    "static/js/2.2c147eab.chunk.js": "/fake-trello/static/js/2.2c147eab.chunk.js",
-    "static/js/2.2c147eab.chunk.js.map": "/fake-trello/static/js/2.2c147eab.chunk.js.map",
+    "static/js/2.bc5d7bc3.chunk.js": "/fake-trello/static/js/2.bc5d7bc3.chunk.js",
+    "static/js/2.bc5d7bc3.chunk.js.map": "/fake-trello/static/js/2.bc5d7bc3.chunk.js.map",
     "index.html": "/fake-trello/index.html",
-    "precache-manifest.53ac1f2af42165036e735eac3ffd1662.js": "/fake-trello/precache-manifest.53ac1f2af42165036e735eac3ffd1662.js",
+    "precache-manifest.9d81db2e25dcee721027c74a88867c1f.js": "/fake-trello/precache-manifest.9d81db2e25dcee721027c74a88867c1f.js",
     "service-worker.js": "/fake-trello/service-worker.js",
-    "static/js/2.2c147eab.chunk.js.LICENSE.txt": "/fake-trello/static/js/2.2c147eab.chunk.js.LICENSE.txt"
+    "static/js/2.bc5d7bc3.chunk.js.LICENSE.txt": "/fake-trello/static/js/2.bc5d7bc3.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.aab6ef71.js",
-    "static/js/2.2c147eab.chunk.js",
-    "static/js/main.d694da3c.chunk.js"
+    "static/js/2.bc5d7bc3.chunk.js",
+    "static/js/main.59f9622e.chunk.js"
   ]
 }
