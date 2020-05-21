@@ -7,6 +7,7 @@ interface CardProps {
 export const Card = styled.div<CardProps>`
   position: relative;
   max-width: 256px;
+  flex: 1;
   background: white;
   padding: 8px;
   border-radius: 4px;

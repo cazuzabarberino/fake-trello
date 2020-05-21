@@ -19,6 +19,8 @@ const TaskCard = ({ task, left, top }: Props) => {
         transform: "rotate(2.5deg)",
         boxShadow: "5px 5px 20px rgba(0, 0, 0, 0.3)",
         background: "white",
+        pointerEvents: "none",
+        width: "272px",
       }}
     >
       {task.title}

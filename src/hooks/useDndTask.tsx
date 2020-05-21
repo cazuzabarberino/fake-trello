@@ -103,25 +103,6 @@ export const useDndTask = (
     [allLists, setAllLists]
   );
 
-  const verticalCheck = React.useCallback(
-    (toTaskIndex: number, yDir: number): boolean => {
-      if (
-        toTaskIndex < 0 ||
-        toTaskIndex >
-          allLists[dragIndexes.current.listIndex].tasks.length - 1 ||
-        !rectInRangeY(
-          taskRects[dragIndexes.current.listIndex][toTaskIndex],
-          mouseCoord.current,
-          yDir
-        )
-      )
-        return false;
-
-      return true;
-    },
-    [allLists]
-  );
-
   const moveTaskVertically = React.useCallback(
     (toTaskIndex: number) => {
       const newList = [...allLists];
@@ -131,11 +112,12 @@ export const useDndTask = (
           dragIndexes.current.taskIndex
         ];
 
-      newList[dragIndexes.current.listIndex].tasks[
-        dragIndexes.current.taskIndex
-      ] = newList[dragIndexes.current.listIndex].tasks[toTaskIndex];
+      newList[dragIndexes.current.listIndex].tasks.splice(
+        dragIndexes.current.taskIndex,
+        1
+      );
 
-      newList[dragIndexes.current.listIndex].tasks[toTaskIndex] = tmp;
+      newList[dragIndexes.current.listIndex].tasks.splice(toTaskIndex, 0, tmp);
 
       dragIndexes.current.taskIndex = toTaskIndex;
 
@@ -151,37 +133,21 @@ export const useDndTask = (
         mouseOffset.current.x -
         listRects[dragIndexes.current.listIndex].x;
 
-      const relativeY =
-        mouseCoord.current.y -
-        mouseOffset.current.y -
-        taskRects[dragIndexes.current.listIndex][dragIndexes.current.taskIndex]
-          .y;
-
       const xDir = relativeX / Math.abs(relativeX) || 0;
-      const yDir = relativeY / Math.abs(relativeY) || 0;
 
       const toListIndex = dragIndexes.current.listIndex + xDir;
-      const toTaskIndex = dragIndexes.current.taskIndex + yDir;
 
       if (xDir && horizontalCheck(toListIndex)) {
         moveTaskHorizontally(toListIndex);
-      } else if (yDir && verticalCheck(toTaskIndex, yDir)) {
-        moveTaskVertically(toTaskIndex);
       }
     }
-  }, [
-    taskDragging,
-    coord,
-    horizontalCheck,
-    moveTaskHorizontally,
-    moveTaskVertically,
-    verticalCheck,
-  ]);
+  }, [taskDragging, coord, horizontalCheck, moveTaskHorizontally]);
 
   return {
     taskDragging,
     coord,
     beginTaskDrag,
     dragIndexes: dragIndexes.current,
+    moveTaskVertically,
   };
 };

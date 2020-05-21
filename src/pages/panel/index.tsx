@@ -2,7 +2,9 @@ import React from "react";
 import shortid from "shortid";
 import CardList from "../../components/cardlist";
 import VisualTaskCard from "../../components/taskCard/VisualTaskCard";
-import DndTaskContext, { DndTaskContextValue } from "../../Contexts/DndTaskContext";
+import DndTaskContext, {
+  DndTaskContextValue,
+} from "../../Contexts/DndTaskContext";
 import { useDndTask } from "../../hooks/useDndTask";
 import Coord from "../../models/Coord";
 import TaskList from "../../models/List";
@@ -17,6 +19,29 @@ const mock = [
     tasks: [
       "backlog task",
       "anothter backlog task",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
       "very long task with a lot of blank space to test the text wrapper",
       "very long task with a lot of blank space to test the text wrapper",
       "very long task with a lot of blank space to test the text wrapper",
@@ -108,10 +133,13 @@ const Panel = (props: Props) => {
     }));
   });
 
-  const { beginTaskDrag, coord, taskDragging, dragIndexes } = useDndTask(
-    allLists,
-    setAllLists
-  );
+  const {
+    beginTaskDrag,
+    coord,
+    taskDragging,
+    dragIndexes,
+    moveTaskVertically,
+  } = useDndTask(allLists, setAllLists);
 
   const draggingList = React.useCallback(
     (draggedIndex: number) => (
@@ -144,8 +172,15 @@ const Panel = (props: Props) => {
       taskDragging,
       taskIndex: dragIndexes.taskIndex,
       listIndex: dragIndexes.listIndex,
+      moveTaskVertically,
     }),
-    [dragIndexes.taskIndex, dragIndexes.listIndex, taskDragging, beginTaskDrag]
+    [
+      dragIndexes.taskIndex,
+      dragIndexes.listIndex,
+      taskDragging,
+      beginTaskDrag,
+      moveTaskVertically,
+    ]
   );
 
   return (

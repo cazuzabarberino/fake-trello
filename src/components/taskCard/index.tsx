@@ -3,7 +3,7 @@ import DndTaskContext, {
   DndTaskContextValue,
 } from "../../Contexts/DndTaskContext";
 import Task from "../../models/Task";
-import { saveTaskRect } from "../../util";
+import { saveTaskRect, checkRangeY } from "../../util";
 import { Card, Shadow } from "./styled";
 
 interface Props {
@@ -20,6 +20,7 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
     taskDragging,
     listIndex: lindex,
     taskIndex,
+    moveTaskVertically,
   } = React.useContext(DndTaskContext) as DndTaskContextValue;
 
   React.useLayoutEffect(() => {
@@ -44,6 +45,22 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
           event,
           (containerRef.current as HTMLDivElement).getBoundingClientRect()
         );
+      }}
+      onMouseMove={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        if (!taskDragging || dragging) return;
+
+        const rect = (containerRef.current as HTMLDivElement).getBoundingClientRect();
+        const coord = {
+          x: event.clientX,
+          y: event.clientY,
+        };
+        const check = checkRangeY(rect, coord);
+
+        if (check > 0) return;
+
+        const toIndex = index + check + 1;
+
+        if (toIndex !== taskIndex) moveTaskVertically(toIndex);
       }}
     >
       {task.title}
