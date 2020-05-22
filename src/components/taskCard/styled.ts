@@ -1,7 +1,8 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 interface CardProps {
   dragging?: boolean;
+  taskDragging?: boolean;
 }
 
 export const Card = styled.div<CardProps>`
@@ -11,19 +12,27 @@ export const Card = styled.div<CardProps>`
   background: white;
   padding: 8px;
   border-radius: 4px;
-  border-bottom: ${({ dragging }) => (dragging ? 0 : "1px")} solid #bbb;
+  border-bottom: 1px solid ${({ dragging }) => (dragging ? "#ddd" : "#bbb")};
   word-wrap: break-word;
   font-size: 14px;
-  cursor: pointer;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+  user-select: none;
+
+  cursor: inherit;
 
   & + div {
     margin-top: 8px;
   }
 
-  &:hover {
-    background: #eee;
-  }
+  ${({ taskDragging }) =>
+    !taskDragging &&
+    css`
+      cursor: pointer;
+
+      &:hover {
+        background: #eee;
+      }
+    `}
 `;
 
 interface ShadowProps {

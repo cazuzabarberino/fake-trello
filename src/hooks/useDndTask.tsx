@@ -1,7 +1,7 @@
 import React from "react";
 import Coord from "../models/Coord";
-import { taskRects, rectInRangeY, rectInRangeX, listRects } from "../util";
 import TaskList from "../models/List";
+import { listRects, rectInRangeX } from "../util";
 
 export const useDndTask = (
   allLists: TaskList[],
@@ -56,12 +56,14 @@ export const useDndTask = (
   const mouseMove = React.useCallback(
     (ev: MouseEvent) => {
       setTaskDragging(true);
+      document.body.style.cursor = "grabbing";
       setPosition(ev.clientX, ev.clientY);
     },
     [setPosition]
   );
 
   const mouseUp = React.useCallback(() => {
+    document.body.style.cursor = "auto";
     setTaskDragging(false);
     window.removeEventListener("mousemove", mouseMove);
     window.removeEventListener("mouseup", mouseUp);
@@ -105,6 +107,12 @@ export const useDndTask = (
 
   const moveTaskVertically = React.useCallback(
     (toTaskIndex: number) => {
+      if (
+        toTaskIndex < 0 ||
+        toTaskIndex >= allLists[dragIndexes.current.listIndex].tasks.length
+      )
+        return;
+
       const newList = [...allLists];
 
       const tmp =

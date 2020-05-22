@@ -23,15 +23,13 @@ export const ElementContent = styled.div<ElementContentProps>`
   width: 272px;
   flex: none;
   background: #ebecf0;
-
   font-size: 14px;
   border-radius: 4px;
-
   transition: box-shadow 0.2s, transform 0.2s;
-
   display: flex;
   flex-direction: column;
   max-height: 500px;
+  padding: 0 4px;
 
   ${({ dragging }) =>
     dragging &&
@@ -60,20 +58,20 @@ export const ElementShadow = styled.div<ElementShadowProps>`
 `;
 
 export const ElementHeader = styled.div`
-  padding: 12px 16px;
+  padding: 12px 8px;
   color: #172b4d;
   font-weight: 700;
 `;
 
 export const NewCardBtn = styled.div`
   display: flex;
-  padding: 12px 16px;
+  padding: 12px 8px;
 `;
 
 export const TaskContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0 8px 8px 8px;
+  padding: 0 4px 8px 4px;
   flex: 1 1 auto;
   overflow-y: auto;
 `;
