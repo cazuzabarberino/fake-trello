@@ -157,5 +157,6 @@ export const useDndTask = (
     beginTaskDrag,
     dragIndexes: dragIndexes.current,
     moveTaskVertically,
+    mouseCoord: mouseCoord.current,
   };
 };

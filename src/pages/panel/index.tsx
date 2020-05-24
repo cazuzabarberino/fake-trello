@@ -20,6 +20,28 @@ const mock = [
       "backlog task",
       "anothter backlog task",
       "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
       "A very looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong task",
     ],
   },
@@ -54,6 +76,7 @@ const Panel = (props: Props) => {
     taskDragging,
     dragIndexes,
     moveTaskVertically,
+    mouseCoord,
   } = useDndTask(allLists, setAllLists);
 
   const draggingList = React.useCallback(
@@ -109,6 +132,8 @@ const Panel = (props: Props) => {
         <ListContainter>
           {allLists.map((list, index) => (
             <CardList
+              taskDragging={taskDragging && dragIndexes.listIndex === index}
+              mouseCoord={mouseCoord}
               draggingList={draggingList(index)}
               key={list.id}
               listIndex={index}
@@ -116,6 +141,7 @@ const Panel = (props: Props) => {
             />
           ))}
         </ListContainter>
+
         {taskDragging && (
           <VisualTaskCard
             task={allLists[dragIndexes.listIndex].tasks[dragIndexes.taskIndex]}

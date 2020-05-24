@@ -27,7 +27,8 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
 
   const mouseMoveHandle = React.useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      if (!taskDragging || dragging) return;
+      if (!taskDragging) return;
+      if (dragging) return;
       const rect = (containerRef.current as HTMLDivElement).getBoundingClientRect();
       const coord = {
         x: event.clientX,
