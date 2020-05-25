@@ -1,25 +1,34 @@
 import Coord from "../models/Coord";
 
-export let taskRects: DOMRect[][];
 export let listRects: DOMRect[] = new Array<DOMRect>();
 
-export const initTaskRect = (arr: DOMRect[][]) => {
-  taskRects = arr;
+let element: null | HTMLDivElement = null;
+
+const getScroll = () => {
+  if (!element) {
+    element = document.getElementById("scroll-test") as HTMLDivElement;
+  }
+
+  return element.scrollLeft;
 };
 
-export const saveTaskRect = (
-  listIndex: number,
-  taskIndex: number,
-  rect: DOMRect
-) => {
-  taskRects[listIndex][taskIndex] = rect;
+export const getRectX = (index: number): number => {
+  const rect = listRects[index];
+  const scroll = getScroll();
+  return rect.x - scroll;
 };
 
 export const saveListRect = (linstIndex: number, rect: DOMRect) => {
+  const scroll = getScroll();
+
+  rect.x += scroll;
   listRects[linstIndex] = rect;
 };
 
 export const rectInRangeX = (rect: DOMRect, coord: Coord): boolean => {
+  const scroll = getScroll();
+  coord.x += scroll;
+
   return coord.x >= rect.x && coord.x <= rect.x + rect.width;
 };
 
