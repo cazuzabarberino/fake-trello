@@ -6,10 +6,10 @@ import DndTaskContext, {
   DndTaskContextValue,
 } from "../../Contexts/DndTaskContext";
 import { useDndTask } from "../../hooks/useDndTask";
-import Coord from "../../models/Coord";
 import TaskList from "../../models/List";
-import { initTaskRect, listRects, rectInRangeX, taskRects } from "../../util";
+import { initTaskRect, taskRects } from "../../util";
 import { Container, ListContainter } from "./styles";
+import useDndList from "../../hooks/useDnDList";
 
 interface Props {}
 
@@ -70,6 +70,11 @@ const Panel = (props: Props) => {
     }));
   });
 
+  const { beginDragList, draggedListIndex, draggingList } = useDndList(
+    allLists,
+    setAllLists
+  );
+
   const {
     beginTaskDrag,
     coord,
@@ -78,31 +83,6 @@ const Panel = (props: Props) => {
     moveTaskVertically,
     width,
   } = useDndTask(allLists, setAllLists);
-
-  const draggingList = React.useCallback(
-    (draggedIndex: number) => (
-      xDirection: number,
-      mouseCoord: Coord
-    ): boolean => {
-      const indexOff = draggedIndex + xDirection;
-
-      if (
-        indexOff < 0 ||
-        indexOff >= allLists.length ||
-        !rectInRangeX(listRects[indexOff], mouseCoord)
-      )
-        return false;
-
-      const newArr = [...allLists];
-      const tmp = newArr[indexOff];
-      newArr[indexOff] = newArr[draggedIndex];
-      newArr[draggedIndex] = tmp;
-
-      setAllLists(newArr);
-      return true;
-    },
-    [allLists]
-  );
 
   const dndContextValue: DndTaskContextValue = React.useMemo(
     () => ({
@@ -121,10 +101,10 @@ const Panel = (props: Props) => {
     ]
   );
 
-  if (!allLists[dragIndexes.listIndex].tasks[dragIndexes.taskIndex]) {
-    console.log(allLists);
-    console.log(dragIndexes);
-  }
+  // if (!allLists[dragIndexes.listIndex].tasks[dragIndexes.taskIndex]) {
+  //   console.log(allLists);
+  //   console.log(dragIndexes);
+  // }
 
   return (
     <DndTaskContext.Provider value={dndContextValue}>
@@ -133,10 +113,10 @@ const Panel = (props: Props) => {
           {allLists.map((list, index) => (
             <CardList
               taskDragging={taskDragging && dragIndexes.listIndex === index}
-              draggingList={draggingList(index)}
               key={list.id}
               listIndex={index}
               list={list}
+              beginDragList={beginDragList}
             />
           ))}
         </ListContainter>
