@@ -34,4 +34,21 @@ export const TaskContainer = styled.div`
   padding: 0 4px 8px 4px;
   flex: 1 1 auto;
   overflow-y: auto;
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: #d9dce2;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #bdc3ce;
+    border-radius: 10px;
+  }
 `;

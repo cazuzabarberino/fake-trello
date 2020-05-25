@@ -6,12 +6,14 @@ interface Props {
   task: Task;
   left: number;
   top: number;
+  width: number;
 }
 
-const TaskCard = ({ task, left, top }: Props) => {
+const TaskCard = ({ task, left, top, width }: Props) => {
   return (
     <Card
       style={{
+        width,
         position: "fixed",
         left,
         top,
@@ -20,7 +22,6 @@ const TaskCard = ({ task, left, top }: Props) => {
         boxShadow: "5px 5px 20px rgba(0, 0, 0, 0.3)",
         background: "white",
         pointerEvents: "none",
-        width: "272px",
       }}
     >
       {task.title}

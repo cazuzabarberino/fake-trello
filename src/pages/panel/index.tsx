@@ -76,7 +76,7 @@ const Panel = (props: Props) => {
     taskDragging,
     dragIndexes,
     moveTaskVertically,
-    mouseCoord,
+    width,
   } = useDndTask(allLists, setAllLists);
 
   const draggingList = React.useCallback(
@@ -146,6 +146,7 @@ const Panel = (props: Props) => {
             task={allLists[dragIndexes.listIndex].tasks[dragIndexes.taskIndex]}
             left={coord.x}
             top={coord.y}
+            width={width}
           />
         )}
       </Container>
