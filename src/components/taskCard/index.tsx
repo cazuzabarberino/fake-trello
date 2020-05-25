@@ -45,6 +45,8 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
   const handleMouseDown = React.useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       event.preventDefault();
+      if (event.button !== 0) return;
+
       beginTaskDrag(
         index,
         listIndex,
@@ -60,6 +62,9 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
       taskDragging={taskDragging}
       dragging={dragging}
       ref={containerRef}
+      onContextMenu={(e) => {
+        e.preventDefault();
+      }}
       onMouseDown={handleMouseDown}
       onMouseMove={mouseMoveHandle}
     >
