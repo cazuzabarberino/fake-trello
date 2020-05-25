@@ -10,6 +10,7 @@ import TaskList from "../../models/List";
 import { initTaskRect, taskRects } from "../../util";
 import { Container, ListContainter } from "./styles";
 import useDndList from "../../hooks/useDnDList";
+import VisualList from "../../components/cardlist/visualList";
 
 interface Props {}
 
@@ -70,10 +71,12 @@ const Panel = (props: Props) => {
     }));
   });
 
-  const { beginDragList, draggedListIndex, draggingList } = useDndList(
-    allLists,
-    setAllLists
-  );
+  const {
+    beginDragList,
+    draggedListIndex,
+    draggingList,
+    draggedListCoord,
+  } = useDndList(allLists, setAllLists);
 
   const {
     beginTaskDrag,
@@ -117,6 +120,7 @@ const Panel = (props: Props) => {
               listIndex={index}
               list={list}
               beginDragList={beginDragList}
+              dragging={draggingList && draggedListIndex === index}
             />
           ))}
         </ListContainter>
@@ -127,6 +131,15 @@ const Panel = (props: Props) => {
             left={coord.x}
             top={coord.y}
             width={width}
+          />
+        )}
+
+        {draggingList && (
+          <VisualList
+            list={allLists[draggedListIndex]}
+            listIndex={draggedListIndex}
+            left={draggedListCoord.x}
+            top={draggedListCoord.y}
           />
         )}
       </Container>

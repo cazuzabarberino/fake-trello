@@ -110,6 +110,7 @@ export const useDnDList = (
     beginDragList: onMouseDown,
     draggedListIndex: listIndexRef.current,
     draggingList: dragging,
+    draggedListCoord: coord,
   };
 };
 

@@ -4,12 +4,19 @@ import useMouseScroll from "../../hooks/useMouseScroll";
 import TaskList from "../../models/List";
 import { saveListRect } from "../../util";
 import TaskCard from "../taskCard";
-import { CardContent, CardHeader, NewTaskBtn, TaskContainer } from "./styled";
+import {
+  CardContent,
+  CardHeader,
+  NewTaskBtn,
+  TaskContainer,
+  Shadow,
+} from "./styled";
 
 interface Props {
   list: TaskList;
   listIndex: number;
   taskDragging: boolean;
+  dragging: boolean;
   beginDragList: (
     listIndex: number,
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -17,7 +24,13 @@ interface Props {
   ) => void;
 }
 
-const CardList = ({ list, listIndex, taskDragging, beginDragList }: Props) => {
+const CardList = ({
+  list,
+  listIndex,
+  taskDragging,
+  beginDragList,
+  dragging,
+}: Props) => {
   const contentRef = React.useRef<HTMLDivElement | null>(null);
   const taskContainerRef = useMouseScroll(taskDragging);
 
@@ -40,11 +53,11 @@ const CardList = ({ list, listIndex, taskDragging, beginDragList }: Props) => {
   };
 
   return (
-    <CardContent ref={contentRef}>
-      <CardHeader onMouseDown={handleMouseDown}>
+    <CardContent dragging={dragging} ref={contentRef}>
+      <CardHeader dragging={dragging} onMouseDown={handleMouseDown}>
         <p>{list.title}</p>
       </CardHeader>
-      <TaskContainer ref={taskContainerRef}>
+      <TaskContainer dragging={dragging} ref={taskContainerRef}>
         {list.tasks.map((task, taskIndex) => (
           <TaskCard
             key={task.id}
@@ -54,10 +67,11 @@ const CardList = ({ list, listIndex, taskDragging, beginDragList }: Props) => {
           />
         ))}
       </TaskContainer>
-      <NewTaskBtn>
+      <NewTaskBtn dragging={dragging}>
         <FiPlus />
         <p>Adicionar outro cartão</p>
       </NewTaskBtn>
+      <Shadow dragging={dragging} />
     </CardContent>
   );
 };
