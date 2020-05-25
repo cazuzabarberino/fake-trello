@@ -9,15 +9,19 @@ interface Props {
   listIndex: number;
   left: number;
   top: number;
+  height: number;
 }
 
-const CardList = ({ list, listIndex, top, left }: Props) => {
+const CardList = ({ list, listIndex, top, left, height }: Props) => {
   return (
     <CardContent
       style={{
         position: "fixed",
         left,
         top,
+        height,
+        transform: "rotate(2.5deg)",
+        boxShadow: "5px 5px 20px rgba(0, 0, 0, 0.3)",
       }}
     >
       <CardHeader

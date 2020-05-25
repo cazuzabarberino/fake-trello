@@ -127,6 +127,7 @@ const Panel = (props: Props) => {
     draggedListIndex,
     draggingList,
     draggedListCoord,
+    height,
   } = useDndList(allLists, setAllLists);
 
   const {
@@ -198,6 +199,7 @@ const Panel = (props: Props) => {
             listIndex={draggedListIndex}
             left={draggedListCoord.x}
             top={draggedListCoord.y}
+            height={height}
           />
         )}
       </Container>

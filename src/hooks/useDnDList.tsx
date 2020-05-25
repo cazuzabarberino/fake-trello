@@ -7,6 +7,7 @@ export const useDnDList = (
   allLists: TaskList[],
   setAllLists: React.Dispatch<React.SetStateAction<TaskList[]>>
 ) => {
+  const height = React.useRef(0);
   const [coord, setCoord] = React.useState<Coord>({
     x: 0,
     y: 0,
@@ -36,7 +37,7 @@ export const useDnDList = (
       y: event.clientY - rect.y,
     };
     listIndexRef.current = listIndex;
-
+    height.current = rect.height;
     setPosition(event.clientX, event.clientY);
     window.addEventListener("mousemove", mouseMove);
     window.addEventListener("mouseup", mouseUp);
@@ -111,6 +112,7 @@ export const useDnDList = (
     draggedListIndex: listIndexRef.current,
     draggingList: dragging,
     draggedListCoord: coord,
+    height: height.current,
   };
 };
 
