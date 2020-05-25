@@ -133,7 +133,6 @@ const Panel = (props: Props) => {
           {allLists.map((list, index) => (
             <CardList
               taskDragging={taskDragging && dragIndexes.listIndex === index}
-              mouseCoord={mouseCoord}
               draggingList={draggingList(index)}
               key={list.id}
               listIndex={index}

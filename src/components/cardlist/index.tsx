@@ -12,10 +12,9 @@ interface Props {
   listIndex: number;
   draggingList: (xDirection: number, globalCoord: Coord) => boolean;
   taskDragging: boolean;
-  mouseCoord: Coord;
 }
 
-const CardList = ({ list, listIndex, taskDragging, mouseCoord }: Props) => {
+const CardList = ({ list, listIndex, taskDragging }: Props) => {
   const contentRef = React.useRef<HTMLDivElement | null>(null);
   const taskContainerRef = useMouseScroll(taskDragging);
 
