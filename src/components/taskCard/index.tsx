@@ -42,11 +42,8 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
     [dragging, index, moveTaskVertically, taskIndex, taskDragging]
   );
 
-  const handleMouseDown = React.useCallback(
+  const handleLeftMouseDown = React.useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      event.preventDefault();
-      if (event.button !== 0) return;
-
       beginTaskDrag(
         index,
         listIndex,
@@ -55,6 +52,23 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
       );
     },
     [beginTaskDrag, index, listIndex]
+  );
+
+  const handleRightMouseDown = React.useCallback(
+    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {},
+    []
+  );
+
+  const handleMouseDown = React.useCallback(
+    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      event.preventDefault();
+      if (event.button === 0) {
+        handleLeftMouseDown(event);
+      } else {
+        handleRightMouseDown(event);
+      }
+    },
+    [handleLeftMouseDown, handleRightMouseDown]
   );
 
   return (
