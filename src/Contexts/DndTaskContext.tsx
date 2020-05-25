@@ -10,6 +10,7 @@ export interface DndTaskContextValue {
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     rect: DOMRect
   ) => void;
+  moveTaskVertically: (toTaskIndex: number) => void;
 }
 
 const DndTaskContext = React.createContext<DndTaskContextValue | null>(null);

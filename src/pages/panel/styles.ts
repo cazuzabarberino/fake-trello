@@ -4,6 +4,7 @@ export const Container = styled.div`
   position: relative;
   flex: 1;
   overflow-x: auto;
+  overflow-y: hidden;
 `;
 
 export const ListContainter = styled.div`
@@ -12,11 +13,4 @@ export const ListContainter = styled.div`
   padding: 8px;
   height: 100%;
   align-items: flex-start;
-`;
-
-export const FakeCard = styled.div`
-  position: fixed;
-  background: red;
-  width: 272px;
-  height: 50px;
 `;

@@ -1,94 +1,50 @@
 import React from "react";
-import useDnD from "../../hooks/useDnD";
-import useElementRect from "../../hooks/useElementRect";
+import { FiPlus } from "react-icons/fi";
+import useMouseScroll from "../../hooks/useMouseScroll";
 import Coord from "../../models/Coord";
 import TaskList from "../../models/List";
-import {
-  ElementContent,
-  ElementContainer,
-  ElementHeader,
-  CardContainer,
-  NewCardBtn,
-  ElementShadow,
-} from "./styled";
-import { FiPlus } from "react-icons/fi";
-import TaskCard from "../taskCard";
 import { saveListRect } from "../../util";
+import TaskCard from "../taskCard";
+import { CardContent, CardHeader, NewTaskBtn, TaskContainer } from "./styled";
 
 interface Props {
   list: TaskList;
   listIndex: number;
   draggingList: (xDirection: number, globalCoord: Coord) => boolean;
+  taskDragging: boolean;
 }
 
-const CardList = ({ list, listIndex, draggingList }: Props) => {
-  const [containerRect, containerRef] = useElementRect(listIndex);
-  const [contentRect, contentRef] = useElementRect(listIndex);
-  const {
-    coord,
-    dragging,
-    handleMouseDown,
-    mouseCoord,
-    moveDirection,
-  } = useDnD(containerRef);
+const CardList = ({ list, listIndex, taskDragging }: Props) => {
+  const contentRef = React.useRef<HTMLDivElement | null>(null);
+  const taskContainerRef = useMouseScroll(taskDragging);
 
   React.useLayoutEffect(() => {
-    saveListRect(listIndex, containerRect);
-  }, [containerRect, listIndex]);
-
-  React.useLayoutEffect(() => {
-    if (dragging) {
-      if (draggingList(moveDirection.x, mouseCoord)) {
-      }
-    }
-  }, [coord]);
+    saveListRect(
+      listIndex,
+      (contentRef.current as HTMLDivElement).getBoundingClientRect()
+    );
+  }, [listIndex]);
 
   return (
-    <ElementContainer
-      index={listIndex}
-      height={contentRect.height}
-      ref={containerRef}
-    >
-      <ElementContent
-        ref={contentRef}
-        dragging={dragging}
-        style={
-          dragging
-            ? {
-                top: coord.y,
-                left: coord.x,
-              }
-            : {
-                top: containerRect.y,
-                left: containerRect.x,
-              }
-        }
-      >
-        <ElementHeader onMouseDown={handleMouseDown}>
-          <p>{list.title}</p>
-        </ElementHeader>
-        <CardContainer>
-          {list.tasks.map((task, taskIndex) => (
-            <TaskCard
-              key={task.id}
-              task={task}
-              listIndex={listIndex}
-              index={taskIndex}
-            />
-          ))}
-        </CardContainer>
-        <NewCardBtn>
-          <FiPlus />
-          <p>Adicionar outro cartão</p>
-        </NewCardBtn>
-      </ElementContent>
-      <ElementShadow
-        dragging={dragging}
-        x={containerRect.x}
-        y={containerRect.y}
-        height={contentRect.height}
-      />
-    </ElementContainer>
+    <CardContent ref={contentRef}>
+      <CardHeader>
+        <p>{list.title}</p>
+      </CardHeader>
+      <TaskContainer ref={taskContainerRef}>
+        {list.tasks.map((task, taskIndex) => (
+          <TaskCard
+            key={task.id}
+            task={task}
+            listIndex={listIndex}
+            index={taskIndex}
+          />
+        ))}
+      </TaskContainer>
+      <NewTaskBtn>
+        <FiPlus />
+        <p>Adicionar outro cartão</p>
+      </NewTaskBtn>
+    </CardContent>
   );
 };
 export default CardList;

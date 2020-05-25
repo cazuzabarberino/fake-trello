@@ -32,3 +32,9 @@ export const rectInRangeY = (
     ? coord.y >= rect.y + rect.height * 0.6
     : coord.y <= rect.y + rect.height * 0.4;
 };
+
+export const checkRangeY = (rect: DOMRect, coord: Coord): number => {
+  if (coord.y >= rect.y + rect.height * 0.5) return 0;
+  else if (coord.y <= rect.y + rect.height * 0.5) return -1;
+  else return 1;
+};

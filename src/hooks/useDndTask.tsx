@@ -1,7 +1,7 @@
 import React from "react";
 import Coord from "../models/Coord";
-import { taskRects, rectInRangeY, rectInRangeX, listRects } from "../util";
 import TaskList from "../models/List";
+import { listRects, rectInRangeX } from "../util";
 
 export const useDndTask = (
   allLists: TaskList[],
@@ -43,7 +43,6 @@ export const useDndTask = (
       listIndex,
     };
 
-    setTaskDragging(true);
     setPosition(event.clientX, event.clientY);
     window.addEventListener("mousemove", mouseMove);
     window.addEventListener("mouseup", mouseUp);
@@ -56,12 +55,15 @@ export const useDndTask = (
 
   const mouseMove = React.useCallback(
     (ev: MouseEvent) => {
+      setTaskDragging(true);
+      document.body.style.cursor = "grabbing";
       setPosition(ev.clientX, ev.clientY);
     },
     [setPosition]
   );
 
   const mouseUp = React.useCallback(() => {
+    document.body.style.cursor = "auto";
     setTaskDragging(false);
     window.removeEventListener("mousemove", mouseMove);
     window.removeEventListener("mouseup", mouseUp);
@@ -78,65 +80,59 @@ export const useDndTask = (
     return true;
   }, []);
 
-  const moveTaskHorizontally = (toIndex: number) => {
-    const newList = [...allLists];
+  const moveTaskHorizontally = React.useCallback(
+    (toIndex: number) => {
+      const newList = [...allLists];
 
-    newList[toIndex].tasks.push(
-      newList[dragIndexes.current.listIndex].tasks[
-        dragIndexes.current.taskIndex
-      ]
-    );
+      newList[toIndex].tasks.push(
+        newList[dragIndexes.current.listIndex].tasks[
+          dragIndexes.current.taskIndex
+        ]
+      );
 
-    newList[dragIndexes.current.listIndex].tasks.splice(
-      dragIndexes.current.taskIndex,
-      1
-    );
+      newList[dragIndexes.current.listIndex].tasks.splice(
+        dragIndexes.current.taskIndex,
+        1
+      );
 
-    dragIndexes.current = {
-      listIndex: toIndex,
-      taskIndex: newList[toIndex].tasks.length - 1,
-    };
+      dragIndexes.current = {
+        listIndex: toIndex,
+        taskIndex: newList[toIndex].tasks.length - 1,
+      };
 
-    setAllLists(newList);
-  };
-
-  const verticalCheck = React.useCallback(
-    (toTaskIndex: number, yDir: number): boolean => {
-      if (
-        toTaskIndex < 0 ||
-        toTaskIndex >
-          allLists[dragIndexes.current.listIndex].tasks.length - 1 ||
-        !rectInRangeY(
-          taskRects[dragIndexes.current.listIndex][toTaskIndex],
-          mouseCoord.current,
-          yDir
-        )
-      )
-        return false;
-
-      return true;
+      setAllLists(newList);
     },
-    []
+    [allLists, setAllLists]
   );
 
-  const moveTaskVertically = (toTaskIndex: number) => {
-    const newList = [...allLists];
+  const moveTaskVertically = React.useCallback(
+    (toTaskIndex: number) => {
+      if (
+        toTaskIndex < 0 ||
+        toTaskIndex >= allLists[dragIndexes.current.listIndex].tasks.length
+      )
+        return;
 
-    const tmp =
-      newList[dragIndexes.current.listIndex].tasks[
-        dragIndexes.current.taskIndex
-      ];
+      const newList = [...allLists];
 
-    newList[dragIndexes.current.listIndex].tasks[
-      dragIndexes.current.taskIndex
-    ] = newList[dragIndexes.current.listIndex].tasks[toTaskIndex];
+      const tmp =
+        newList[dragIndexes.current.listIndex].tasks[
+          dragIndexes.current.taskIndex
+        ];
 
-    newList[dragIndexes.current.listIndex].tasks[toTaskIndex] = tmp;
+      newList[dragIndexes.current.listIndex].tasks.splice(
+        dragIndexes.current.taskIndex,
+        1
+      );
 
-    dragIndexes.current.taskIndex = toTaskIndex;
+      newList[dragIndexes.current.listIndex].tasks.splice(toTaskIndex, 0, tmp);
 
-    setAllLists(newList);
-  };
+      dragIndexes.current.taskIndex = toTaskIndex;
+
+      setAllLists(newList);
+    },
+    [allLists, setAllLists]
+  );
 
   React.useLayoutEffect(() => {
     if (taskDragging) {
@@ -145,22 +141,12 @@ export const useDndTask = (
         mouseOffset.current.x -
         listRects[dragIndexes.current.listIndex].x;
 
-      const relativeY =
-        mouseCoord.current.y -
-        mouseOffset.current.y -
-        taskRects[dragIndexes.current.listIndex][dragIndexes.current.taskIndex]
-          .y;
-
       const xDir = relativeX / Math.abs(relativeX) || 0;
-      const yDir = relativeY / Math.abs(relativeY) || 0;
 
       const toListIndex = dragIndexes.current.listIndex + xDir;
-      const toTaskIndex = dragIndexes.current.taskIndex + yDir;
 
       if (xDir && horizontalCheck(toListIndex)) {
         moveTaskHorizontally(toListIndex);
-      } else if (yDir && verticalCheck(toTaskIndex, yDir)) {
-        moveTaskVertically(toTaskIndex);
       }
     }
   }, [taskDragging, coord, horizontalCheck, moveTaskHorizontally]);
@@ -170,5 +156,7 @@ export const useDndTask = (
     coord,
     beginTaskDrag,
     dragIndexes: dragIndexes.current,
+    moveTaskVertically,
+    mouseCoord: mouseCoord.current,
   };
 };
