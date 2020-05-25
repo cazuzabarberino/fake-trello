@@ -1,7 +1,7 @@
 import React from "react";
 import Coord from "../models/Coord";
 import TaskList from "../models/List";
-import { listRects, rectInRangeX } from "../util";
+import { getRectX, rectInRangeX, listRects } from "../util";
 
 export const useDnDList = (
   allLists: TaskList[],
@@ -64,16 +64,19 @@ export const useDnDList = (
     window.removeEventListener("mouseup", mouseUp);
   }, [mouseMove]);
 
-  const horizontalCheck = React.useCallback((toIndex: number): boolean => {
-    if (
-      toIndex < 0 ||
-      toIndex > listRects.length - 1 ||
-      !rectInRangeX(listRects[toIndex], mouseCoord.current)
-    )
-      return false;
+  const horizontalCheck = React.useCallback(
+    (toIndex: number): boolean => {
+      if (
+        toIndex < 0 ||
+        toIndex > allLists.length - 1 ||
+        !rectInRangeX(listRects[toIndex], mouseCoord.current)
+      )
+        return false;
 
-    return true;
-  }, []);
+      return true;
+    },
+    [allLists.length]
+  );
 
   const moveList = React.useCallback(
     (toIndex: number) => {
@@ -95,7 +98,7 @@ export const useDnDList = (
       const relativeX =
         mouseCoord.current.x -
         mouseOffset.current.x -
-        listRects[listIndexRef.current].x;
+        getRectX(listIndexRef.current);
 
       const xDir = relativeX / Math.abs(relativeX) || 0;
 

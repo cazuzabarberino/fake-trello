@@ -1,6 +1,6 @@
 import React from "react";
 import { FiPlus } from "react-icons/fi";
-import useMouseScroll from "../../hooks/useMouseScroll";
+import useMouseScroll from "../../hooks/useMouseScrollVertical";
 import TaskList from "../../models/List";
 import { saveListRect } from "../../util";
 import TaskCard from "../taskCard";

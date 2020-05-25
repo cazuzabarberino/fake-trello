@@ -2,7 +2,7 @@ import React from "react";
 import Coord from "../models/Coord";
 import { clearInterval, setInterval } from "timers";
 
-export default function useMouseScroll(condition: boolean) {
+export default function useMouseScrollVertical(condition: boolean) {
   const scrollRef = React.useRef<HTMLDivElement | null>(null);
   const intervalRef = React.useRef<NodeJS.Timeout | null>(null);
   const mouseCoordRef = React.useRef<Coord>({ x: 0, y: 0 });
@@ -26,18 +26,11 @@ export default function useMouseScroll(condition: boolean) {
     const inBottomEdge = mouseCoordRef.current.y >= bottomEdge;
     const inTopEdge = mouseCoordRef.current.y <= topEdge;
 
-    // if (inBottomEdge) {
-    //   element.style.borderBottom = "2px solid red";
-    // } else if (inTopEdge) {
-    //   element.style.borderTop = "2px solid red";
-    // }
-
     const canScrollUp = element.scrollTop > 0;
     const canScrollDown =
       element.scrollTop < element.scrollHeight - rect.height;
 
     if ((!inBottomEdge || !canScrollDown) && (!inTopEdge || !canScrollUp)) {
-      // element.style.border = "none";
       return false;
     }
 

@@ -1,17 +1,16 @@
 import React from "react";
 import shortid from "shortid";
 import CardList from "../../components/cardlist";
+import VisualList from "../../components/cardlist/visualList";
 import VisualTaskCard from "../../components/taskCard/VisualTaskCard";
 import DndTaskContext, {
   DndTaskContextValue,
 } from "../../Contexts/DndTaskContext";
-import { useDndTask } from "../../hooks/useDndTask";
-import TaskList from "../../models/List";
-import { initTaskRect, taskRects } from "../../util";
-import { Container, ListContainter } from "./styles";
 import useDndList from "../../hooks/useDnDList";
-import VisualList from "../../components/cardlist/visualList";
-
+import { useDndTask } from "../../hooks/useDndTask";
+import useMouseScrollHorizontal from "../../hooks/useMouseScrollHorizontal";
+import TaskList from "../../models/List";
+import { Container, ListContainter } from "./styles";
 interface Props {}
 
 const mock = [
@@ -108,9 +107,6 @@ const mock = [
 ];
 
 const Panel = (props: Props) => {
-  if (!taskRects)
-    initTaskRect(mock.map((list) => list.tasks.map((_) => new DOMRect())));
-
   const [allLists, setAllLists] = React.useState<TaskList[]>(() => {
     return mock.map((list) => ({
       ...list,
@@ -139,6 +135,8 @@ const Panel = (props: Props) => {
     width,
   } = useDndTask(allLists, setAllLists);
 
+  const scrollRef = useMouseScrollHorizontal(draggingList);
+
   const dndContextValue: DndTaskContextValue = React.useMemo(
     () => ({
       beginTaskDrag,
@@ -164,7 +162,7 @@ const Panel = (props: Props) => {
   return (
     <DndTaskContext.Provider value={dndContextValue}>
       <Container>
-        <ListContainter>
+        <ListContainter id="scroll-test" ref={scrollRef}>
           {allLists.map((list, index) => (
             <CardList
               taskDragging={taskDragging && dragIndexes.listIndex === index}
