@@ -22,6 +22,7 @@ const CardList = ({ list, listIndex, top, left, height }: Props) => {
         height,
         transform: "rotate(2.5deg)",
         boxShadow: "5px 5px 20px rgba(0, 0, 0, 0.3)",
+        pointerEvents: "none",
       }}
     >
       <CardHeader

@@ -124,6 +124,7 @@ const Panel = (props: Props) => {
     draggingList,
     draggedListCoord,
     height,
+    moveListHorizontally,
   } = useDndList(allLists, setAllLists);
 
   const {
@@ -165,12 +166,14 @@ const Panel = (props: Props) => {
         <ListContainter id="scroll-test" ref={scrollRef}>
           {allLists.map((list, index) => (
             <CardList
-              taskDragging={taskDragging && dragIndexes.listIndex === index}
+              selfTaskDragging={taskDragging && dragIndexes.listIndex === index}
               key={list.id}
               listIndex={index}
               list={list}
               beginDragList={beginDragList}
-              dragging={draggingList && draggedListIndex === index}
+              draggingSelf={draggingList && draggedListIndex === index}
+              draggingList={draggingList}
+              moveListHorizontally={moveListHorizontally}
             />
           ))}
           <div

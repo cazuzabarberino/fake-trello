@@ -4,15 +4,23 @@ interface CardContentProps {
   dragging?: boolean;
 }
 
-export const CardContent = styled.div<CardContentProps>`
-  position: relative;
+export const Container = styled.div`
+  border: 2px solid red;
   min-width: 272px;
-  max-height: 100%;
-  padding: 0 4px;
+
+  height: 100%;
 
   & + div {
     margin-left: 8px;
   }
+`;
+
+export const CardContent = styled.div<CardContentProps>`
+  position: relative;
+  max-width: 272px;
+  width: 100%;
+  max-height: 100%;
+  padding: 0 4px;
 
   display: flex;
   flex-direction: column;

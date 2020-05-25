@@ -10,29 +10,34 @@ import {
   NewTaskBtn,
   TaskContainer,
   Shadow,
+  Container,
 } from "./styled";
 
 interface Props {
   list: TaskList;
   listIndex: number;
-  taskDragging: boolean;
-  dragging: boolean;
+  selfTaskDragging: boolean;
+  draggingList: boolean;
+  draggingSelf: boolean;
   beginDragList: (
     listIndex: number,
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     rect: DOMRect
   ) => void;
+  moveListHorizontally: (toIndex: number) => void;
 }
 
 const CardList = ({
   list,
   listIndex,
-  taskDragging,
+  selfTaskDragging,
   beginDragList,
-  dragging,
+  draggingSelf,
+  draggingList,
+  moveListHorizontally,
 }: Props) => {
   const contentRef = React.useRef<HTMLDivElement | null>(null);
-  const taskContainerRef = useMouseScroll(taskDragging);
+  const taskContainerRef = useMouseScroll(selfTaskDragging);
 
   React.useLayoutEffect(() => {
     saveListRect(
@@ -52,27 +57,34 @@ const CardList = ({
     );
   };
 
+  const handleMouseEnter = () => {
+    if (!draggingList || draggingSelf) return;
+    moveListHorizontally(listIndex);
+  };
+
   return (
-    <CardContent dragging={dragging} ref={contentRef}>
-      <CardHeader dragging={dragging} onMouseDown={handleMouseDown}>
-        <p>{list.title}</p>
-      </CardHeader>
-      <TaskContainer dragging={dragging} ref={taskContainerRef}>
-        {list.tasks.map((task, taskIndex) => (
-          <TaskCard
-            key={task.id}
-            task={task}
-            listIndex={listIndex}
-            index={taskIndex}
-          />
-        ))}
-      </TaskContainer>
-      <NewTaskBtn dragging={dragging}>
-        <FiPlus />
-        <p>Adicionar outro cartão</p>
-      </NewTaskBtn>
-      <Shadow dragging={dragging} />
-    </CardContent>
+    <Container onMouseEnter={handleMouseEnter}>
+      <CardContent dragging={draggingSelf} ref={contentRef}>
+        <CardHeader dragging={draggingSelf} onMouseDown={handleMouseDown}>
+          <p>{list.title}</p>
+        </CardHeader>
+        <TaskContainer dragging={draggingSelf} ref={taskContainerRef}>
+          {list.tasks.map((task, taskIndex) => (
+            <TaskCard
+              key={task.id}
+              task={task}
+              listIndex={listIndex}
+              index={taskIndex}
+            />
+          ))}
+        </TaskContainer>
+        <NewTaskBtn dragging={draggingSelf}>
+          <FiPlus />
+          <p>Adicionar outro cartão</p>
+        </NewTaskBtn>
+        <Shadow dragging={draggingSelf} />
+      </CardContent>
+    </Container>
   );
 };
 export default CardList;

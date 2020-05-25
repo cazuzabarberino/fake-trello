@@ -1,7 +1,7 @@
 import React from "react";
 import Coord from "../models/Coord";
 import TaskList from "../models/List";
-import { listRects, rectInRangeX } from "../util";
+import { listRects, rectInRangeX, getRectX } from "../util";
 
 export const useDndTask = (
   allLists: TaskList[],
@@ -140,7 +140,7 @@ export const useDndTask = (
       const relativeX =
         mouseCoord.current.x -
         mouseOffset.current.x -
-        listRects[dragIndexes.current.listIndex].x;
+        getRectX(dragIndexes.current.listIndex);
 
       const xDir = relativeX / Math.abs(relativeX) || 0;
 

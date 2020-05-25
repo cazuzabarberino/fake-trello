@@ -1,7 +1,6 @@
 import React from "react";
 import Coord from "../models/Coord";
 import TaskList from "../models/List";
-import { getRectX, rectInRangeX, listRects } from "../util";
 
 export const useDnDList = (
   allLists: TaskList[],
@@ -64,21 +63,7 @@ export const useDnDList = (
     window.removeEventListener("mouseup", mouseUp);
   }, [mouseMove]);
 
-  const horizontalCheck = React.useCallback(
-    (toIndex: number): boolean => {
-      if (
-        toIndex < 0 ||
-        toIndex > allLists.length - 1 ||
-        !rectInRangeX(listRects[toIndex], mouseCoord.current)
-      )
-        return false;
-
-      return true;
-    },
-    [allLists.length]
-  );
-
-  const moveList = React.useCallback(
+  const moveListHorizontally = React.useCallback(
     (toIndex: number) => {
       const newList = [...allLists];
 
@@ -93,29 +78,13 @@ export const useDnDList = (
     [allLists, setAllLists]
   );
 
-  React.useLayoutEffect(() => {
-    if (dragging) {
-      const relativeX =
-        mouseCoord.current.x -
-        mouseOffset.current.x -
-        getRectX(listIndexRef.current);
-
-      const xDir = relativeX / Math.abs(relativeX) || 0;
-
-      const toListIndex = listIndexRef.current + xDir;
-
-      if (xDir && horizontalCheck(toListIndex)) {
-        moveList(toListIndex);
-      }
-    }
-  }, [dragging, coord, horizontalCheck, moveList]);
-
   return {
     beginDragList: onMouseDown,
     draggedListIndex: listIndexRef.current,
     draggingList: dragging,
     draggedListCoord: coord,
     height: height.current,
+    moveListHorizontally,
   };
 };
 
