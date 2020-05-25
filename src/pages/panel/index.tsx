@@ -43,8 +43,59 @@ const mock = [
       "very long task with a lot of blank space to test the text wrapper",
       "very long task with a lot of blank space to test the text wrapper",
       "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
+      "very long task with a lot of blank space to test the text wrapper",
       "A very looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong task",
     ],
+  },
+  {
+    title: "To dos",
+    tasks: ["a todo task"],
+  },
+  {
+    title: "To dos",
+    tasks: ["a todo task"],
+  },
+  {
+    title: "To dos",
+    tasks: ["a todo task"],
+  },
+  {
+    title: "To dos",
+    tasks: ["a todo task"],
   },
   {
     title: "To dos",
@@ -123,6 +174,13 @@ const Panel = (props: Props) => {
               dragging={draggingList && draggedListIndex === index}
             />
           ))}
+          <div
+            style={{
+              minWidth: "8px",
+              height: "100%",
+              margin: 0,
+            }}
+          />
         </ListContainter>
 
         {taskDragging && (

@@ -6,7 +6,7 @@ interface CardContentProps {
 
 export const CardContent = styled.div<CardContentProps>`
   position: relative;
-  width: 272px;
+  min-width: 272px;
   max-height: 100%;
   padding: 0 4px;
 
