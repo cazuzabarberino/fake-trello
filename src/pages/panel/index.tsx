@@ -11,7 +11,7 @@ import { useDndTask } from "../../hooks/useDndTask";
 import useMouseScrollHorizontal from "../../hooks/useMouseScrollHorizontal";
 import TaskList from "../../models/List";
 import { Container, ListContainter } from "./styles";
-interface Props {}
+import NewList from "../../components/newList";
 
 const mock = [
   {
@@ -33,7 +33,7 @@ const mock = [
   },
 ];
 
-const Panel = (props: Props) => {
+const Panel = () => {
   const [allLists, setAllLists] = React.useState<TaskList[]>(() => {
     return mock.map((list) => ({
       ...list,
@@ -110,6 +110,7 @@ const Panel = (props: Props) => {
               margin: 0,
             }}
           />
+          <NewList />
         </ListContainter>
 
         {taskDragging && (

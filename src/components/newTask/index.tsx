@@ -3,6 +3,7 @@ import { Container } from "./styled";
 import { FiX } from "react-icons/fi";
 import { withTheme, DefaultTheme } from "styled-components";
 import useKeyMouseToSaveClose from "../../hooks/useKeyMouseToSaveClose";
+import useFocusInput from "../../hooks/useFocusInput";
 
 interface Props {
   theme: DefaultTheme;
@@ -12,21 +13,12 @@ interface Props {
 
 const NewTask = ({ theme, closeNewTask }: Props) => {
   const [input, setInput] = React.useState("");
-  const inputRef = React.useRef<null | HTMLInputElement>(null);
-
+  const inputRef = useFocusInput();
   const saveInput = React.useCallback(() => {
     setInput("");
   }, [setInput]);
 
   const containerRef = useKeyMouseToSaveClose(saveInput, closeNewTask);
-
-  React.useLayoutEffect(() => {
-    (inputRef.current as HTMLInputElement).focus();
-  }, []);
-
-  React.useLayoutEffect(() => {
-    return () => {};
-  }, [closeNewTask, saveInput]);
 
   return (
     <Container ref={containerRef}>
