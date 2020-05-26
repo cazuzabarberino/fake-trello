@@ -1,6 +1,6 @@
 import React from "react";
 import Panel from "./pages/panel";
-import { GlobalStyles, theme } from "./styles";
+import { GlobalStyles, defaultTheme } from "./styles";
 import { ThemeProvider } from "styled-components";
 import Header from "./components/header";
 import styled from "styled-components";
@@ -8,7 +8,7 @@ import styled from "styled-components";
 function App() {
   return (
     <>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={defaultTheme}>
         <GlobalStyles />
         <Container>
           <Header />

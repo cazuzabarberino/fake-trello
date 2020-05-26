@@ -34,7 +34,7 @@ const Header = (props: Props) => {
       </HeaderBtnWrapper>
       <HeaderTitle>
         <DiTrello size={24} />
-        Trello
+        Fake Trello
       </HeaderTitle>
       <HeaderBtnWrapper right>
         <HeaderBox as="button">

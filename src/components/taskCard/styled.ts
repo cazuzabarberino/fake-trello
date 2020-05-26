@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import { darken } from "polished";
 
 interface CardProps {
   dragging?: boolean;
@@ -9,7 +10,7 @@ export const Card = styled.div<CardProps>`
   position: relative;
   max-width: 256px;
   flex: 1;
-  background: white;
+  background: ${({ theme }) => theme.taskColor};
   padding: 8px;
   border-radius: 4px;
   border-bottom: 1px solid ${({ dragging }) => (dragging ? "#ddd" : "#bbb")};
@@ -30,7 +31,7 @@ export const Card = styled.div<CardProps>`
       cursor: pointer;
 
       &:hover {
-        background: #eee;
+        background: ${({ theme }) => darken(0.1, theme.taskColor)};
       }
     `}
 `;
@@ -47,5 +48,5 @@ export const Shadow = styled.div<ShadowProps>`
   width: 100%;
   height: 100%;
   border-radius: inherit;
-  background: #ddd;
+  background: ${({ theme }) => theme.transparency};
 `;

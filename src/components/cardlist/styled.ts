@@ -21,10 +21,10 @@ export const CardContent = styled.div<CardContentProps>`
   max-height: 100%;
   padding: 0 4px;
 
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-auto-flow: row;
 
-  background: ${({ dragging }) => (dragging ? "none" : "#ebecf0")};
+  background: ${({ dragging, theme }) => (dragging ? "none" : theme.listColor)};
 
   font-size: 14px;
   border-radius: 4px;
@@ -39,25 +39,35 @@ export const Shadow = styled.div<ShadowProps>`
   position: absolute;
   width: 100%;
   height: 100%;
-  background: red;
   top: 0;
   left: 0;
   border-radius: inherit;
-  background: rgba(0, 0, 0, 0.35);
+  background: ${({ theme }) => theme.transparency};
 `;
 
 export const CardHeader = styled.div<draggingProps>`
   opacity: ${({ dragging }) => (dragging ? 0 : 1)};
   padding: 12px 8px;
-  color: #172b4d;
   font-weight: 700;
   cursor: pointer;
 `;
 
 export const NewTaskBtn = styled.div<draggingProps>`
   opacity: ${({ dragging }) => (dragging ? 0 : 1)};
-  display: flex;
-  padding: 12px 8px;
+  display: grid;
+  grid-auto-flow: column;
+  align-content: center;
+  place-content: start;
+
+  column-gap: 8px;
+  padding: 8px 8px;
+  cursor: pointer;
+  margin: 0 4px;
+  margin-bottom: 8px;
+
+  :hover {
+    background: rgba(9, 30, 66, 0.08);
+  }
 `;
 
 interface draggingProps {
@@ -80,12 +90,12 @@ export const TaskContainer = styled.div<draggingProps>`
   /* Track */
   ::-webkit-scrollbar-track {
     border-radius: 10px;
-    background: #d9dce2;
+    background: ${({ theme }) => theme.scrollBar};
   }
 
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: #bdc3ce;
+    background: ${({ theme }) => theme.scrollThumb};
     border-radius: 10px;
   }
 `;
