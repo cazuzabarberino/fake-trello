@@ -82,7 +82,7 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
       onMouseDown={handleMouseDown}
       onMouseMove={mouseMoveHandle}
     >
-      {task.title}
+      <p>{task.title}</p>
       <Shadow dragging={dragging} />
     </Card>
   );

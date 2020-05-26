@@ -1,12 +1,12 @@
 import styled, { css } from "styled-components";
 import { darken } from "polished";
 
-interface CardProps {
+interface DragginProps {
   dragging?: boolean;
   taskDragging?: boolean;
 }
 
-export const Card = styled.div<CardProps>`
+export const Card = styled.div<DragginProps>`
   position: relative;
   max-width: 256px;
   flex: 1;
@@ -34,13 +34,13 @@ export const Card = styled.div<CardProps>`
         background: ${({ theme }) => darken(0.1, theme.taskColor)};
       }
     `}
+
+  p {
+    opacity: ${({ dragging }) => (dragging ? 0 : 1)};
+  }
 `;
 
-interface ShadowProps {
-  dragging: boolean;
-}
-
-export const Shadow = styled.div<ShadowProps>`
+export const Shadow = styled.div<DragginProps>`
   display: ${({ dragging }) => (dragging ? "block" : "none")};
   position: absolute;
   top: 0;

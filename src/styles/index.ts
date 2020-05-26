@@ -8,6 +8,7 @@ declare module "styled-components" {
     scrollThumb: string;
     listColor: string;
     taskColor: string;
+    green: string;
   }
 }
 
@@ -18,6 +19,7 @@ export const defaultTheme: DefaultTheme = {
   scrollThumb: "#bdc3ce",
   listColor: "#ebecf0",
   taskColor: "white",
+  green: "#5aac44",
 };
 
 export const GlobalStyles = createGlobalStyle`

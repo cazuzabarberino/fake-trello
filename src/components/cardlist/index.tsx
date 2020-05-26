@@ -12,6 +12,7 @@ import {
   Shadow,
   Container,
 } from "./styled";
+import NewTask from "../newTask";
 
 interface Props {
   list: TaskList;
@@ -38,6 +39,7 @@ const CardList = ({
 }: Props) => {
   const contentRef = React.useRef<HTMLDivElement | null>(null);
   const taskContainerRef = useMouseScroll(selfTaskDragging);
+  const [addingTask, setAddingTask] = React.useState(false);
 
   React.useLayoutEffect(() => {
     saveListRect(
@@ -65,7 +67,11 @@ const CardList = ({
   return (
     <Container onMouseEnter={handleMouseEnter}>
       <CardContent dragging={draggingSelf} ref={contentRef}>
-        <CardHeader dragging={draggingSelf} onMouseDown={handleMouseDown}>
+        <CardHeader
+          selfTaskDragging={selfTaskDragging}
+          dragging={draggingSelf}
+          onMouseDown={handleMouseDown}
+        >
           <p>{list.title}</p>
         </CardHeader>
         <TaskContainer dragging={draggingSelf} ref={taskContainerRef}>
@@ -78,10 +84,21 @@ const CardList = ({
             />
           ))}
         </TaskContainer>
-        <NewTaskBtn dragging={draggingSelf}>
-          <FiPlus />
-          <p>Adicionar outro cartão</p>
-        </NewTaskBtn>
+        {addingTask ? (
+          <NewTask
+            listIndex={listIndex}
+            closeNewTask={() => setAddingTask(false)}
+          />
+        ) : (
+          <NewTaskBtn
+            selfTaskDragging={selfTaskDragging}
+            dragging={draggingSelf}
+            onClick={() => setAddingTask(true)}
+          >
+            <FiPlus size={16} />
+            <p>Adicionar outro cartão</p>
+          </NewTaskBtn>
+        )}
         <Shadow dragging={draggingSelf} />
       </CardContent>
     </Container>

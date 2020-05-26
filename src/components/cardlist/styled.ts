@@ -1,7 +1,8 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-interface CardContentProps {
+interface draggingProps {
   dragging?: boolean;
+  selfTaskDragging?: boolean;
 }
 
 export const Container = styled.div`
@@ -14,7 +15,7 @@ export const Container = styled.div`
   }
 `;
 
-export const CardContent = styled.div<CardContentProps>`
+export const CardContent = styled.div<draggingProps>`
   position: relative;
   max-width: 272px;
   width: 100%;
@@ -49,7 +50,8 @@ export const CardHeader = styled.div<draggingProps>`
   opacity: ${({ dragging }) => (dragging ? 0 : 1)};
   padding: 12px 8px;
   font-weight: 700;
-  cursor: pointer;
+  cursor: ${({ selfTaskDragging }) =>
+    selfTaskDragging ? "inherit" : "pointer"};
 `;
 
 export const NewTaskBtn = styled.div<draggingProps>`
@@ -61,18 +63,19 @@ export const NewTaskBtn = styled.div<draggingProps>`
 
   column-gap: 8px;
   padding: 8px 8px;
-  cursor: pointer;
+  cursor: ${({ selfTaskDragging }) =>
+    selfTaskDragging ? "inherit" : "pointer"};
   margin: 0 4px;
   margin-bottom: 8px;
 
-  :hover {
-    background: rgba(9, 30, 66, 0.08);
-  }
+  ${({ selfTaskDragging }) =>
+    !selfTaskDragging &&
+    css`
+      :hover {
+        background: rgba(9, 30, 66, 0.08);
+      }
+    `}
 `;
-
-interface draggingProps {
-  dragging?: boolean;
-}
 
 export const TaskContainer = styled.div<draggingProps>`
   opacity: ${({ dragging }) => (dragging ? 0 : 1)};
