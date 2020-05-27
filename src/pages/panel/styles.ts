@@ -4,6 +4,7 @@ export const Container = styled.div`
   max-height: calc(100vh - 40px);
   display: flex;
   padding-bottom: 8px;
+  flex: 1;
 `;
 
 export const ListContainter = styled.div`

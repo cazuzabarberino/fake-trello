@@ -9,14 +9,25 @@ interface Props {
   theme: DefaultTheme;
   listIndex: number;
   closeNewTask: () => void;
+  addNewTask: (title: string, listIndex: number) => void;
+  scrolDown: () => void;
 }
 
-const NewTask = ({ theme, closeNewTask }: Props) => {
+const NewTask = ({
+  theme,
+  closeNewTask,
+  addNewTask,
+  listIndex,
+  scrolDown,
+}: Props) => {
   const [input, setInput] = React.useState("");
   const inputRef = useFocusInput();
   const saveInput = React.useCallback(() => {
+    if (!input) return;
+    addNewTask(input, listIndex);
     setInput("");
-  }, [setInput]);
+    scrolDown();
+  }, [setInput, addNewTask, input, listIndex, scrolDown]);
 
   const containerRef = useKeyMouseToSaveClose(saveInput, closeNewTask);
 

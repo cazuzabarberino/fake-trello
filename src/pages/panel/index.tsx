@@ -2,16 +2,17 @@ import React from "react";
 import shortid from "shortid";
 import CardList from "../../components/cardlist";
 import VisualList from "../../components/cardlist/visualList";
+import NewList from "../../components/newList";
 import VisualTaskCard from "../../components/taskCard/VisualTaskCard";
 import DndTaskContext, {
   DndTaskContextValue,
 } from "../../Contexts/DndTaskContext";
 import useDndList from "../../hooks/useDnDList";
 import { useDndTask } from "../../hooks/useDndTask";
+import useListFunction from "../../hooks/useListFunction";
 import useMouseScrollHorizontal from "../../hooks/useMouseScrollHorizontal";
 import TaskList from "../../models/List";
 import { Container, ListContainter } from "./styles";
-import NewList from "../../components/newList";
 
 const mock = [
   {
@@ -45,6 +46,8 @@ const Panel = () => {
     }));
   });
 
+  const { addList, addNewTask } = useListFunction(allLists, setAllLists);
+
   const {
     beginDragList,
     draggedListIndex,
@@ -63,7 +66,7 @@ const Panel = () => {
     width,
   } = useDndTask(allLists, setAllLists);
 
-  const scrollRef = useMouseScrollHorizontal(draggingList);
+  const { scrollRef, scrollToRight } = useMouseScrollHorizontal(draggingList);
 
   const dndContextValue: DndTaskContextValue = React.useMemo(
     () => ({
@@ -93,6 +96,7 @@ const Panel = () => {
         <ListContainter id="scroll-test" ref={scrollRef}>
           {allLists.map((list, index) => (
             <CardList
+              addNewTask={addNewTask}
               selfTaskDragging={taskDragging && dragIndexes.listIndex === index}
               key={list.id}
               listIndex={index}
@@ -103,6 +107,7 @@ const Panel = () => {
               moveListHorizontally={moveListHorizontally}
             />
           ))}
+          <NewList addList={addList} scrollToRight={scrollToRight} />
           <div
             style={{
               minWidth: "8px",
@@ -110,7 +115,6 @@ const Panel = () => {
               margin: 0,
             }}
           />
-          <NewList />
         </ListContainter>
 
         {taskDragging && (

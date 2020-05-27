@@ -66,5 +66,12 @@ export default function useMouseScrollVertical(condition: boolean) {
     };
   }, [saveMouseCoord, checkMoveScroll, condition]);
 
-  return scrollRef;
+  const scrolDown = React.useCallback(() => {
+    const element = scrollRef.current as HTMLDivElement;
+    element.scrollTo({
+      top: element.scrollHeight,
+    });
+  }, []);
+
+  return { scrollRef, scrolDown };
 }

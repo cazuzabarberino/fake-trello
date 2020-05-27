@@ -26,6 +26,7 @@ interface Props {
     rect: DOMRect
   ) => void;
   moveListHorizontally: (toIndex: number) => void;
+  addNewTask: (title: string, listIndex: number) => void;
 }
 
 const CardList = ({
@@ -36,9 +37,10 @@ const CardList = ({
   draggingSelf,
   draggingList,
   moveListHorizontally,
+  addNewTask,
 }: Props) => {
   const contentRef = React.useRef<HTMLDivElement | null>(null);
-  const taskContainerRef = useMouseScroll(selfTaskDragging);
+  const { scrollRef, scrolDown } = useMouseScroll(selfTaskDragging);
   const [addingTask, setAddingTask] = React.useState(false);
 
   React.useLayoutEffect(() => {
@@ -52,6 +54,8 @@ const CardList = ({
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     event.preventDefault();
+    if (event.button !== 0) return;
+
     beginDragList(
       listIndex,
       event,
@@ -74,7 +78,7 @@ const CardList = ({
         >
           <p>{list.title}</p>
         </CardHeader>
-        <TaskContainer dragging={draggingSelf} ref={taskContainerRef}>
+        <TaskContainer dragging={draggingSelf} ref={scrollRef}>
           {list.tasks.map((task, taskIndex) => (
             <TaskCard
               key={task.id}
@@ -88,6 +92,8 @@ const CardList = ({
           <NewTask
             listIndex={listIndex}
             closeNewTask={() => setAddingTask(false)}
+            addNewTask={addNewTask}
+            scrolDown={scrolDown}
           />
         ) : (
           <NewTaskBtn

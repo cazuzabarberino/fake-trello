@@ -6,15 +6,20 @@ import { Container } from "./styled";
 
 interface Props {
   theme: DefaultTheme;
+  addList: (title: string) => void;
+  scrollToRight: () => void;
 }
 
-const NewList = ({ theme }: Props) => {
+const NewList = ({ theme, addList, scrollToRight }: Props) => {
   const [creatingNewList, setCreatingNewList] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement | null>(null);
   const [input, setInput] = React.useState("");
   const saveInput = React.useCallback(() => {
+    if (!creatingNewList || !input) return;
+    addList(input);
     setInput("");
-  }, [setInput]);
+    scrollToRight();
+  }, [setInput, input, addList, creatingNewList, scrollToRight]);
 
   const close = React.useCallback(() => setCreatingNewList(false), []);
   const open = React.useCallback(() => {

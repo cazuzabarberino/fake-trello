@@ -19,11 +19,17 @@ export const CardContent = styled.div<draggingProps>`
   position: relative;
   max-width: 272px;
   width: 100%;
-  max-height: 100%;
   padding: 0 4px;
 
+  max-height: 100%;
+
+  /* display: flex;
+  flex-direction: column; */
+
   display: grid;
-  grid-auto-flow: row;
+  grid-template-rows: auto 1fr auto;
+  row-gap: 8px;
+  /* grid-auto-flow: row; */
 
   background: ${({ dragging, theme }) => (dragging ? "none" : theme.listColor)};
 
@@ -48,7 +54,7 @@ export const Shadow = styled.div<ShadowProps>`
 
 export const CardHeader = styled.div<draggingProps>`
   opacity: ${({ dragging }) => (dragging ? 0 : 1)};
-  padding: 12px 8px;
+  padding: 8px 8px 4px 8px;
   font-weight: 700;
   cursor: ${({ selfTaskDragging }) =>
     selfTaskDragging ? "inherit" : "pointer"};
@@ -81,7 +87,7 @@ export const TaskContainer = styled.div<draggingProps>`
   opacity: ${({ dragging }) => (dragging ? 0 : 1)};
   display: flex;
   flex-direction: column;
-  padding: 0 4px 8px 4px;
+  padding: 0 4px 0 4px;
   flex: 1 1 auto;
   overflow-y: auto;
 
