@@ -16,6 +16,7 @@ import {
   TaskContainer,
 } from "./styled";
 import CardlistAction from "./cardlistAction";
+import CardListEdit from "./cardlistEditTitle";
 
 interface Props {
   list: TaskList;
@@ -40,6 +41,7 @@ const CardList = ({
   draggingList,
   moveListHorizontally,
 }: Props) => {
+  const [editing, setEditing] = React.useState(false);
   const contentRef = React.useRef<HTMLDivElement | null>(null);
   const { scrollRef, scrolDown } = useMouseScroll(selfTaskDragging);
   const [addingTask, setAddingTask] = React.useState(false);
@@ -88,7 +90,16 @@ const CardList = ({
           dragging={draggingSelf}
           onMouseDown={handleMouseDown}
         >
-          <p>{list.title}</p>
+          <p onClick={() => setEditing(true)}>
+            {list.title}
+            {editing && (
+              <CardListEdit
+                close={() => setEditing(false)}
+                listIndex={listIndex}
+                title={list.title}
+              />
+            )}
+          </p>
           <div ref={menuBtnRef} onClick={() => setMenuOpen((val) => !val)}>
             <BsThreeDots size={16} />
           </div>

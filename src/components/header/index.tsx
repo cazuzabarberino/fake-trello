@@ -1,25 +1,14 @@
 import React from "react";
-
-import { BsFillGrid3X3GapFill } from "react-icons/bs";
-import { AiOutlineHome } from "react-icons/ai";
-import { FaTrello } from "react-icons/fa";
-import { FiAlertCircle, FiPlus } from "react-icons/fi";
 import { DiTrello } from "react-icons/di";
-import { MdNotificationsNone } from "react-icons/md";
-import {
-  Container,
-  HeaderBox,
-  HeaderTitle,
-  HeaderBtnWrapper,
-  HeaderAvatar,
-} from "./styles";
+import { Container, HeaderTitle } from "./styles";
+
 
 interface Props {}
 
 const Header = (props: Props) => {
   return (
     <Container>
-      <HeaderBtnWrapper>
+      {/* <HeaderBtnWrapper>
         <HeaderBox as="button">
           <BsFillGrid3X3GapFill size={16} color="white" />
         </HeaderBox>
@@ -31,12 +20,12 @@ const Header = (props: Props) => {
           <p>Quadros</p>
         </HeaderBox>
         <HeaderBox as="input" />
-      </HeaderBtnWrapper>
+      </HeaderBtnWrapper> */}
       <HeaderTitle>
         <DiTrello size={24} />
         Fake Trello
       </HeaderTitle>
-      <HeaderBtnWrapper right>
+      {/* <HeaderBtnWrapper right>
         <HeaderBox as="button">
           <FiPlus size={20} color="white" />
         </HeaderBox>
@@ -47,7 +36,7 @@ const Header = (props: Props) => {
           <MdNotificationsNone size={20} color="white" />
         </HeaderBox>
         <HeaderAvatar />
-      </HeaderBtnWrapper>
+      </HeaderBtnWrapper> */}
     </Container>
   );
 };

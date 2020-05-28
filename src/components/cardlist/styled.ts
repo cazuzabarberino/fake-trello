@@ -58,11 +58,11 @@ export const CardHeader = styled.div<draggingProps>`
   cursor: ${({ selfTaskDragging }) =>
     selfTaskDragging ? "inherit" : "pointer"};
   padding-top: 4px;
-
+  position: relative;
   display: grid;
   grid-template-columns: 1fr auto;
 
-  div {
+  & > div {
     height: 32px;
     width: 32px;
     /* border: 2px solid red; */
@@ -78,11 +78,14 @@ export const CardHeader = styled.div<draggingProps>`
   }
 
   p {
-    /* border: 2px solid blue; */
+    width: 100%;
     display: flex;
     align-items: center;
     padding-left: 12px;
     font-weight: 700;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 `;
 
