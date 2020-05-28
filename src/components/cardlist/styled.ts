@@ -1,7 +1,8 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-interface CardContentProps {
+interface draggingProps {
   dragging?: boolean;
+  selfTaskDragging?: boolean;
 }
 
 export const Container = styled.div`
@@ -14,17 +15,23 @@ export const Container = styled.div`
   }
 `;
 
-export const CardContent = styled.div<CardContentProps>`
+export const CardContent = styled.div<draggingProps>`
   position: relative;
   max-width: 272px;
   width: 100%;
-  max-height: 100%;
   padding: 0 4px;
 
-  display: flex;
-  flex-direction: column;
+  max-height: 100%;
 
-  background: ${({ dragging }) => (dragging ? "none" : "#ebecf0")};
+  /* display: flex;
+  flex-direction: column; */
+
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  row-gap: 4px;
+  /* grid-auto-flow: row; */
+
+  background: ${({ dragging, theme }) => (dragging ? "none" : theme.listColor)};
 
   font-size: 14px;
   border-radius: 4px;
@@ -39,36 +46,77 @@ export const Shadow = styled.div<ShadowProps>`
   position: absolute;
   width: 100%;
   height: 100%;
-  background: red;
   top: 0;
   left: 0;
   border-radius: inherit;
-  background: rgba(0, 0, 0, 0.35);
+  background: ${({ theme }) => theme.transparency};
 `;
 
 export const CardHeader = styled.div<draggingProps>`
   opacity: ${({ dragging }) => (dragging ? 0 : 1)};
-  padding: 12px 8px;
-  color: #172b4d;
   font-weight: 700;
-  cursor: pointer;
+  cursor: ${({ selfTaskDragging }) =>
+    selfTaskDragging ? "inherit" : "pointer"};
+  padding-top: 4px;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+
+  & > div {
+    height: 32px;
+    width: 32px;
+    /* border: 2px solid red; */
+    display: grid;
+    place-content: center;
+    border-radius: 4px;
+    opacity: 0.5;
+
+    :hover {
+      opacity: 1;
+      background: ${({ theme }) => theme.transparencyLight};
+    }
+  }
+
+  p {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 12px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 `;
 
 export const NewTaskBtn = styled.div<draggingProps>`
   opacity: ${({ dragging }) => (dragging ? 0 : 1)};
-  display: flex;
-  padding: 12px 8px;
-`;
+  display: grid;
+  grid-auto-flow: column;
+  align-content: center;
+  place-content: start;
 
-interface draggingProps {
-  dragging?: boolean;
-}
+  column-gap: 8px;
+  padding: 8px 8px;
+  cursor: ${({ selfTaskDragging }) =>
+    selfTaskDragging ? "inherit" : "pointer"};
+  margin: 0 4px;
+  margin-bottom: 8px;
+
+  ${({ selfTaskDragging }) =>
+    !selfTaskDragging &&
+    css`
+      :hover {
+        background: rgba(9, 30, 66, 0.08);
+      }
+    `}
+`;
 
 export const TaskContainer = styled.div<draggingProps>`
   opacity: ${({ dragging }) => (dragging ? 0 : 1)};
   display: flex;
   flex-direction: column;
-  padding: 0 4px 8px 4px;
+  padding: 0 4px 0 4px;
   flex: 1 1 auto;
   overflow-y: auto;
 
@@ -80,12 +128,12 @@ export const TaskContainer = styled.div<draggingProps>`
   /* Track */
   ::-webkit-scrollbar-track {
     border-radius: 10px;
-    background: #d9dce2;
+    background: ${({ theme }) => theme.scrollBar};
   }
 
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: #bdc3ce;
+    background: ${({ theme }) => theme.scrollThumb};
     border-radius: 10px;
   }
 `;

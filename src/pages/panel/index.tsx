@@ -2,16 +2,18 @@ import React from "react";
 import shortid from "shortid";
 import CardList from "../../components/cardlist";
 import VisualList from "../../components/cardlist/visualList";
+import NewList from "../../components/newList";
 import VisualTaskCard from "../../components/taskCard/VisualTaskCard";
 import DndTaskContext, {
   DndTaskContextValue,
 } from "../../Contexts/DndTaskContext";
 import useDndList from "../../hooks/useDnDList";
 import { useDndTask } from "../../hooks/useDndTask";
+import useTaskList from "../../hooks/useTaskList";
 import useMouseScrollHorizontal from "../../hooks/useMouseScrollHorizontal";
 import TaskList from "../../models/List";
 import { Container, ListContainter } from "./styles";
-interface Props {}
+import { TaskListContext } from "../../Contexts/TaskListContext";
 
 const mock = [
   {
@@ -20,81 +22,8 @@ const mock = [
       "backlog task",
       "anothter backlog task",
       "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
-      "very long task with a lot of blank space to test the text wrapper",
       "A very looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong task",
     ],
-  },
-  {
-    title: "To dos",
-    tasks: ["a todo task"],
-  },
-  {
-    title: "To dos",
-    tasks: ["a todo task"],
-  },
-  {
-    title: "To dos",
-    tasks: ["a todo task"],
-  },
-  {
-    title: "To dos",
-    tasks: ["a todo task"],
   },
   {
     title: "To dos",
@@ -106,7 +35,7 @@ const mock = [
   },
 ];
 
-const Panel = (props: Props) => {
+const Panel = () => {
   const [allLists, setAllLists] = React.useState<TaskList[]>(() => {
     return mock.map((list) => ({
       ...list,
@@ -117,6 +46,8 @@ const Panel = (props: Props) => {
       })),
     }));
   });
+
+  const taskListContextValue = useTaskList(allLists, setAllLists);
 
   const {
     beginDragList,
@@ -136,7 +67,7 @@ const Panel = (props: Props) => {
     width,
   } = useDndTask(allLists, setAllLists);
 
-  const scrollRef = useMouseScrollHorizontal(draggingList);
+  const { scrollRef, scrollToRight } = useMouseScrollHorizontal(draggingList);
 
   const dndContextValue: DndTaskContextValue = React.useMemo(
     () => ({
@@ -161,50 +92,57 @@ const Panel = (props: Props) => {
   // }
 
   return (
-    <DndTaskContext.Provider value={dndContextValue}>
-      <Container>
-        <ListContainter id="scroll-test" ref={scrollRef}>
-          {allLists.map((list, index) => (
-            <CardList
-              selfTaskDragging={taskDragging && dragIndexes.listIndex === index}
-              key={list.id}
-              listIndex={index}
-              list={list}
-              beginDragList={beginDragList}
-              draggingSelf={draggingList && draggedListIndex === index}
-              draggingList={draggingList}
-              moveListHorizontally={moveListHorizontally}
+    <TaskListContext.Provider value={taskListContextValue}>
+      <DndTaskContext.Provider value={dndContextValue}>
+        <Container>
+          <ListContainter id="scroll-test" ref={scrollRef}>
+            {allLists.map((list, index) => (
+              <CardList
+                selfTaskDragging={
+                  taskDragging && dragIndexes.listIndex === index
+                }
+                key={list.id}
+                listIndex={index}
+                list={list}
+                beginDragList={beginDragList}
+                draggingSelf={draggingList && draggedListIndex === index}
+                draggingList={draggingList}
+                moveListHorizontally={moveListHorizontally}
+              />
+            ))}
+            <NewList scrollToRight={scrollToRight} />
+            <div
+              style={{
+                minWidth: "8px",
+                height: "100%",
+                margin: 0,
+              }}
             />
-          ))}
-          <div
-            style={{
-              minWidth: "8px",
-              height: "100%",
-              margin: 0,
-            }}
-          />
-        </ListContainter>
+          </ListContainter>
 
-        {taskDragging && (
-          <VisualTaskCard
-            task={allLists[dragIndexes.listIndex].tasks[dragIndexes.taskIndex]}
-            left={coord.x}
-            top={coord.y}
-            width={width}
-          />
-        )}
+          {taskDragging && (
+            <VisualTaskCard
+              task={
+                allLists[dragIndexes.listIndex].tasks[dragIndexes.taskIndex]
+              }
+              left={coord.x}
+              top={coord.y}
+              width={width}
+            />
+          )}
 
-        {draggingList && (
-          <VisualList
-            list={allLists[draggedListIndex]}
-            listIndex={draggedListIndex}
-            left={draggedListCoord.x}
-            top={draggedListCoord.y}
-            height={height}
-          />
-        )}
-      </Container>
-    </DndTaskContext.Provider>
+          {draggingList && (
+            <VisualList
+              list={allLists[draggedListIndex]}
+              listIndex={draggedListIndex}
+              left={draggedListCoord.x}
+              top={draggedListCoord.y}
+              height={height}
+            />
+          )}
+        </Container>
+      </DndTaskContext.Provider>
+    </TaskListContext.Provider>
   );
 };
 

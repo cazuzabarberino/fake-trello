@@ -8,7 +8,7 @@ export const Container = styled.div`
   padding: 4px;
 
   display: flex;
-  background: rgba(0, 0, 0, 0.32);
+  background: ${({ theme }) => theme.transparency};
 `;
 
 interface HeaderBtnWrapperProps {

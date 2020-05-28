@@ -1,17 +1,22 @@
 import React from "react";
+import { BsThreeDots } from "react-icons/bs";
 import { FiPlus } from "react-icons/fi";
 import useMouseScroll from "../../hooks/useMouseScrollVertical";
 import TaskList from "../../models/List";
+import Coord from "../../models/Coord";
 import { saveListRect } from "../../util";
+import NewTask from "../newTask";
 import TaskCard from "../taskCard";
 import {
   CardContent,
   CardHeader,
-  NewTaskBtn,
-  TaskContainer,
-  Shadow,
   Container,
+  NewTaskBtn,
+  Shadow,
+  TaskContainer,
 } from "./styled";
+import CardlistAction from "./cardlistAction";
+import CardListEdit from "./cardlistEditTitle";
 
 interface Props {
   list: TaskList;
@@ -36,8 +41,21 @@ const CardList = ({
   draggingList,
   moveListHorizontally,
 }: Props) => {
+  const [editing, setEditing] = React.useState(false);
   const contentRef = React.useRef<HTMLDivElement | null>(null);
-  const taskContainerRef = useMouseScroll(selfTaskDragging);
+  const { scrollRef, scrolDown } = useMouseScroll(selfTaskDragging);
+  const [addingTask, setAddingTask] = React.useState(false);
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const menuBtnRef = React.useRef<HTMLDivElement | null>(null);
+
+  const menuPosition: Coord = React.useMemo(() => {
+    if (!menuOpen) return { x: 0, y: 0 };
+    const rect = (menuBtnRef.current as HTMLDivElement).getBoundingClientRect();
+    return {
+      x: rect.x,
+      y: rect.y,
+    };
+  }, [menuOpen]);
 
   React.useLayoutEffect(() => {
     saveListRect(
@@ -50,6 +68,8 @@ const CardList = ({
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     event.preventDefault();
+    if (event.button !== 0) return;
+
     beginDragList(
       listIndex,
       event,
@@ -65,10 +85,26 @@ const CardList = ({
   return (
     <Container onMouseEnter={handleMouseEnter}>
       <CardContent dragging={draggingSelf} ref={contentRef}>
-        <CardHeader dragging={draggingSelf} onMouseDown={handleMouseDown}>
-          <p>{list.title}</p>
+        <CardHeader
+          selfTaskDragging={selfTaskDragging}
+          dragging={draggingSelf}
+          onMouseDown={handleMouseDown}
+        >
+          <p onClick={() => setEditing(true)}>
+            {list.title}
+            {editing && (
+              <CardListEdit
+                close={() => setEditing(false)}
+                listIndex={listIndex}
+                title={list.title}
+              />
+            )}
+          </p>
+          <div ref={menuBtnRef} onClick={() => setMenuOpen((val) => !val)}>
+            <BsThreeDots size={16} />
+          </div>
         </CardHeader>
-        <TaskContainer dragging={draggingSelf} ref={taskContainerRef}>
+        <TaskContainer dragging={draggingSelf} ref={scrollRef}>
           {list.tasks.map((task, taskIndex) => (
             <TaskCard
               key={task.id}
@@ -78,12 +114,32 @@ const CardList = ({
             />
           ))}
         </TaskContainer>
-        <NewTaskBtn dragging={draggingSelf}>
-          <FiPlus />
-          <p>Adicionar outro cartão</p>
-        </NewTaskBtn>
+        {addingTask ? (
+          <NewTask
+            listIndex={listIndex}
+            closeNewTask={() => setAddingTask(false)}
+            scrolDown={scrolDown}
+          />
+        ) : (
+          <NewTaskBtn
+            selfTaskDragging={selfTaskDragging}
+            dragging={draggingSelf}
+            onClick={() => setAddingTask(true)}
+          >
+            <FiPlus size={16} />
+            <p>Adicionar outro cartão</p>
+          </NewTaskBtn>
+        )}
         <Shadow dragging={draggingSelf} />
       </CardContent>
+      {menuOpen && (
+        <CardlistAction
+          listIndex={listIndex}
+          openNewTask={() => setAddingTask(true)}
+          close={() => setMenuOpen(false)}
+          menuPosition={menuPosition}
+        />
+      )}
     </Container>
   );
 };

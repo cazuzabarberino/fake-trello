@@ -1,9 +1,30 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle, DefaultTheme } from "styled-components";
+
+declare module "styled-components" {
+  export interface DefaultTheme {
+    fontColor: string;
+    transparency: string;
+    transparencyLight: string;
+    scrollBar: string;
+    scrollThumb: string;
+    listColor: string;
+    taskColor: string;
+    green: string;
+  }
+}
+
+export const defaultTheme: DefaultTheme = {
+  fontColor: "#172b4d",
+  transparency: "rgba(0, 0, 0, 0.32)",
+  transparencyLight: "rgba(0, 0, 0, 0.16)",
+  scrollBar: "#d9dce2",
+  scrollThumb: "#bdc3ce",
+  listColor: "#ebecf0",
+  taskColor: "white",
+  green: "#5aac44",
+};
 
 export const GlobalStyles = createGlobalStyle`
-
-
-
   * {
     padding: 0;
     margin: 0;
@@ -13,7 +34,7 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   body{
-    color: #172b4d;
+    color: ${({ theme }) => theme.fontColor};
   }
 
   button {
@@ -21,5 +42,3 @@ export const GlobalStyles = createGlobalStyle`
   }
 
 `;
-
-export const theme = {};

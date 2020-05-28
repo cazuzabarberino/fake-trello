@@ -66,5 +66,15 @@ export default function useMouseScrollHorizontal(condition: boolean) {
     };
   }, [saveMouseCoord, checkMoveScroll, condition]);
 
-  return scrollRef;
+  const scrollToRight = React.useCallback(() => {
+    const element = scrollRef.current as HTMLDivElement;
+    element.scrollTo({
+      left: element.scrollWidth,
+    });
+  }, []);
+
+
+  
+
+  return { scrollRef, scrollToRight };
 }

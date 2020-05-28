@@ -5,6 +5,8 @@ import DndTaskContext, {
 import Task from "../../models/Task";
 import { checkRangeY } from "../../util";
 import { Card, Shadow } from "./styled";
+import TaskMenu from "./taskMenu";
+import { FiEdit2 } from "react-icons/fi";
 
 interface Props {
   task: Task;
@@ -14,6 +16,7 @@ interface Props {
 
 const TaskCard = ({ task, listIndex, index }: Props) => {
   const containerRef = React.useRef<HTMLDivElement | null>(null);
+  const [menuOpen, setMenuOpen] = React.useState(false);
 
   const {
     beginTaskDrag,
@@ -55,7 +58,9 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
   );
 
   const handleRightMouseDown = React.useCallback(
-    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {},
+    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      setMenuOpen(true);
+    },
     []
   );
 
@@ -72,19 +77,33 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
   );
 
   return (
-    <Card
-      taskDragging={taskDragging}
-      dragging={dragging}
-      ref={containerRef}
-      onContextMenu={(e) => {
-        e.preventDefault();
-      }}
-      onMouseDown={handleMouseDown}
-      onMouseMove={mouseMoveHandle}
-    >
-      {task.title}
-      <Shadow dragging={dragging} />
-    </Card>
+    <>
+      <Card
+        taskDragging={taskDragging}
+        dragging={dragging}
+        ref={containerRef}
+        onContextMenu={(e) => {
+          e.preventDefault();
+        }}
+        onMouseDown={handleMouseDown}
+        onMouseMove={mouseMoveHandle}
+      >
+        <p>{task.title}</p>
+        <button onClick={() => setMenuOpen(true)}>
+          <FiEdit2 size={14} />
+        </button>
+        <Shadow dragging={dragging} />
+        {menuOpen && (
+          <TaskMenu
+            taskIndex={index}
+            listIndex={listIndex}
+            rect={(containerRef.current as HTMLDivElement).getBoundingClientRect()}
+            close={() => setMenuOpen(false)}
+            title={task.title}
+          />
+        )}
+      </Card>
+    </>
   );
 };
 
