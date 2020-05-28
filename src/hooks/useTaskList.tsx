@@ -2,8 +2,9 @@ import React from "react";
 import shortid from "shortid";
 import TaskList from "../models/List";
 import Task from "../models/Task";
+import { TaskListContextValue } from "../Contexts/TaskListContext";
 
-export default function useListFunction(
+export default function useTaskList(
   allLists: TaskList[],
   setAllLists: React.Dispatch<React.SetStateAction<TaskList[]>>
 ) {
@@ -57,5 +58,15 @@ export default function useListFunction(
     [allLists, setAllLists]
   );
 
-  return { addList, addNewTask, deleteList, deleteTask };
+  const taskListContextValue: TaskListContextValue = React.useMemo(
+    () => ({
+      addList,
+      addNewTask,
+      deleteTask,
+      deleteList,
+    }),
+    [addList, addNewTask, deleteList, deleteTask]
+  );
+
+  return taskListContextValue;
 }

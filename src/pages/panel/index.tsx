@@ -9,10 +9,11 @@ import DndTaskContext, {
 } from "../../Contexts/DndTaskContext";
 import useDndList from "../../hooks/useDnDList";
 import { useDndTask } from "../../hooks/useDndTask";
-import useListFunction from "../../hooks/useListFunction";
+import useTaskList from "../../hooks/useTaskList";
 import useMouseScrollHorizontal from "../../hooks/useMouseScrollHorizontal";
 import TaskList from "../../models/List";
 import { Container, ListContainter } from "./styles";
+import { TaskListContext } from "../../Contexts/TaskListContext";
 
 const mock = [
   {
@@ -46,7 +47,7 @@ const Panel = () => {
     }));
   });
 
-  const { addList, addNewTask } = useListFunction(allLists, setAllLists);
+  const taskListContextValue = useTaskList(allLists, setAllLists);
 
   const {
     beginDragList,
@@ -91,52 +92,57 @@ const Panel = () => {
   // }
 
   return (
-    <DndTaskContext.Provider value={dndContextValue}>
-      <Container>
-        <ListContainter id="scroll-test" ref={scrollRef}>
-          {allLists.map((list, index) => (
-            <CardList
-              addNewTask={addNewTask}
-              selfTaskDragging={taskDragging && dragIndexes.listIndex === index}
-              key={list.id}
-              listIndex={index}
-              list={list}
-              beginDragList={beginDragList}
-              draggingSelf={draggingList && draggedListIndex === index}
-              draggingList={draggingList}
-              moveListHorizontally={moveListHorizontally}
+    <TaskListContext.Provider value={taskListContextValue}>
+      <DndTaskContext.Provider value={dndContextValue}>
+        <Container>
+          <ListContainter id="scroll-test" ref={scrollRef}>
+            {allLists.map((list, index) => (
+              <CardList
+                selfTaskDragging={
+                  taskDragging && dragIndexes.listIndex === index
+                }
+                key={list.id}
+                listIndex={index}
+                list={list}
+                beginDragList={beginDragList}
+                draggingSelf={draggingList && draggedListIndex === index}
+                draggingList={draggingList}
+                moveListHorizontally={moveListHorizontally}
+              />
+            ))}
+            <NewList scrollToRight={scrollToRight} />
+            <div
+              style={{
+                minWidth: "8px",
+                height: "100%",
+                margin: 0,
+              }}
             />
-          ))}
-          <NewList addList={addList} scrollToRight={scrollToRight} />
-          <div
-            style={{
-              minWidth: "8px",
-              height: "100%",
-              margin: 0,
-            }}
-          />
-        </ListContainter>
+          </ListContainter>
 
-        {taskDragging && (
-          <VisualTaskCard
-            task={allLists[dragIndexes.listIndex].tasks[dragIndexes.taskIndex]}
-            left={coord.x}
-            top={coord.y}
-            width={width}
-          />
-        )}
+          {taskDragging && (
+            <VisualTaskCard
+              task={
+                allLists[dragIndexes.listIndex].tasks[dragIndexes.taskIndex]
+              }
+              left={coord.x}
+              top={coord.y}
+              width={width}
+            />
+          )}
 
-        {draggingList && (
-          <VisualList
-            list={allLists[draggedListIndex]}
-            listIndex={draggedListIndex}
-            left={draggedListCoord.x}
-            top={draggedListCoord.y}
-            height={height}
-          />
-        )}
-      </Container>
-    </DndTaskContext.Provider>
+          {draggingList && (
+            <VisualList
+              list={allLists[draggedListIndex]}
+              listIndex={draggedListIndex}
+              left={draggedListCoord.x}
+              top={draggedListCoord.y}
+              height={height}
+            />
+          )}
+        </Container>
+      </DndTaskContext.Provider>
+    </TaskListContext.Provider>
   );
 };
 

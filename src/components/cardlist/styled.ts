@@ -28,7 +28,7 @@ export const CardContent = styled.div<draggingProps>`
 
   display: grid;
   grid-template-rows: auto 1fr auto;
-  row-gap: 8px;
+  row-gap: 4px;
   /* grid-auto-flow: row; */
 
   background: ${({ dragging, theme }) => (dragging ? "none" : theme.listColor)};
@@ -54,10 +54,36 @@ export const Shadow = styled.div<ShadowProps>`
 
 export const CardHeader = styled.div<draggingProps>`
   opacity: ${({ dragging }) => (dragging ? 0 : 1)};
-  padding: 8px 8px 4px 8px;
   font-weight: 700;
   cursor: ${({ selfTaskDragging }) =>
     selfTaskDragging ? "inherit" : "pointer"};
+  padding-top: 4px;
+
+  display: grid;
+  grid-template-columns: 1fr auto;
+
+  div {
+    height: 32px;
+    width: 32px;
+    /* border: 2px solid red; */
+    display: grid;
+    place-content: center;
+    border-radius: 4px;
+    opacity: 0.5;
+
+    :hover {
+      opacity: 1;
+      background: ${({ theme }) => theme.transparencyLight};
+    }
+  }
+
+  p {
+    /* border: 2px solid blue; */
+    display: flex;
+    align-items: center;
+    padding-left: 12px;
+    font-weight: 700;
+  }
 `;
 
 export const NewTaskBtn = styled.div<draggingProps>`

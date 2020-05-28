@@ -3,14 +3,19 @@ import { FiX } from "react-icons/fi";
 import { DefaultTheme, withTheme } from "styled-components";
 import useKeyMouseToSaveClose from "../../hooks/useKeyMouseToSaveClose";
 import { Container } from "./styled";
+import {
+  TaskListContextValue,
+  TaskListContext,
+} from "../../Contexts/TaskListContext";
 
 interface Props {
   theme: DefaultTheme;
-  addList: (title: string) => void;
   scrollToRight: () => void;
 }
 
-const NewList = ({ theme, addList, scrollToRight }: Props) => {
+const NewList = ({ theme, scrollToRight }: Props) => {
+  const { addList } = React.useContext(TaskListContext) as TaskListContextValue;
+
   const [creatingNewList, setCreatingNewList] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement | null>(null);
   const [input, setInput] = React.useState("");

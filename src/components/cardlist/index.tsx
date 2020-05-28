@@ -1,18 +1,21 @@
 import React from "react";
+import { BsThreeDots } from "react-icons/bs";
 import { FiPlus } from "react-icons/fi";
 import useMouseScroll from "../../hooks/useMouseScrollVertical";
 import TaskList from "../../models/List";
+import Coord from "../../models/Coord";
 import { saveListRect } from "../../util";
+import NewTask from "../newTask";
 import TaskCard from "../taskCard";
 import {
   CardContent,
   CardHeader,
-  NewTaskBtn,
-  TaskContainer,
-  Shadow,
   Container,
+  NewTaskBtn,
+  Shadow,
+  TaskContainer,
 } from "./styled";
-import NewTask from "../newTask";
+import CardlistAction from "./cardlistAction";
 
 interface Props {
   list: TaskList;
@@ -26,7 +29,6 @@ interface Props {
     rect: DOMRect
   ) => void;
   moveListHorizontally: (toIndex: number) => void;
-  addNewTask: (title: string, listIndex: number) => void;
 }
 
 const CardList = ({
@@ -37,11 +39,21 @@ const CardList = ({
   draggingSelf,
   draggingList,
   moveListHorizontally,
-  addNewTask,
 }: Props) => {
   const contentRef = React.useRef<HTMLDivElement | null>(null);
   const { scrollRef, scrolDown } = useMouseScroll(selfTaskDragging);
   const [addingTask, setAddingTask] = React.useState(false);
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const menuBtnRef = React.useRef<HTMLDivElement | null>(null);
+
+  const menuPosition: Coord = React.useMemo(() => {
+    if (!menuOpen) return { x: 0, y: 0 };
+    const rect = (menuBtnRef.current as HTMLDivElement).getBoundingClientRect();
+    return {
+      x: rect.x,
+      y: rect.y,
+    };
+  }, [menuOpen]);
 
   React.useLayoutEffect(() => {
     saveListRect(
@@ -77,6 +89,9 @@ const CardList = ({
           onMouseDown={handleMouseDown}
         >
           <p>{list.title}</p>
+          <div ref={menuBtnRef} onClick={() => setMenuOpen((val) => !val)}>
+            <BsThreeDots size={16} />
+          </div>
         </CardHeader>
         <TaskContainer dragging={draggingSelf} ref={scrollRef}>
           {list.tasks.map((task, taskIndex) => (
@@ -92,7 +107,6 @@ const CardList = ({
           <NewTask
             listIndex={listIndex}
             closeNewTask={() => setAddingTask(false)}
-            addNewTask={addNewTask}
             scrolDown={scrolDown}
           />
         ) : (
@@ -107,6 +121,14 @@ const CardList = ({
         )}
         <Shadow dragging={draggingSelf} />
       </CardContent>
+      {menuOpen && (
+        <CardlistAction
+          listIndex={listIndex}
+          openNewTask={() => setAddingTask(true)}
+          close={() => setMenuOpen(false)}
+          menuPosition={menuPosition}
+        />
+      )}
     </Container>
   );
 };

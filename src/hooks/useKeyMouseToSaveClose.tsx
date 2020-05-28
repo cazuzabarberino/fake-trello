@@ -35,10 +35,10 @@ export default function useKeyMouseToSaveClose(
     }
 
     window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("mousedown", mouseUpHandler);
+    window.addEventListener("mousedown", mouseUpHandler, true);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("mousedown", mouseUpHandler);
+      window.removeEventListener("mousedown", mouseUpHandler, true);
     };
   }, [save, close]);
 

@@ -1,4 +1,5 @@
 import React from "react";
+import { BsThreeDots } from "react-icons/bs";
 import { FiPlus } from "react-icons/fi";
 import TaskList from "../../models/List";
 import TaskCard from "../taskCard";
@@ -31,6 +32,9 @@ const CardList = ({ list, listIndex, top, left, height }: Props) => {
         }}
       >
         <p>{list.title}</p>
+        <div>
+          <BsThreeDots size={16} />
+        </div>
       </CardHeader>
       <TaskContainer>
         {list.tasks.map((task, taskIndex) => (
