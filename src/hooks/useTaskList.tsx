@@ -58,14 +58,34 @@ export default function useTaskList(
     [allLists, setAllLists]
   );
 
+  const editListTitle = React.useCallback(
+    (title: string, listIndex: number) => {
+      const newList = [...allLists];
+      newList[listIndex].title = title;
+      setAllLists(newList);
+    },
+    [allLists, setAllLists]
+  );
+
+  const editTaskTitle = React.useCallback(
+    (title: string, taskIndex: number, listIndex: number) => {
+      const newList = [...allLists];
+      newList[listIndex].tasks[taskIndex].title = title;
+      setAllLists(newList);
+    },
+    [allLists, setAllLists]
+  );
+
   const taskListContextValue: TaskListContextValue = React.useMemo(
     () => ({
       addList,
       addNewTask,
       deleteTask,
       deleteList,
+      editListTitle,
+      editTaskTitle,
     }),
-    [addList, addNewTask, deleteList, deleteTask]
+    [addList, addNewTask, deleteList, deleteTask, editListTitle, editTaskTitle]
   );
 
   return taskListContextValue;

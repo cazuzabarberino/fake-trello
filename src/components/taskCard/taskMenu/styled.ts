@@ -30,6 +30,7 @@ export const Container = styled.div<MenuProps>`
 
 interface EditZoneProps {
   width: number;
+  height: number;
 }
 
 export const EditZone = styled.div<EditZoneProps>`
@@ -41,8 +42,9 @@ export const EditZone = styled.div<EditZoneProps>`
   & > textarea {
     resize: none;
     width: ${({ width }) => width + "px"};
-    height: 100px;
-
+    min-height: 100px;
+    height: ${({ height }) => height + "px"};
+    font-size: 14px;
     border: none;
     border-radius: 4px;
     padding: 8px;

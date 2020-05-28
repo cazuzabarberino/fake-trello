@@ -17,16 +17,23 @@ interface Props {
 }
 
 const TaskMenu = ({ close, rect, title, listIndex, taskIndex }: Props) => {
-  const contentRef = useKeyMouseToSaveClose(() => {}, close);
   const inputRef = useFocusInput<HTMLTextAreaElement>();
   const [input, setInput] = React.useState("");
-  const { deleteTask } = React.useContext(
+  const { deleteTask, editTaskTitle } = React.useContext(
     TaskListContext
   ) as TaskListContextValue;
 
   React.useEffect(() => {
     setInput(title);
   }, [title]);
+
+  const save = React.useCallback(() => {
+    if (input === "") return;
+    editTaskTitle(input, taskIndex, listIndex);
+    close();
+  }, [input, close, editTaskTitle, taskIndex, listIndex]);
+
+  const contentRef = useKeyMouseToSaveClose(save, close);
 
   return (
     <Container
@@ -35,7 +42,7 @@ const TaskMenu = ({ close, rect, title, listIndex, taskIndex }: Props) => {
       left={rect.x}
     >
       <div ref={contentRef}>
-        <EditZone width={rect.width}>
+        <EditZone height={rect.height} width={rect.width}>
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
