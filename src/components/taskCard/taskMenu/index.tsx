@@ -48,7 +48,7 @@ const TaskMenu = ({ close, rect, title, listIndex, taskIndex }: Props) => {
             onChange={(e) => setInput(e.target.value)}
             ref={inputRef}
           />
-          <button>Salvar</button>
+          <button onClick={save}>Salvar</button>
         </EditZone>
         <OptionsZone>
           <button

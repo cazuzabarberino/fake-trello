@@ -6,6 +6,7 @@ import Task from "../../models/Task";
 import { checkRangeY } from "../../util";
 import { Card, Shadow } from "./styled";
 import TaskMenu from "./taskMenu";
+import { FiEdit2 } from "react-icons/fi";
 
 interface Props {
   task: Task;
@@ -88,6 +89,9 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
         onMouseMove={mouseMoveHandle}
       >
         <p>{task.title}</p>
+        <button onClick={() => setMenuOpen(true)}>
+          <FiEdit2 size={14} />
+        </button>
         <Shadow dragging={dragging} />
         {menuOpen && (
           <TaskMenu

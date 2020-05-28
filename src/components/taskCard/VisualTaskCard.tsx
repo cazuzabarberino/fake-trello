@@ -1,6 +1,7 @@
 import React from "react";
 import Task from "../../models/Task";
 import { Card } from "./styled";
+import { FiEdit2 } from "react-icons/fi";
 
 interface Props {
   task: Task;
@@ -24,7 +25,10 @@ const TaskCard = ({ task, left, top, width }: Props) => {
         pointerEvents: "none",
       }}
     >
-      {task.title}
+      <p>{task.title}</p>
+      <button>
+        <FiEdit2 size={14} />
+      </button>
     </Card>
   );
 };

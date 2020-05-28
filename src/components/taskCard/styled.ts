@@ -21,6 +21,38 @@ export const Card = styled.div<DragginProps>`
 
   cursor: inherit;
 
+  & > button {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    border: none;
+    background: none;
+    display: none;
+    opacity: 0.5;
+    border-radius: 4px;
+
+    place-content: center;
+    width: 20px;
+    height: 20px;
+
+    :hover {
+      opacity: 1;
+      background: ${({ theme }) => theme.transparencyLight};
+    }
+  }
+
+  ${({ dragging }) =>
+    !dragging &&
+    css`
+      :hover > button {
+        display: grid;
+      }
+    `}
+
+  p {
+    margin-right: 16px;
+  }
+
   & + div {
     margin-top: 8px;
   }
