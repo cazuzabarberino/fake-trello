@@ -46,7 +46,7 @@ const NewList = ({ theme, scrollToRight }: Props) => {
           ref={inputRef}
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Insira o título da lista..."
+          placeholder="Enter a title for this list..."
         />
         <div>
           <button
@@ -54,14 +54,14 @@ const NewList = ({ theme, scrollToRight }: Props) => {
               saveInput();
             }}
           >
-            Adicionar Lista
+            Add List
           </button>
           <button onClick={close}>
             <FiX size={24} color={theme.fontColor} />
           </button>
         </div>
       </div>
-      <p onClick={open}>Adicionar outra lista</p>
+      <p onClick={open}>Add new list</p>
     </Container>
   );
 };

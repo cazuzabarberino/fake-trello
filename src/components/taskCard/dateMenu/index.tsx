@@ -106,15 +106,15 @@ export default ({ top, left, listIndex, taskIndex, close }: Props) => {
       onMouseDown={(e) => e.stopPropagation()}
     >
       <header>
-        <p>Alterar Data de Entrega</p>
+        <p>Change Due Date</p>
         <button onClick={close}>
           <FiX size={16} />
         </button>
       </header>
       <Division />
       <DataWrapper>
-        <p>Data</p>
-        <p>Hora</p>
+        <p>Date</p>
+        <p>Time</p>
         <div>{selected.format("DD/MM/YY")}</div>
         <div>{selected.format("H:mm")}</div>
       </DataWrapper>
@@ -122,7 +122,7 @@ export default ({ top, left, listIndex, taskIndex, close }: Props) => {
         <button
           onClick={() => serCalendarView((val) => val.clone().subtract(1, "M"))}
         >
-          Anterior
+          Prev
         </button>
         <select
           value={calendarView.month()}
@@ -153,7 +153,7 @@ export default ({ top, left, listIndex, taskIndex, close }: Props) => {
         <button
           onClick={() => serCalendarView((val) => val.clone().add(1, "M"))}
         >
-          Próximo
+          Next
         </button>
       </CalendarNavWrapper>
       <Calendar>
@@ -166,10 +166,10 @@ export default ({ top, left, listIndex, taskIndex, close }: Props) => {
       </Calendar>
       <BtnWrapper>
         <Btn color={green} onClick={() => save(selected.format("DD/MM/YY"))}>
-          Salvar
+          Save
         </Btn>
         <Btn color={red} onClick={() => save("")}>
-          Remover
+          Remove
         </Btn>
       </BtnWrapper>
     </Container>

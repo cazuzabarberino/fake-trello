@@ -61,7 +61,7 @@ const TaskMenu = ({ close, rect, task, listIndex, taskIndex }: Props) => {
               </DateBadge>
             )}
           </div>
-          <button onClick={save}>Salvar</button>
+          <button onClick={save}>Save</button>
         </EditZone>
         <OptionsZone>
           <button
@@ -71,7 +71,7 @@ const TaskMenu = ({ close, rect, task, listIndex, taskIndex }: Props) => {
             }}
           >
             <FiClock />
-            <p>Alterar Data de Entrega</p>
+            <p>Change Due Date</p>
           </button>
           <button
             onClick={() => {
@@ -79,7 +79,7 @@ const TaskMenu = ({ close, rect, task, listIndex, taskIndex }: Props) => {
             }}
           >
             <FiArchive />
-            <p>Arquivar</p>
+            <p>Archive</p>
           </button>
         </OptionsZone>
         {dateMenuOpen && (

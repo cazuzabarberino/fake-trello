@@ -127,7 +127,11 @@ const CardList = ({
             onClick={() => setAddingTask(true)}
           >
             <FiPlus size={16} />
-            <p>Adicionar outro cartão</p>
+            {list.tasks.length > 0 ? (
+              <p>Add another card</p>
+            ) : (
+              <p>Add a card</p>
+            )}
           </NewTaskBtn>
         )}
         <Shadow dragging={draggingSelf} />

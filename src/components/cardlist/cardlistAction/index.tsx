@@ -34,7 +34,7 @@ const CardlistAction = ({
       }}
     >
       <header>
-        <p>Ações da Lista</p>
+        <p>List Actions</p>
         <button onClick={close}>
           <FiX size={16} />
         </button>
@@ -48,7 +48,7 @@ const CardlistAction = ({
               close();
             }}
           >
-            Adicionar Cartão...
+            Add Card...
           </button>
         </li>
       </ul>
@@ -61,7 +61,7 @@ const CardlistAction = ({
               close();
             }}
           >
-            Arquivar esta Lista
+            Archive this List
           </button>
         </li>
       </ul>
