@@ -1,5 +1,5 @@
 import React from "react";
-import { FiArchive, FiClock } from "react-icons/fi";
+import { FiArchive, FiClock, FiTag } from "react-icons/fi";
 import {
   TaskListContext,
   TaskListContextValue,
@@ -10,6 +10,8 @@ import Task from "../../../models/Task";
 import DateBadge from "../DateBadge";
 import DateMenu from "../dateMenu";
 import { Container, EditZone, OptionsZone } from "./styled";
+import LabelMenu from "../labelMenu";
+import { LabelWrapper } from "../styled";
 
 interface Props {
   close: () => void;
@@ -17,12 +19,21 @@ interface Props {
   task: Task;
   taskIndex: number;
   listIndex: number;
+  taskLabels: JSX.Element[];
 }
 
-const TaskMenu = ({ close, rect, task, listIndex, taskIndex }: Props) => {
+const TaskMenu = ({
+  close,
+  rect,
+  task,
+  listIndex,
+  taskIndex,
+  taskLabels,
+}: Props) => {
   const inputRef = useFocusInput<HTMLTextAreaElement>();
   const [input, setInput] = React.useState("");
   const [dateMenuOpen, setDateMenuOpen] = React.useState(false);
+  const [labelMenuOpen, setLabelMenuOpen] = React.useState(false);
   const { deleteTask, editTaskTitle } = React.useContext(
     TaskListContext
   ) as TaskListContextValue;
@@ -48,16 +59,33 @@ const TaskMenu = ({ close, rect, task, listIndex, taskIndex }: Props) => {
       <div ref={containerRef}>
         <EditZone height={rect.height} width={rect.width}>
           <div>
+            <LabelWrapper>{taskLabels}</LabelWrapper>
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
               ref={inputRef}
             />
-            {task.date && <DateBadge date={task.date} />}
+            {task.date && (
+              <DateBadge
+                taskIndex={taskIndex}
+                listIndex={listIndex}
+                complete={task.complete}
+                date={task.date}
+              />
+            )}
           </div>
           <button onClick={save}>Save</button>
         </EditZone>
         <OptionsZone>
+          <button
+            onClick={() => {
+              setLabelMenuOpen(true);
+              pauseRef.current = true;
+            }}
+          >
+            <FiTag />
+            <p>Edit Labels</p>
+          </button>
           <button
             onClick={() => {
               setDateMenuOpen(true);
@@ -76,6 +104,19 @@ const TaskMenu = ({ close, rect, task, listIndex, taskIndex }: Props) => {
             <p>Archive</p>
           </button>
         </OptionsZone>
+        {labelMenuOpen && (
+          <LabelMenu
+            close={() => {
+              setLabelMenuOpen(false);
+              pauseRef.current = false;
+            }}
+            top={rect.y}
+            left={rect.x + rect.width + 8}
+            taskIndex={taskIndex}
+            listIndex={listIndex}
+            labels={task.labels}
+          />
+        )}
         {dateMenuOpen && (
           <DateMenu
             date={task.date}

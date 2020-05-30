@@ -6,7 +6,11 @@ interface DragginProps {
   taskDragging?: boolean;
 }
 
-export const Card = styled.div<DragginProps>`
+interface CardProps {
+  hide?: boolean;
+}
+
+export const Card = styled.div<DragginProps & CardProps>`
   position: relative;
   max-width: 256px;
   flex: 1;
@@ -58,10 +62,6 @@ export const Card = styled.div<DragginProps>`
     margin-right: 16px;
   }
 
-  & + div {
-    margin-top: 8px;
-  }
-
   ${({ taskDragging }) =>
     !taskDragging &&
     css`
@@ -75,9 +75,22 @@ export const Card = styled.div<DragginProps>`
   p {
     opacity: ${({ dragging }) => (dragging ? 0 : 1)};
   }
+
+  transition: 0.2s ease-out;
+
+  & + div {
+    margin-top: ${({ hide }) => (hide ? "0" : "8px")};
+  }
+
+  ${({ hide }) =>
+    hide &&
+    css`
+      max-height: 0;
+      padding: 0;
+      border: 0;
+      overflow: hidden;
+    `}
 `;
-
-
 
 export const Shadow = styled.div<DragginProps>`
   display: ${({ dragging }) => (dragging ? "block" : "none")};
@@ -88,4 +101,25 @@ export const Shadow = styled.div<DragginProps>`
   height: 100%;
   border-radius: inherit;
   background: ${({ theme }) => theme.transparency};
+`;
+
+export const LabelWrapper = styled.div<DragginProps>`
+  width: calc(100% - 20px);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  column-gap: 4px;
+  row-gap: 4px;
+  margin-bottom: 4px;
+
+  opacity: ${({ dragging }) => (dragging ? 0 : 1)};
+`;
+
+interface LabelProps {
+  color: string;
+}
+
+export const LabelMark = styled.div<LabelProps>`
+  height: 8px;
+  border-radius: 8px;
+  background: ${({ color }) => color};
 `;

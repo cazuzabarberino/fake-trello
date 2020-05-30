@@ -5,9 +5,11 @@ import DndTaskContext, {
 } from "../../Contexts/DndTaskContext";
 import Task from "../../models/Task";
 import { checkRangeY } from "../../util";
-import { Card, Shadow } from "./styled";
-import TaskMenu from "./taskMenu";
 import DateBadge from "./DateBadge";
+import { Card, Shadow, LabelWrapper, LabelMark } from "./styled";
+import TaskMenu from "./taskMenu";
+import { LabelContext } from "../../Contexts/LabelContext";
+import Label from "../../models/Label";
 
 interface Props {
   task: Task;
@@ -18,6 +20,24 @@ interface Props {
 const TaskCard = ({ task, listIndex, index }: Props) => {
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const [menuOpen, setMenuOpen] = React.useState(false);
+  const { state } = React.useContext(LabelContext);
+
+  const hideRef = React.useRef(false);
+
+  const taskLabels = React.useMemo(() => {
+    const arr: JSX.Element[] = [];
+    hideRef.current = true;
+
+    task.labels.forEach((labelId) => {
+      const label = state.labels.find((label) => label.id === labelId) as Label;
+      if (label.selected) hideRef.current = false;
+      arr.push(<LabelMark key={labelId} color={label.color} />);
+    });
+
+    if (!arr.length && state.noTagSelected) hideRef.current = false;
+
+    return arr;
+  }, [state.labels, task.labels, state.noTagSelected]);
 
   const {
     beginTaskDrag,
@@ -82,6 +102,7 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
 
   return (
     <Card
+      hide={hideRef.current}
       taskDragging={taskDragging}
       dragging={dragging}
       ref={containerRef}
@@ -91,14 +112,23 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
       onMouseDown={handleMouseDown}
       onMouseMove={mouseMoveHandle}
     >
+      <LabelWrapper dragging={dragging}>{taskLabels}</LabelWrapper>
       <p>{task.title}</p>
-      {task.date && !dragging && <DateBadge date={task.date} />}
+      {task.date && !dragging && (
+        <DateBadge
+          listIndex={listIndex}
+          taskIndex={index}
+          complete={task.complete}
+          date={task.date}
+        />
+      )}
       <button onClick={() => setMenuOpen(true)}>
         <FiEdit2 size={14} />
       </button>
       <Shadow dragging={dragging} />
       {menuOpen && (
         <TaskMenu
+          taskLabels={taskLabels}
           taskIndex={index}
           listIndex={listIndex}
           rect={(containerRef.current as HTMLDivElement).getBoundingClientRect()}

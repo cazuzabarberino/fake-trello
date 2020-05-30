@@ -23,9 +23,11 @@ export default function useTaskList(
     (title: string, listIndex: number) => {
       const newList = [...allLists];
       const newTask: Task = {
+        labels: [],
         title,
         id: shortid.generate(),
         date: "",
+        complete: false,
       };
       newList[listIndex].tasks.push(newTask);
       setAllLists(newList);
@@ -86,6 +88,52 @@ export default function useTaskList(
     [allLists, setAllLists]
   );
 
+  const editCompleteState = React.useCallback(
+    (state: boolean, taskIndex: number, listIndex: number) => {
+      const newList = [...allLists];
+      newList[listIndex].tasks[taskIndex].complete = state;
+      setAllLists(newList);
+    },
+    [allLists, setAllLists]
+  );
+
+  const editLabel = React.useCallback(
+    (labelid: string, taskIndex: number, listIndex: number) => {
+      const newList = [...allLists];
+      const hasLabel = newList[listIndex].tasks[taskIndex].labels.findIndex(
+        (label) => label === labelid
+      );
+
+      if (hasLabel >= 0)
+        newList[listIndex].tasks[taskIndex].labels = newList[listIndex].tasks[
+          taskIndex
+        ].labels.filter((label) => label !== labelid);
+      else
+        newList[listIndex].tasks[taskIndex].labels = [
+          ...newList[listIndex].tasks[taskIndex].labels,
+          labelid,
+        ];
+
+      setAllLists(newList);
+    },
+    [allLists, setAllLists]
+  );
+
+  const deleteEveryLabel = React.useCallback(
+    (labelid: string) => {
+      const newList = allLists.map((list) => ({
+        ...list,
+        tasks: list.tasks.map((task) => ({
+          ...task,
+          labels: task.labels.filter((label) => label !== labelid),
+        })),
+      }));
+
+      setAllLists(newList);
+    },
+    [allLists, setAllLists]
+  );
+
   const taskListContextValue: TaskListContextValue = React.useMemo(
     () => ({
       addList,
@@ -95,6 +143,9 @@ export default function useTaskList(
       editListTitle,
       editTaskTitle,
       editTaskDate,
+      editCompleteState,
+      editLabel,
+      deleteEveryLabel,
     }),
     [
       addList,
@@ -104,6 +155,9 @@ export default function useTaskList(
       editListTitle,
       editTaskTitle,
       editTaskDate,
+      editCompleteState,
+      editLabel,
+      deleteEveryLabel,
     ]
   );
 
