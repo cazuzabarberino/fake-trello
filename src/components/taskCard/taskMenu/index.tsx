@@ -11,6 +11,7 @@ import DateBadge from "../DateBadge";
 import DateMenu from "../dateMenu";
 import { Container, EditZone, OptionsZone } from "./styled";
 import LabelMenu from "../labelMenu";
+import { LabelWrapper } from "../styled";
 
 interface Props {
   close: () => void;
@@ -18,9 +19,17 @@ interface Props {
   task: Task;
   taskIndex: number;
   listIndex: number;
+  taskLabels: JSX.Element[];
 }
 
-const TaskMenu = ({ close, rect, task, listIndex, taskIndex }: Props) => {
+const TaskMenu = ({
+  close,
+  rect,
+  task,
+  listIndex,
+  taskIndex,
+  taskLabels,
+}: Props) => {
   const inputRef = useFocusInput<HTMLTextAreaElement>();
   const [input, setInput] = React.useState("");
   const [dateMenuOpen, setDateMenuOpen] = React.useState(false);
@@ -50,6 +59,7 @@ const TaskMenu = ({ close, rect, task, listIndex, taskIndex }: Props) => {
       <div ref={containerRef}>
         <EditZone height={rect.height} width={rect.width}>
           <div>
+            <LabelWrapper>{taskLabels}</LabelWrapper>
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -104,6 +114,7 @@ const TaskMenu = ({ close, rect, task, listIndex, taskIndex }: Props) => {
             left={rect.x + rect.width + 8}
             taskIndex={taskIndex}
             listIndex={listIndex}
+            labels={task.labels}
           />
         )}
         {dateMenuOpen && (

@@ -14,6 +14,10 @@ import {
   LabelSelectBoxWrapper,
   OptionBtn,
 } from "./styled";
+import {
+  TaskListContext,
+  TaskListContextValue,
+} from "../../../Contexts/TaskListContext";
 
 interface Props {
   top: number;
@@ -21,6 +25,7 @@ interface Props {
   listIndex: number;
   taskIndex: number;
   close: () => void;
+  labels: string[];
 }
 
 enum LabelMenuPage {
@@ -28,12 +33,22 @@ enum LabelMenuPage {
   newLabel,
 }
 
-export default ({ top, left, listIndex, taskIndex, close }: Props) => {
+export default ({
+  top,
+  left,
+  listIndex,
+  taskIndex,
+  close,
+  labels: taskLabels,
+}: Props) => {
   const { containerRef } = useKeyMouseToSaveClose(() => {}, close);
   const { state, actions } = React.useContext(LabelContext);
   const [page, setPage] = React.useState<LabelMenuPage>(LabelMenuPage.main);
   const [selectedColor, setSelectedColor] = React.useState("");
   const [input, setInput] = React.useState("");
+  const { editLabel } = React.useContext(
+    TaskListContext
+  ) as TaskListContextValue;
 
   // console.log(state);
 
@@ -140,9 +155,15 @@ export default ({ top, left, listIndex, taskIndex, close }: Props) => {
             <LabelSelectBoxWrapper>
               {state.labels.map((label) => (
                 <React.Fragment key={label.id + "btnfrag"}>
-                  <LabelSelectBox key={label.id} color={label.color}>
+                  <LabelSelectBox
+                    key={label.id}
+                    color={label.color}
+                    onClick={() => editLabel(label.id, taskIndex, listIndex)}
+                  >
                     <p>{label.title}</p>
-                    <FiCheck color="white" size={20} />
+                    {taskLabels.findIndex((l) => l === label.id) >= 0 && (
+                      <FiCheck color="white" size={20} />
+                    )}
                   </LabelSelectBox>
                   <button key={label.id + "btn"}>
                     <FiEdit2 size={16} />
@@ -157,7 +178,18 @@ export default ({ top, left, listIndex, taskIndex, close }: Props) => {
           </>
         );
     }
-  }, [page, colorBoxes, input, actions, selectedColor, state.labels]);
+  }, [
+    page,
+    colorBoxes,
+    input,
+    actions,
+    selectedColor,
+    state.labels,
+    taskLabels,
+    editLabel,
+    listIndex,
+    taskIndex,
+  ]);
 
   return (
     <Container

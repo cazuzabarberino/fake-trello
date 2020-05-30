@@ -127,6 +127,7 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
       <Shadow dragging={dragging} />
       {menuOpen && (
         <TaskMenu
+          taskLabels={taskLabels}
           taskIndex={index}
           listIndex={listIndex}
           rect={(containerRef.current as HTMLDivElement).getBoundingClientRect()}

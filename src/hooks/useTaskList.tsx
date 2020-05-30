@@ -104,9 +104,15 @@ export default function useTaskList(
         (label) => label === labelid
       );
 
-      if (hasLabel > 0)
-        newList[listIndex].tasks[taskIndex].labels.splice(hasLabel, 1);
-      else newList[listIndex].tasks[taskIndex].labels.push(labelid);
+      if (hasLabel >= 0)
+        newList[listIndex].tasks[taskIndex].labels = newList[listIndex].tasks[
+          taskIndex
+        ].labels.filter((label) => label !== labelid);
+      else
+        newList[listIndex].tasks[taskIndex].labels = [
+          ...newList[listIndex].tasks[taskIndex].labels,
+          labelid,
+        ];
 
       setAllLists(newList);
     },
