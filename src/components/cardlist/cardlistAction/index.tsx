@@ -1,12 +1,12 @@
 import React from "react";
-import { Container, Division } from "./styled";
 import { FiX } from "react-icons/fi";
-import Coord from "../../../models/Coord";
-import useKeyMouseToSaveClose from "../../../hooks/useKeyMouseToSaveClose";
 import {
-  TaskListContextValue,
   TaskListContext,
+  TaskListContextValue,
 } from "../../../Contexts/TaskListContext";
+import useKeyMouseToSaveClose from "../../../hooks/useKeyMouseToSaveClose";
+import Coord from "../../../models/Coord";
+import { Container, Division } from "./styled";
 
 interface Props {
   menuPosition: Coord;
@@ -21,7 +21,7 @@ const CardlistAction = ({
   openNewTask,
   listIndex,
 }: Props) => {
-  const containerRef = useKeyMouseToSaveClose(() => {}, close);
+  const { containerRef } = useKeyMouseToSaveClose(() => {}, close);
   const { deleteList } = React.useContext(
     TaskListContext
   ) as TaskListContextValue;
@@ -34,7 +34,7 @@ const CardlistAction = ({
       }}
     >
       <header>
-        <p>Ações da Lista</p>
+        <p>List Actions</p>
         <button onClick={close}>
           <FiX size={16} />
         </button>
@@ -48,7 +48,7 @@ const CardlistAction = ({
               close();
             }}
           >
-            Adicionar Cartão...
+            Add Card...
           </button>
         </li>
       </ul>
@@ -61,7 +61,7 @@ const CardlistAction = ({
               close();
             }}
           >
-            Arquivar esta Lista
+            Archive this List
           </button>
         </li>
       </ul>

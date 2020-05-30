@@ -1,31 +1,35 @@
 import React from "react";
-import { Container, EditZone, OptionsZone } from "./styled";
-import useKeyMouseToSaveClose from "../../../hooks/useKeyMouseToSaveClose";
-import useFocusInput from "../../../hooks/useFocusInput";
-import { FiArchive } from "react-icons/fi";
+import { FiArchive, FiClock } from "react-icons/fi";
 import {
-  TaskListContextValue,
   TaskListContext,
+  TaskListContextValue,
 } from "../../../Contexts/TaskListContext";
+import useFocusInput from "../../../hooks/useFocusInput";
+import useKeyMouseToSaveClose from "../../../hooks/useKeyMouseToSaveClose";
+import Task from "../../../models/Task";
+import DateBadge from "../DateBadge";
+import DateMenu from "../dateMenu";
+import { Container, EditZone, OptionsZone } from "./styled";
 
 interface Props {
   close: () => void;
   rect: DOMRect;
-  title: string;
+  task: Task;
   taskIndex: number;
   listIndex: number;
 }
 
-const TaskMenu = ({ close, rect, title, listIndex, taskIndex }: Props) => {
+const TaskMenu = ({ close, rect, task, listIndex, taskIndex }: Props) => {
   const inputRef = useFocusInput<HTMLTextAreaElement>();
   const [input, setInput] = React.useState("");
+  const [dateMenuOpen, setDateMenuOpen] = React.useState(false);
   const { deleteTask, editTaskTitle } = React.useContext(
     TaskListContext
   ) as TaskListContextValue;
 
   React.useEffect(() => {
-    setInput(title);
-  }, [title]);
+    setInput(task.title);
+  }, [task.title]);
 
   const save = React.useCallback(() => {
     if (input === "") return;
@@ -33,7 +37,7 @@ const TaskMenu = ({ close, rect, title, listIndex, taskIndex }: Props) => {
     close();
   }, [input, close, editTaskTitle, taskIndex, listIndex]);
 
-  const contentRef = useKeyMouseToSaveClose(save, close);
+  const { containerRef, pauseRef } = useKeyMouseToSaveClose(save, close);
 
   return (
     <Container
@@ -41,25 +45,50 @@ const TaskMenu = ({ close, rect, title, listIndex, taskIndex }: Props) => {
       top={rect.y}
       left={rect.x}
     >
-      <div ref={contentRef}>
+      <div ref={containerRef}>
         <EditZone height={rect.height} width={rect.width}>
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            ref={inputRef}
-          />
-          <button onClick={save}>Salvar</button>
+          <div>
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              ref={inputRef}
+            />
+            {task.date && <DateBadge date={task.date} />}
+          </div>
+          <button onClick={save}>Save</button>
         </EditZone>
         <OptionsZone>
+          <button
+            onClick={() => {
+              setDateMenuOpen(true);
+              pauseRef.current = true;
+            }}
+          >
+            <FiClock />
+            <p>Change Due Date</p>
+          </button>
           <button
             onClick={() => {
               deleteTask(taskIndex, listIndex);
             }}
           >
             <FiArchive />
-            <p>Arquivar</p>
+            <p>Archive</p>
           </button>
         </OptionsZone>
+        {dateMenuOpen && (
+          <DateMenu
+            date={task.date}
+            close={() => {
+              setDateMenuOpen(false);
+              pauseRef.current = false;
+            }}
+            top={rect.y}
+            left={rect.x + rect.width + 8}
+            taskIndex={taskIndex}
+            listIndex={listIndex}
+          />
+        )}
       </div>
     </Container>
   );

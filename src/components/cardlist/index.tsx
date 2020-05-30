@@ -46,11 +46,11 @@ const CardList = ({
   const { scrollRef, scrolDown } = useMouseScroll(selfTaskDragging);
   const [addingTask, setAddingTask] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
-  const menuBtnRef = React.useRef<HTMLDivElement | null>(null);
+  const menuBtnRef = React.useRef<HTMLButtonElement | null>(null);
 
   const menuPosition: Coord = React.useMemo(() => {
     if (!menuOpen) return { x: 0, y: 0 };
-    const rect = (menuBtnRef.current as HTMLDivElement).getBoundingClientRect();
+    const rect = (menuBtnRef.current as HTMLButtonElement).getBoundingClientRect();
     return {
       x: rect.x,
       y: rect.y,
@@ -90,8 +90,8 @@ const CardList = ({
           dragging={draggingSelf}
           onMouseDown={handleMouseDown}
         >
-          <p onClick={() => setEditing(true)}>
-            {list.title}
+          <div onClick={() => setEditing(true)}>
+            <p>{list.title}</p>
             {editing && (
               <CardListEdit
                 close={() => setEditing(false)}
@@ -99,10 +99,10 @@ const CardList = ({
                 title={list.title}
               />
             )}
-          </p>
-          <div ref={menuBtnRef} onClick={() => setMenuOpen((val) => !val)}>
-            <BsThreeDots size={16} />
           </div>
+          <button ref={menuBtnRef} onClick={() => setMenuOpen((val) => !val)}>
+            <BsThreeDots size={16} />
+          </button>
         </CardHeader>
         <TaskContainer dragging={draggingSelf} ref={scrollRef}>
           {list.tasks.map((task, taskIndex) => (
@@ -127,7 +127,11 @@ const CardList = ({
             onClick={() => setAddingTask(true)}
           >
             <FiPlus size={16} />
-            <p>Adicionar outro cartão</p>
+            {list.tasks.length > 0 ? (
+              <p>Add another card</p>
+            ) : (
+              <p>Add a card</p>
+            )}
           </NewTaskBtn>
         )}
         <Shadow dragging={draggingSelf} />

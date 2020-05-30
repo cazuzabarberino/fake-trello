@@ -1,4 +1,5 @@
 import React from "react";
+import { FiEdit2 } from "react-icons/fi";
 import DndTaskContext, {
   DndTaskContextValue,
 } from "../../Contexts/DndTaskContext";
@@ -6,7 +7,7 @@ import Task from "../../models/Task";
 import { checkRangeY } from "../../util";
 import { Card, Shadow } from "./styled";
 import TaskMenu from "./taskMenu";
-import { FiEdit2 } from "react-icons/fi";
+import DateBadge from "./DateBadge";
 
 interface Props {
   task: Task;
@@ -21,12 +22,15 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
   const {
     beginTaskDrag,
     taskDragging,
-    listIndex: lindex,
-    taskIndex,
+    listIndex: draggedListIndex,
+    taskIndex: draggedTaskIndex,
     moveTaskVertically,
   } = React.useContext(DndTaskContext) as DndTaskContextValue;
 
-  const dragging = taskDragging && lindex === listIndex && taskIndex === index;
+  const dragging =
+    taskDragging &&
+    draggedListIndex === listIndex &&
+    draggedTaskIndex === index;
 
   const mouseMoveHandle = React.useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -40,9 +44,9 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
       const check = checkRangeY(rect, coord);
       if (check > 0) return;
       const toIndex = index + check + 1;
-      if (toIndex !== taskIndex) moveTaskVertically(toIndex);
+      if (toIndex !== draggedTaskIndex) moveTaskVertically(toIndex);
     },
-    [dragging, index, moveTaskVertically, taskIndex, taskDragging]
+    [dragging, index, moveTaskVertically, draggedTaskIndex, taskDragging]
   );
 
   const handleLeftMouseDown = React.useCallback(
@@ -77,33 +81,32 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
   );
 
   return (
-    <>
-      <Card
-        taskDragging={taskDragging}
-        dragging={dragging}
-        ref={containerRef}
-        onContextMenu={(e) => {
-          e.preventDefault();
-        }}
-        onMouseDown={handleMouseDown}
-        onMouseMove={mouseMoveHandle}
-      >
-        <p>{task.title}</p>
-        <button onClick={() => setMenuOpen(true)}>
-          <FiEdit2 size={14} />
-        </button>
-        <Shadow dragging={dragging} />
-        {menuOpen && (
-          <TaskMenu
-            taskIndex={index}
-            listIndex={listIndex}
-            rect={(containerRef.current as HTMLDivElement).getBoundingClientRect()}
-            close={() => setMenuOpen(false)}
-            title={task.title}
-          />
-        )}
-      </Card>
-    </>
+    <Card
+      taskDragging={taskDragging}
+      dragging={dragging}
+      ref={containerRef}
+      onContextMenu={(e) => {
+        e.preventDefault();
+      }}
+      onMouseDown={handleMouseDown}
+      onMouseMove={mouseMoveHandle}
+    >
+      <p>{task.title}</p>
+      {task.date && !dragging && <DateBadge date={task.date} />}
+      <button onClick={() => setMenuOpen(true)}>
+        <FiEdit2 size={14} />
+      </button>
+      <Shadow dragging={dragging} />
+      {menuOpen && (
+        <TaskMenu
+          taskIndex={index}
+          listIndex={listIndex}
+          rect={(containerRef.current as HTMLDivElement).getBoundingClientRect()}
+          close={() => setMenuOpen(false)}
+          task={task}
+        />
+      )}
+    </Card>
   );
 };
 

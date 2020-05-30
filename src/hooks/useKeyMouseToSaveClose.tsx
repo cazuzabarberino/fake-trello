@@ -5,6 +5,7 @@ export default function useKeyMouseToSaveClose(
   close: () => void
 ) {
   const containerRef = React.useRef<null | HTMLDivElement>(null);
+  const pauseRef = React.useRef<boolean>(false);
 
   React.useLayoutEffect(() => {
     function handleKeyDown(ev: KeyboardEvent) {
@@ -21,6 +22,7 @@ export default function useKeyMouseToSaveClose(
     }
 
     function mouseUpHandler(ev: MouseEvent) {
+      if (pauseRef.current) return;
       const rect = (containerRef.current as HTMLDivElement).getBoundingClientRect();
 
       if (
@@ -42,5 +44,5 @@ export default function useKeyMouseToSaveClose(
     };
   }, [save, close]);
 
-  return containerRef;
+  return { containerRef, pauseRef };
 }

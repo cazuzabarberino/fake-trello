@@ -43,6 +43,7 @@ const Panel = () => {
       tasks: list.tasks.map((task) => ({
         id: shortid.generate(),
         title: task,
+        date: "",
       })),
     }));
   });

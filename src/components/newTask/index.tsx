@@ -30,7 +30,7 @@ const NewTask = ({ theme, closeNewTask, listIndex, scrolDown }: Props) => {
     scrolDown();
   }, [setInput, addNewTask, input, listIndex, scrolDown]);
 
-  const containerRef = useKeyMouseToSaveClose(saveInput, closeNewTask);
+  const { containerRef } = useKeyMouseToSaveClose(saveInput, closeNewTask);
 
   return (
     <Container ref={containerRef}>
@@ -38,7 +38,7 @@ const NewTask = ({ theme, closeNewTask, listIndex, scrolDown }: Props) => {
         ref={inputRef}
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        placeholder="Insira um título para este cartão..."
+        placeholder="Enter a title for this card..."
       />
       <div>
         <button
@@ -46,7 +46,7 @@ const NewTask = ({ theme, closeNewTask, listIndex, scrolDown }: Props) => {
             saveInput();
           }}
         >
-          Adicionar Cartão
+          Add Card
         </button>
         <button onClick={closeNewTask}>
           <FiX size={24} color={theme.fontColor} />

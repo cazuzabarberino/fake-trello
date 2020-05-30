@@ -1,19 +1,21 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { withTheme, DefaultTheme } from "styled-components";
 import useKeyMouseToSaveClose from "../../../hooks/useKeyMouseToSaveClose";
 import useFocusInput from "../../../hooks/useFocusInput";
 import {
   TaskListContext,
   TaskListContextValue,
 } from "../../../Contexts/TaskListContext";
+import { FiX } from "react-icons/fi";
 
 interface Props {
   title: string;
   close: () => void;
   listIndex: number;
+  theme: DefaultTheme;
 }
 
-const CardlistEditTitle = ({ title, close, listIndex }: Props) => {
+const CardlistEditTitle = ({ title, close, listIndex, theme }: Props) => {
   const [input, setInput] = React.useState("");
 
   const { editListTitle } = React.useContext(
@@ -26,7 +28,7 @@ const CardlistEditTitle = ({ title, close, listIndex }: Props) => {
     close();
   }, [input, close, editListTitle, listIndex]);
 
-  const contentRef = useKeyMouseToSaveClose(save, close);
+  const { containerRef } = useKeyMouseToSaveClose(save, close);
   const inputRef = useFocusInput<HTMLInputElement>();
 
   React.useEffect(() => {
@@ -34,12 +36,20 @@ const CardlistEditTitle = ({ title, close, listIndex }: Props) => {
   }, [title]);
 
   return (
-    <Container ref={contentRef}>
+    <Container ref={containerRef}>
       <Input
         ref={inputRef}
         value={input}
         onChange={(e) => setInput(e.target.value)}
       />
+      <Btn
+        onClick={(e) => {
+          close();
+          e.stopPropagation();
+        }}
+      >
+        <FiX size={20} color={theme.red} />
+      </Btn>
     </Container>
   );
 };
@@ -52,18 +62,36 @@ const Container = styled.div`
   height: 100%;
 `;
 
+const Btn = styled.div`
+  position: absolute;
+  top: 50%;
+  right: 40px;
+  transform: translateY(-50%);
+  display: grid;
+  place-content: center;
+  height: 20px;
+  width: 20px;
+
+  opacity: 0.5;
+
+  :hover {
+    opacity: 1;
+  }
+`;
+
 const Input = styled.input`
   width: calc(100% - 32px);
   height: calc(100% - 4px);
   border: none;
   background: none;
   padding: 8px 12px;
+  padding-right: 28px;
   font-size: 14px;
   font-weight: 700;
   background: ${({ theme }) => theme.taskColor};
-  border: 2px solid ${({ theme }) => theme.green};
+  border: 2px solid ${({ theme }) => theme.red};
   border-radius: 4px;
   color: ${({ theme }) => theme.fontColor};
 `;
 
-export default CardlistEditTitle;
+export default withTheme(CardlistEditTitle);

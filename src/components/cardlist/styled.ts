@@ -28,7 +28,7 @@ export const CardContent = styled.div<draggingProps>`
 
   display: grid;
   grid-template-rows: auto 1fr auto;
-  row-gap: 4px;
+  row-gap: 8px;
   /* grid-auto-flow: row; */
 
   background: ${({ dragging, theme }) => (dragging ? "none" : theme.listColor)};
@@ -62,7 +62,7 @@ export const CardHeader = styled.div<draggingProps>`
   display: grid;
   grid-template-columns: 1fr auto;
 
-  & > div {
+  & > button {
     height: 32px;
     width: 32px;
     /* border: 2px solid red; */
@@ -70,6 +70,7 @@ export const CardHeader = styled.div<draggingProps>`
     place-content: center;
     border-radius: 4px;
     opacity: 0.5;
+    border: none;
 
     :hover {
       opacity: 1;
@@ -77,15 +78,19 @@ export const CardHeader = styled.div<draggingProps>`
     }
   }
 
-  p {
+  & > div {
     width: 100%;
     display: flex;
     align-items: center;
     padding-left: 12px;
+    width: 100%;
     font-weight: 700;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+  }
+
+  p {
   }
 `;
 

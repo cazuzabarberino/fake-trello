@@ -18,6 +18,10 @@ export const Card = styled.div<DragginProps>`
   font-size: 14px;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
   user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
 
   cursor: inherit;
 
@@ -50,6 +54,7 @@ export const Card = styled.div<DragginProps>`
     `}
 
   p {
+    max-width: calc(100% - 16px);
     margin-right: 16px;
   }
 
@@ -71,6 +76,8 @@ export const Card = styled.div<DragginProps>`
     opacity: ${({ dragging }) => (dragging ? 0 : 1)};
   }
 `;
+
+
 
 export const Shadow = styled.div<DragginProps>`
   display: ${({ dragging }) => (dragging ? "block" : "none")};
