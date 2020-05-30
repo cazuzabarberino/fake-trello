@@ -2,6 +2,7 @@ import React from "react";
 import Task from "../../models/Task";
 import { Card } from "./styled";
 import { FiEdit2 } from "react-icons/fi";
+import DateBadge from "./DateBadge";
 
 interface Props {
   task: Task;
@@ -26,6 +27,7 @@ const TaskCard = ({ task, left, top, width }: Props) => {
       }}
     >
       <p>{task.title}</p>
+      {task.date && <DateBadge date={task.date} />}
       <button>
         <FiEdit2 size={14} />
       </button>

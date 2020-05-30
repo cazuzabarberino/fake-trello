@@ -28,7 +28,7 @@ export const CardContent = styled.div<draggingProps>`
 
   display: grid;
   grid-template-rows: auto 1fr auto;
-  row-gap: 4px;
+  row-gap: 8px;
   /* grid-auto-flow: row; */
 
   background: ${({ dragging, theme }) => (dragging ? "none" : theme.listColor)};

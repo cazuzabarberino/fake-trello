@@ -1,16 +1,15 @@
 import React from "react";
-import { Container, EditZone, OptionsZone } from "./styled";
-import useKeyMouseToSaveClose from "../../../hooks/useKeyMouseToSaveClose";
-import useFocusInput from "../../../hooks/useFocusInput";
 import { FiArchive, FiClock } from "react-icons/fi";
 import {
-  TaskListContextValue,
   TaskListContext,
+  TaskListContextValue,
 } from "../../../Contexts/TaskListContext";
-import DateMenu from "../dateMenu";
+import useFocusInput from "../../../hooks/useFocusInput";
+import useKeyMouseToSaveClose from "../../../hooks/useKeyMouseToSaveClose";
 import Task from "../../../models/Task";
-import { DateBadge } from "../styled";
-import moment from "moment";
+import DateBadge from "../DateBadge";
+import DateMenu from "../dateMenu";
+import { Container, EditZone, OptionsZone } from "./styled";
 
 interface Props {
   close: () => void;
@@ -54,12 +53,7 @@ const TaskMenu = ({ close, rect, task, listIndex, taskIndex }: Props) => {
               onChange={(e) => setInput(e.target.value)}
               ref={inputRef}
             />
-            {task.date && (
-              <DateBadge>
-                <FiClock />
-                <p>{moment(task.date, "DD MM YY").calendar()}</p>
-              </DateBadge>
-            )}
+            {task.date && <DateBadge date={task.date} />}
           </div>
           <button onClick={save}>Save</button>
         </EditZone>

@@ -1,13 +1,13 @@
 import React from "react";
+import { FiEdit2 } from "react-icons/fi";
 import DndTaskContext, {
   DndTaskContextValue,
 } from "../../Contexts/DndTaskContext";
 import Task from "../../models/Task";
 import { checkRangeY } from "../../util";
-import { Card, Shadow, DateBadge } from "./styled";
+import { Card, Shadow } from "./styled";
 import TaskMenu from "./taskMenu";
-import { FiEdit2, FiClock } from "react-icons/fi";
-import moment from "moment";
+import DateBadge from "./DateBadge";
 
 interface Props {
   task: Task;
@@ -81,39 +81,32 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
   );
 
   return (
-    <>
-      <Card
-        taskDragging={taskDragging}
-        dragging={dragging}
-        ref={containerRef}
-        onContextMenu={(e) => {
-          e.preventDefault();
-        }}
-        onMouseDown={handleMouseDown}
-        onMouseMove={mouseMoveHandle}
-      >
-        <p>{task.title}</p>
-        {task.date && (
-          <DateBadge>
-            <FiClock />
-            <p>{moment(task.date, "DD MM YY").calendar()}</p>
-          </DateBadge>
-        )}
-        <button onClick={() => setMenuOpen(true)}>
-          <FiEdit2 size={14} />
-        </button>
-        <Shadow dragging={dragging} />
-        {menuOpen && (
-          <TaskMenu
-            taskIndex={index}
-            listIndex={listIndex}
-            rect={(containerRef.current as HTMLDivElement).getBoundingClientRect()}
-            close={() => setMenuOpen(false)}
-            task={task}
-          />
-        )}
-      </Card>
-    </>
+    <Card
+      taskDragging={taskDragging}
+      dragging={dragging}
+      ref={containerRef}
+      onContextMenu={(e) => {
+        e.preventDefault();
+      }}
+      onMouseDown={handleMouseDown}
+      onMouseMove={mouseMoveHandle}
+    >
+      <p>{task.title}</p>
+      {task.date && !dragging && <DateBadge date={task.date} />}
+      <button onClick={() => setMenuOpen(true)}>
+        <FiEdit2 size={14} />
+      </button>
+      <Shadow dragging={dragging} />
+      {menuOpen && (
+        <TaskMenu
+          taskIndex={index}
+          listIndex={listIndex}
+          rect={(containerRef.current as HTMLDivElement).getBoundingClientRect()}
+          close={() => setMenuOpen(false)}
+          task={task}
+        />
+      )}
+    </Card>
   );
 };
 

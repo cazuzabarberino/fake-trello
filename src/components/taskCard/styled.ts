@@ -77,18 +77,7 @@ export const Card = styled.div<DragginProps>`
   }
 `;
 
-export const DateBadge = styled.div`
-  margin-top: 8px;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  place-items: center;
-  place-content: center;
-  column-gap: 8px;
-  padding: 4px;
-  background: ${({ theme }) => theme.green};
-  color: white;
-  border-radius: 4px;
-`;
+
 
 export const Shadow = styled.div<DragginProps>`
   display: ${({ dragging }) => (dragging ? "block" : "none")};

@@ -31,10 +31,12 @@ const CardList = ({ list, listIndex, top, left, height }: Props) => {
           cursor: "grabbing",
         }}
       >
-        <p>{list.title}</p>
         <div>
-          <BsThreeDots size={16} />
+          <p>{list.title}</p>
         </div>
+        <button>
+          <BsThreeDots size={16} />
+        </button>
       </CardHeader>
       <TaskContainer>
         {list.tasks.map((task, taskIndex) => (
