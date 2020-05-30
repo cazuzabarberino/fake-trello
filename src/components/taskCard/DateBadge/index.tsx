@@ -26,7 +26,7 @@ export default ({ date }: Props) => {
   return (
     <DateBadge dueState={dueState}>
       <FiClock />
-      <p>{due.calendar()}</p>
+      <p>{due.format("MMMM Do YYYY")}</p>
     </DateBadge>
   );
 };

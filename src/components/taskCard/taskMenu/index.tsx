@@ -78,6 +78,7 @@ const TaskMenu = ({ close, rect, task, listIndex, taskIndex }: Props) => {
         </OptionsZone>
         {dateMenuOpen && (
           <DateMenu
+            date={task.date}
             close={() => {
               setDateMenuOpen(false);
               pauseRef.current = false;

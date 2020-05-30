@@ -26,11 +26,16 @@ interface Props {
   listIndex: number;
   taskIndex: number;
   close: () => void;
+  date: string;
 }
 
-export default ({ top, left, listIndex, taskIndex, close }: Props) => {
-  const [selected, setSelected] = React.useState<moment.Moment>(moment());
-  const [calendarView, serCalendarView] = React.useState(moment().date(1));
+export default ({ top, left, listIndex, taskIndex, close, date }: Props) => {
+  const [selected, setSelected] = React.useState<moment.Moment>(
+    date ? moment(date, "DD MM YY") : moment()
+  );
+  const [calendarView, serCalendarView] = React.useState(
+    (date ? moment(date, "DD MM YY") : moment()).date(1)
+  );
   const { editTaskDate } = React.useContext(
     TaskListContext
   ) as TaskListContextValue;
@@ -112,7 +117,7 @@ export default ({ top, left, listIndex, taskIndex, close }: Props) => {
       <DataWrapper>
         <p>Date</p>
         <p>Time</p>
-        <div>{selected.format("DD/MM/YY")}</div>
+        <div>{selected.format("MMMM Do YYYY")}</div>
         <div>{selected.format("H:mm")}</div>
       </DataWrapper>
       <CalendarNavWrapper>
