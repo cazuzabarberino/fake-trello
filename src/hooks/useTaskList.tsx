@@ -25,6 +25,7 @@ export default function useTaskList(
       const newTask: Task = {
         title,
         id: shortid.generate(),
+        date: "",
       };
       newList[listIndex].tasks.push(newTask);
       setAllLists(newList);
@@ -76,6 +77,15 @@ export default function useTaskList(
     [allLists, setAllLists]
   );
 
+  const editTaskDate = React.useCallback(
+    (date: string, taskIndex: number, listIndex: number) => {
+      const newList = [...allLists];
+      newList[listIndex].tasks[taskIndex].date = date;
+      setAllLists(newList);
+    },
+    [allLists, setAllLists]
+  );
+
   const taskListContextValue: TaskListContextValue = React.useMemo(
     () => ({
       addList,
@@ -84,8 +94,17 @@ export default function useTaskList(
       deleteList,
       editListTitle,
       editTaskTitle,
+      editTaskDate,
     }),
-    [addList, addNewTask, deleteList, deleteTask, editListTitle, editTaskTitle]
+    [
+      addList,
+      addNewTask,
+      deleteList,
+      deleteTask,
+      editListTitle,
+      editTaskTitle,
+      editTaskDate,
+    ]
   );
 
   return taskListContextValue;

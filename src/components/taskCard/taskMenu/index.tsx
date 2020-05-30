@@ -2,30 +2,35 @@ import React from "react";
 import { Container, EditZone, OptionsZone } from "./styled";
 import useKeyMouseToSaveClose from "../../../hooks/useKeyMouseToSaveClose";
 import useFocusInput from "../../../hooks/useFocusInput";
-import { FiArchive } from "react-icons/fi";
+import { FiArchive, FiClock } from "react-icons/fi";
 import {
   TaskListContextValue,
   TaskListContext,
 } from "../../../Contexts/TaskListContext";
+import DateMenu from "../dateMenu";
+import Task from "../../../models/Task";
+import { DateBadge } from "../styled";
+import moment from "moment";
 
 interface Props {
   close: () => void;
   rect: DOMRect;
-  title: string;
+  task: Task;
   taskIndex: number;
   listIndex: number;
 }
 
-const TaskMenu = ({ close, rect, title, listIndex, taskIndex }: Props) => {
+const TaskMenu = ({ close, rect, task, listIndex, taskIndex }: Props) => {
   const inputRef = useFocusInput<HTMLTextAreaElement>();
   const [input, setInput] = React.useState("");
+  const [dateMenuOpen, setDateMenuOpen] = React.useState(false);
   const { deleteTask, editTaskTitle } = React.useContext(
     TaskListContext
   ) as TaskListContextValue;
 
   React.useEffect(() => {
-    setInput(title);
-  }, [title]);
+    setInput(task.title);
+  }, [task.title]);
 
   const save = React.useCallback(() => {
     if (input === "") return;
@@ -33,7 +38,7 @@ const TaskMenu = ({ close, rect, title, listIndex, taskIndex }: Props) => {
     close();
   }, [input, close, editTaskTitle, taskIndex, listIndex]);
 
-  const contentRef = useKeyMouseToSaveClose(save, close);
+  const { containerRef, pauseRef } = useKeyMouseToSaveClose(save, close);
 
   return (
     <Container
@@ -41,16 +46,33 @@ const TaskMenu = ({ close, rect, title, listIndex, taskIndex }: Props) => {
       top={rect.y}
       left={rect.x}
     >
-      <div ref={contentRef}>
+      <div ref={containerRef}>
         <EditZone height={rect.height} width={rect.width}>
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            ref={inputRef}
-          />
+          <div>
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              ref={inputRef}
+            />
+            {task.date && (
+              <DateBadge>
+                <FiClock />
+                <p>{moment(task.date, "DD MM YY").calendar()}</p>
+              </DateBadge>
+            )}
+          </div>
           <button onClick={save}>Salvar</button>
         </EditZone>
         <OptionsZone>
+          <button
+            onClick={() => {
+              setDateMenuOpen(true);
+              pauseRef.current = true;
+            }}
+          >
+            <FiClock />
+            <p>Alterar Data de Entrega</p>
+          </button>
           <button
             onClick={() => {
               deleteTask(taskIndex, listIndex);
@@ -60,6 +82,18 @@ const TaskMenu = ({ close, rect, title, listIndex, taskIndex }: Props) => {
             <p>Arquivar</p>
           </button>
         </OptionsZone>
+        {dateMenuOpen && (
+          <DateMenu
+            close={() => {
+              setDateMenuOpen(false);
+              pauseRef.current = false;
+            }}
+            top={rect.y}
+            left={rect.x + rect.width + 8}
+            taskIndex={taskIndex}
+            listIndex={listIndex}
+          />
+        )}
       </div>
     </Container>
   );

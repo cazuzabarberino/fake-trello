@@ -30,7 +30,7 @@ const NewTask = ({ theme, closeNewTask, listIndex, scrolDown }: Props) => {
     scrolDown();
   }, [setInput, addNewTask, input, listIndex, scrolDown]);
 
-  const containerRef = useKeyMouseToSaveClose(saveInput, closeNewTask);
+  const { containerRef } = useKeyMouseToSaveClose(saveInput, closeNewTask);
 
   return (
     <Container ref={containerRef}>

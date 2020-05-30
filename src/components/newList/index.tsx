@@ -37,7 +37,7 @@ const NewList = ({ theme, scrollToRight }: Props) => {
     }
   }, [creatingNewList]);
 
-  const containerRef = useKeyMouseToSaveClose(saveInput, close);
+  const { containerRef } = useKeyMouseToSaveClose(saveInput, close);
 
   return (
     <Container creating={creatingNewList} ref={containerRef}>

@@ -4,10 +4,10 @@ import DndTaskContext, {
 } from "../../Contexts/DndTaskContext";
 import Task from "../../models/Task";
 import { checkRangeY } from "../../util";
-import { Card, Shadow } from "./styled";
+import { Card, Shadow, DateBadge } from "./styled";
 import TaskMenu from "./taskMenu";
-import { FiEdit2 } from "react-icons/fi";
-import DateMenu from "./dateMenu";
+import { FiEdit2, FiClock } from "react-icons/fi";
+import moment from "moment";
 
 interface Props {
   task: Task;
@@ -93,6 +93,12 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
         onMouseMove={mouseMoveHandle}
       >
         <p>{task.title}</p>
+        {task.date && (
+          <DateBadge>
+            <FiClock />
+            <p>{moment(task.date, "DD MM YY").calendar()}</p>
+          </DateBadge>
+        )}
         <button onClick={() => setMenuOpen(true)}>
           <FiEdit2 size={14} />
         </button>
@@ -103,10 +109,9 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
             listIndex={listIndex}
             rect={(containerRef.current as HTMLDivElement).getBoundingClientRect()}
             close={() => setMenuOpen(false)}
-            title={task.title}
+            task={task}
           />
         )}
-        {listIndex === 0 && index === 0 && <DateMenu />}
       </Card>
     </>
   );

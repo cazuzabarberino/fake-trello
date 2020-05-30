@@ -39,15 +39,26 @@ export const EditZone = styled.div<EditZoneProps>`
   justify-content: start;
   align-items: flex-start;
 
-  & > textarea {
-    resize: none;
+  & > div {
     width: ${({ width }) => width + "px"};
-    min-height: 100px;
-    height: ${({ height }) => height + "px"};
-    font-size: 14px;
-    border: none;
+    min-height: ${({ height }) => height + "px"};
     border-radius: 4px;
+    background: white;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
     padding: 8px;
+
+    & > textarea {
+      width: 100%;
+      resize: none;
+      min-height: 100px;
+      font-size: 14px;
+      border: none;
+      border-radius: inherit;
+      padding-right: 16px;
+    }
   }
 
   & > button {
@@ -72,6 +83,11 @@ export const EditZone = styled.div<EditZoneProps>`
 
 export const OptionsZone = styled.div`
   margin-left: 8px;
+  display: grid;
+  row-gap: 4px;
+  place-content: start;
+  place-items: start;
+  grid-template-columns: auto;
 
   & > button {
     background: ${({ theme }) => theme.transparency};

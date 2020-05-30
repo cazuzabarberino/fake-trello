@@ -1,12 +1,16 @@
 import styled, { css } from "styled-components";
 import { darken, lighten } from "polished";
 
-export const Container = styled.div`
+interface ContainerProps {
+  top: number;
+  left: number;
+}
+
+export const Container = styled.div<ContainerProps>`
   position: fixed;
   z-index: 20;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: ${({ top }) => top + "px"};
+  left: ${({ left }) => left + "px"};
 
   width: 300px;
 
@@ -78,9 +82,24 @@ export const DataWrapper = styled.div`
 `;
 
 export const CalendarNavWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 8px;
   margin: 8px;
+
+  button,
+  select {
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    border-bottom: 1px solid black;
+    opacity: 0.5;
+
+    :hover {
+      opacity: 1;
+    }
+  }
 `;
 
 export const Calendar = styled.div`

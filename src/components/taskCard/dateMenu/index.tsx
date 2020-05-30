@@ -14,13 +14,39 @@ import {
   DataWrapper,
 } from "./styled";
 import { ThemeContext } from "styled-components";
+import useKeyMouseToSaveClose from "../../../hooks/useKeyMouseToSaveClose";
+import {
+  TaskListContext,
+  TaskListContextValue,
+} from "../../../Contexts/TaskListContext";
 
-interface Props {}
+interface Props {
+  top: number;
+  left: number;
+  listIndex: number;
+  taskIndex: number;
+  close: () => void;
+}
 
-export default () => {
+export default ({ top, left, listIndex, taskIndex, close }: Props) => {
   const [selected, setSelected] = React.useState<moment.Moment>(moment());
   const [calendarView, serCalendarView] = React.useState(moment().date(1));
+  const { editTaskDate } = React.useContext(
+    TaskListContext
+  ) as TaskListContextValue;
 
+  const save = React.useCallback(
+    (val: string) => {
+      editTaskDate(val, taskIndex, listIndex);
+      close();
+    },
+    [close, editTaskDate, taskIndex, listIndex]
+  );
+
+  const { containerRef } = useKeyMouseToSaveClose(
+    () => save(selected.format("DD/MM/YY")),
+    close
+  );
   const start = calendarView.weekday();
   const daysInMonth = calendarView.daysInMonth();
   const end =
@@ -73,10 +99,15 @@ export default () => {
   };
 
   return (
-    <Container onMouseDown={(e) => e.stopPropagation()}>
+    <Container
+      ref={containerRef}
+      top={top}
+      left={left}
+      onMouseDown={(e) => e.stopPropagation()}
+    >
       <header>
         <p>Alterar Data de Entrega</p>
-        <button>
+        <button onClick={close}>
           <FiX size={16} />
         </button>
       </header>
@@ -134,8 +165,12 @@ export default () => {
         {emptyDate(end)}
       </Calendar>
       <BtnWrapper>
-        <Btn color={green}>Salvar</Btn>
-        <Btn color={red}>Remover</Btn>
+        <Btn color={green} onClick={() => save(selected.format("DD/MM/YY"))}>
+          Salvar
+        </Btn>
+        <Btn color={red} onClick={() => save("")}>
+          Remover
+        </Btn>
       </BtnWrapper>
     </Container>
   );

@@ -21,7 +21,7 @@ const CardlistAction = ({
   openNewTask,
   listIndex,
 }: Props) => {
-  const containerRef = useKeyMouseToSaveClose(() => {}, close);
+  const { containerRef } = useKeyMouseToSaveClose(() => {}, close);
   const { deleteList } = React.useContext(
     TaskListContext
   ) as TaskListContextValue;

@@ -28,7 +28,7 @@ const CardlistEditTitle = ({ title, close, listIndex, theme }: Props) => {
     close();
   }, [input, close, editListTitle, listIndex]);
 
-  const contentRef = useKeyMouseToSaveClose(save, close);
+  const { containerRef } = useKeyMouseToSaveClose(save, close);
   const inputRef = useFocusInput<HTMLInputElement>();
 
   React.useEffect(() => {
@@ -36,7 +36,7 @@ const CardlistEditTitle = ({ title, close, listIndex, theme }: Props) => {
   }, [title]);
 
   return (
-    <Container ref={contentRef}>
+    <Container ref={containerRef}>
       <Input
         ref={inputRef}
         value={input}

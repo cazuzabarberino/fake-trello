@@ -18,6 +18,10 @@ export const Card = styled.div<DragginProps>`
   font-size: 14px;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
   user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
 
   cursor: inherit;
 
@@ -50,6 +54,7 @@ export const Card = styled.div<DragginProps>`
     `}
 
   p {
+    max-width: calc(100% - 16px);
     margin-right: 16px;
   }
 
@@ -70,6 +75,19 @@ export const Card = styled.div<DragginProps>`
   p {
     opacity: ${({ dragging }) => (dragging ? 0 : 1)};
   }
+`;
+
+export const DateBadge = styled.div`
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  place-items: center;
+  place-content: center;
+  column-gap: 8px;
+  padding: 4px;
+  background: ${({ theme }) => theme.green};
+  color: white;
+  border-radius: 4px;
 `;
 
 export const Shadow = styled.div<DragginProps>`
