@@ -43,10 +43,7 @@ export default ({ top, left, listIndex, taskIndex, close }: Props) => {
     [close, editTaskDate, taskIndex, listIndex]
   );
 
-  const { containerRef } = useKeyMouseToSaveClose(
-    () => save(selected.format("DD/MM/YY")),
-    close
-  );
+  const { containerRef } = useKeyMouseToSaveClose(() => {}, close);
   const start = calendarView.weekday();
   const daysInMonth = calendarView.daysInMonth();
   const end =
