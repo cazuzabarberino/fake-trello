@@ -10,6 +10,8 @@ declare module "styled-components" {
     listColor: string;
     taskColor: string;
     green: string;
+    red: string;
+    blue: string;
   }
 }
 
@@ -22,6 +24,8 @@ export const defaultTheme: DefaultTheme = {
   listColor: "#ebecf0",
   taskColor: "white",
   green: "#5aac44",
+  red: "#eb5a46",
+  blue: "#298fca",
 };
 
 export const GlobalStyles = createGlobalStyle`

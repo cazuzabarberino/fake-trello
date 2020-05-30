@@ -7,6 +7,7 @@ import { checkRangeY } from "../../util";
 import { Card, Shadow } from "./styled";
 import TaskMenu from "./taskMenu";
 import { FiEdit2 } from "react-icons/fi";
+import DateMenu from "./dateMenu";
 
 interface Props {
   task: Task;
@@ -21,12 +22,15 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
   const {
     beginTaskDrag,
     taskDragging,
-    listIndex: lindex,
-    taskIndex,
+    listIndex: draggedListIndex,
+    taskIndex: draggedTaskIndex,
     moveTaskVertically,
   } = React.useContext(DndTaskContext) as DndTaskContextValue;
 
-  const dragging = taskDragging && lindex === listIndex && taskIndex === index;
+  const dragging =
+    taskDragging &&
+    draggedListIndex === listIndex &&
+    draggedTaskIndex === index;
 
   const mouseMoveHandle = React.useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -40,9 +44,9 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
       const check = checkRangeY(rect, coord);
       if (check > 0) return;
       const toIndex = index + check + 1;
-      if (toIndex !== taskIndex) moveTaskVertically(toIndex);
+      if (toIndex !== draggedTaskIndex) moveTaskVertically(toIndex);
     },
-    [dragging, index, moveTaskVertically, taskIndex, taskDragging]
+    [dragging, index, moveTaskVertically, draggedTaskIndex, taskDragging]
   );
 
   const handleLeftMouseDown = React.useCallback(
@@ -102,6 +106,7 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
             title={task.title}
           />
         )}
+        {listIndex === 0 && index === 0 && <DateMenu />}
       </Card>
     </>
   );

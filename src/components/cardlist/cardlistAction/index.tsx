@@ -1,12 +1,12 @@
 import React from "react";
-import { Container, Division } from "./styled";
 import { FiX } from "react-icons/fi";
-import Coord from "../../../models/Coord";
-import useKeyMouseToSaveClose from "../../../hooks/useKeyMouseToSaveClose";
 import {
-  TaskListContextValue,
   TaskListContext,
+  TaskListContextValue,
 } from "../../../Contexts/TaskListContext";
+import useKeyMouseToSaveClose from "../../../hooks/useKeyMouseToSaveClose";
+import Coord from "../../../models/Coord";
+import { Container, Division } from "./styled";
 
 interface Props {
   menuPosition: Coord;
