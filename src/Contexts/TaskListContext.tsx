@@ -13,6 +13,7 @@ export interface TaskListContextValue {
     taskIndex: number,
     listIndex: number
   ) => void;
+  editLabel: (labelid: string, taskIndex: number, listIndex: number) => void;
 }
 
 export const TaskListContext = React.createContext<TaskListContextValue | null>(

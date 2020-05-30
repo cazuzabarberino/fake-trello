@@ -14,7 +14,6 @@ import useMouseScrollHorizontal from "../../hooks/useMouseScrollHorizontal";
 import TaskList from "../../models/List";
 import { Container, ListContainter } from "./styles";
 import { TaskListContext } from "../../Contexts/TaskListContext";
-
 const mock = [
   {
     title: "Backlog",
@@ -45,6 +44,7 @@ const Panel = () => {
         title: task,
         date: "",
         complete: false,
+        labels: ["1"],
       })),
     }));
   });

@@ -4,16 +4,19 @@ import { GlobalStyles, defaultTheme } from "./styles";
 import { ThemeProvider } from "styled-components";
 import Header from "./components/header";
 import styled from "styled-components";
+import { LabelProvider } from "./Contexts/LabelContext";
 
 function App() {
   return (
     <>
       <ThemeProvider theme={defaultTheme}>
         <GlobalStyles />
-        <Container>
-          <Header />
-          <Panel />
-        </Container>
+        <LabelProvider>
+          <Container>
+            <Header />
+            <Panel />
+          </Container>
+        </LabelProvider>
       </ThemeProvider>
     </>
   );

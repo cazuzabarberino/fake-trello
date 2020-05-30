@@ -6,8 +6,10 @@ import DndTaskContext, {
 import Task from "../../models/Task";
 import { checkRangeY } from "../../util";
 import DateBadge from "./DateBadge";
-import { Card, Shadow } from "./styled";
+import { Card, Shadow, LabelWrapper, LabelMark } from "./styled";
 import TaskMenu from "./taskMenu";
+import { LabelContext } from "../../Contexts/LabelContext";
+import Label from "../../models/Label";
 
 interface Props {
   task: Task;
@@ -18,6 +20,24 @@ interface Props {
 const TaskCard = ({ task, listIndex, index }: Props) => {
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const [menuOpen, setMenuOpen] = React.useState(false);
+  const { state } = React.useContext(LabelContext);
+
+  const taskLabels = React.useMemo(() => {
+    const arr: JSX.Element[] = [];
+
+    task.labels.forEach((labelId) => {
+      arr.push(
+        <LabelMark
+          key={labelId}
+          color={
+            (state.labels.find((label) => label.id === labelId) as Label).color
+          }
+        />
+      );
+    });
+
+    return arr;
+  }, [state.labels, task.labels]);
 
   const {
     beginTaskDrag,
@@ -91,6 +111,7 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
       onMouseDown={handleMouseDown}
       onMouseMove={mouseMoveHandle}
     >
+      <LabelWrapper dragging={dragging}>{taskLabels}</LabelWrapper>
       <p>{task.title}</p>
       {task.date && !dragging && (
         <DateBadge

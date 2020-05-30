@@ -77,8 +77,6 @@ export const Card = styled.div<DragginProps>`
   }
 `;
 
-
-
 export const Shadow = styled.div<DragginProps>`
   display: ${({ dragging }) => (dragging ? "block" : "none")};
   position: absolute;
@@ -88,4 +86,25 @@ export const Shadow = styled.div<DragginProps>`
   height: 100%;
   border-radius: inherit;
   background: ${({ theme }) => theme.transparency};
+`;
+
+export const LabelWrapper = styled.div<DragginProps>`
+  width: calc(100% - 20px);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  column-gap: 4px;
+  row-gap: 4px;
+  margin-bottom: 4px;
+
+  opacity: ${({ dragging }) => (dragging ? 0 : 1)};
+`;
+
+interface LabelProps {
+  color: string;
+}
+
+export const LabelMark = styled.div<LabelProps>`
+  height: 8px;
+  border-radius: 8px;
+  background: ${({ color }) => color};
 `;

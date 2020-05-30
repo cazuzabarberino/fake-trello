@@ -23,6 +23,7 @@ export default function useTaskList(
     (title: string, listIndex: number) => {
       const newList = [...allLists];
       const newTask: Task = {
+        labels: [],
         title,
         id: shortid.generate(),
         date: "",
@@ -96,6 +97,22 @@ export default function useTaskList(
     [allLists, setAllLists]
   );
 
+  const editLabel = React.useCallback(
+    (labelid: string, taskIndex: number, listIndex: number) => {
+      const newList = [...allLists];
+      const hasLabel = newList[listIndex].tasks[taskIndex].labels.findIndex(
+        (label) => label === labelid
+      );
+
+      if (hasLabel > 0)
+        newList[listIndex].tasks[taskIndex].labels.splice(hasLabel, 1);
+      else newList[listIndex].tasks[taskIndex].labels.push(labelid);
+
+      setAllLists(newList);
+    },
+    [allLists, setAllLists]
+  );
+
   const taskListContextValue: TaskListContextValue = React.useMemo(
     () => ({
       addList,
@@ -106,6 +123,7 @@ export default function useTaskList(
       editTaskTitle,
       editTaskDate,
       editCompleteState,
+      editLabel,
     }),
     [
       addList,
@@ -116,6 +134,7 @@ export default function useTaskList(
       editTaskTitle,
       editTaskDate,
       editCompleteState,
+      editLabel,
     ]
   );
 

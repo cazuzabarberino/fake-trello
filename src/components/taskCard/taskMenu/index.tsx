@@ -1,5 +1,5 @@
 import React from "react";
-import { FiArchive, FiClock } from "react-icons/fi";
+import { FiArchive, FiClock, FiTag } from "react-icons/fi";
 import {
   TaskListContext,
   TaskListContextValue,
@@ -10,6 +10,7 @@ import Task from "../../../models/Task";
 import DateBadge from "../DateBadge";
 import DateMenu from "../dateMenu";
 import { Container, EditZone, OptionsZone } from "./styled";
+import LabelMenu from "../labelMenu";
 
 interface Props {
   close: () => void;
@@ -23,6 +24,7 @@ const TaskMenu = ({ close, rect, task, listIndex, taskIndex }: Props) => {
   const inputRef = useFocusInput<HTMLTextAreaElement>();
   const [input, setInput] = React.useState("");
   const [dateMenuOpen, setDateMenuOpen] = React.useState(false);
+  const [labelMenuOpen, setLabelMenuOpen] = React.useState(false);
   const { deleteTask, editTaskTitle } = React.useContext(
     TaskListContext
   ) as TaskListContextValue;
@@ -67,6 +69,15 @@ const TaskMenu = ({ close, rect, task, listIndex, taskIndex }: Props) => {
         <OptionsZone>
           <button
             onClick={() => {
+              setLabelMenuOpen(true);
+              pauseRef.current = true;
+            }}
+          >
+            <FiTag />
+            <p>Edit Labels</p>
+          </button>
+          <button
+            onClick={() => {
               setDateMenuOpen(true);
               pauseRef.current = true;
             }}
@@ -83,6 +94,18 @@ const TaskMenu = ({ close, rect, task, listIndex, taskIndex }: Props) => {
             <p>Archive</p>
           </button>
         </OptionsZone>
+        {labelMenuOpen && (
+          <LabelMenu
+            close={() => {
+              setLabelMenuOpen(false);
+              pauseRef.current = false;
+            }}
+            top={rect.y}
+            left={rect.x + rect.width + 8}
+            taskIndex={taskIndex}
+            listIndex={listIndex}
+          />
+        )}
         {dateMenuOpen && (
           <DateMenu
             date={task.date}

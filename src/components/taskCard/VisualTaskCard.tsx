@@ -1,8 +1,10 @@
 import React from "react";
 import Task from "../../models/Task";
-import { Card } from "./styled";
+import { Card, LabelWrapper, LabelMark } from "./styled";
 import { FiEdit2 } from "react-icons/fi";
 import DateBadge from "./DateBadge";
+import { LabelContext } from "../../Contexts/LabelContext";
+import Label from "../../models/Label";
 
 interface Props {
   task: Task;
@@ -12,6 +14,25 @@ interface Props {
 }
 
 const TaskCard = ({ task, left, top, width }: Props) => {
+  const { state } = React.useContext(LabelContext);
+
+  const taskLabels = React.useMemo(() => {
+    const arr: JSX.Element[] = [];
+
+    task.labels.forEach((labelId) => {
+      arr.push(
+        <LabelMark
+          key={labelId}
+          color={
+            (state.labels.find((label) => label.id === labelId) as Label).color
+          }
+        />
+      );
+    });
+
+    return arr;
+  }, [state.labels, task.labels]);
+
   return (
     <Card
       style={{
@@ -26,6 +47,7 @@ const TaskCard = ({ task, left, top, width }: Props) => {
         pointerEvents: "none",
       }}
     >
+      <LabelWrapper>{taskLabels}</LabelWrapper>
       <p>{task.title}</p>
       {task.date && (
         <DateBadge
