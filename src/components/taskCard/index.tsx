@@ -22,22 +22,22 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const { state } = React.useContext(LabelContext);
 
+  const hideRef = React.useRef(false);
+
   const taskLabels = React.useMemo(() => {
     const arr: JSX.Element[] = [];
+    hideRef.current = true;
 
     task.labels.forEach((labelId) => {
-      arr.push(
-        <LabelMark
-          key={labelId}
-          color={
-            (state.labels.find((label) => label.id === labelId) as Label).color
-          }
-        />
-      );
+      const label = state.labels.find((label) => label.id === labelId) as Label;
+      if (label.selected) hideRef.current = false;
+      arr.push(<LabelMark key={labelId} color={label.color} />);
     });
 
+    if (!arr.length && state.noTagSelected) hideRef.current = false;
+
     return arr;
-  }, [state.labels, task.labels]);
+  }, [state.labels, task.labels, state.noTagSelected]);
 
   const {
     beginTaskDrag,
@@ -102,6 +102,7 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
 
   return (
     <Card
+      hide={hideRef.current}
       taskDragging={taskDragging}
       dragging={dragging}
       ref={containerRef}
