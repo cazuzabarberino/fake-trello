@@ -53,7 +53,14 @@ const TaskMenu = ({ close, rect, task, listIndex, taskIndex }: Props) => {
               onChange={(e) => setInput(e.target.value)}
               ref={inputRef}
             />
-            {task.date && <DateBadge date={task.date} />}
+            {task.date && (
+              <DateBadge
+                taskIndex={taskIndex}
+                listIndex={listIndex}
+                complete={task.complete}
+                date={task.date}
+              />
+            )}
           </div>
           <button onClick={save}>Save</button>
         </EditZone>

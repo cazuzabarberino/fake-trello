@@ -27,7 +27,14 @@ const TaskCard = ({ task, left, top, width }: Props) => {
       }}
     >
       <p>{task.title}</p>
-      {task.date && <DateBadge date={task.date} />}
+      {task.date && (
+        <DateBadge
+          listIndex={0}
+          taskIndex={0}
+          complete={task.complete}
+          date={task.date}
+        />
+      )}
       <button>
         <FiEdit2 size={14} />
       </button>

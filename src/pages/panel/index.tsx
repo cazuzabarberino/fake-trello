@@ -44,6 +44,7 @@ const Panel = () => {
         id: shortid.generate(),
         title: task,
         date: "",
+        complete: false,
       })),
     }));
   });

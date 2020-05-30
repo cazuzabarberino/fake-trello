@@ -5,9 +5,9 @@ import DndTaskContext, {
 } from "../../Contexts/DndTaskContext";
 import Task from "../../models/Task";
 import { checkRangeY } from "../../util";
+import DateBadge from "./DateBadge";
 import { Card, Shadow } from "./styled";
 import TaskMenu from "./taskMenu";
-import DateBadge from "./DateBadge";
 
 interface Props {
   task: Task;
@@ -92,7 +92,14 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
       onMouseMove={mouseMoveHandle}
     >
       <p>{task.title}</p>
-      {task.date && !dragging && <DateBadge date={task.date} />}
+      {task.date && !dragging && (
+        <DateBadge
+          listIndex={listIndex}
+          taskIndex={index}
+          complete={task.complete}
+          date={task.date}
+        />
+      )}
       <button onClick={() => setMenuOpen(true)}>
         <FiEdit2 size={14} />
       </button>

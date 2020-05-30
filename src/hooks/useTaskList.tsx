@@ -26,6 +26,7 @@ export default function useTaskList(
         title,
         id: shortid.generate(),
         date: "",
+        complete: false,
       };
       newList[listIndex].tasks.push(newTask);
       setAllLists(newList);
@@ -86,6 +87,15 @@ export default function useTaskList(
     [allLists, setAllLists]
   );
 
+  const editCompleteState = React.useCallback(
+    (state: boolean, taskIndex: number, listIndex: number) => {
+      const newList = [...allLists];
+      newList[listIndex].tasks[taskIndex].complete = state;
+      setAllLists(newList);
+    },
+    [allLists, setAllLists]
+  );
+
   const taskListContextValue: TaskListContextValue = React.useMemo(
     () => ({
       addList,
@@ -95,6 +105,7 @@ export default function useTaskList(
       editListTitle,
       editTaskTitle,
       editTaskDate,
+      editCompleteState,
     }),
     [
       addList,
@@ -104,6 +115,7 @@ export default function useTaskList(
       editListTitle,
       editTaskTitle,
       editTaskDate,
+      editCompleteState,
     ]
   );
 
