@@ -12,8 +12,10 @@ import { useDndTask } from "../../hooks/useDndTask";
 import useTaskList from "../../hooks/useTaskList";
 import useMouseScrollHorizontal from "../../hooks/useMouseScrollHorizontal";
 import TaskList from "../../models/List";
-import { Container, ListContainter } from "./styles";
+import { Container, ListContainter, LabelFilter, LabelBtn } from "./styles";
 import { TaskListContext } from "../../Contexts/TaskListContext";
+import { LabelContext } from "../../Contexts/LabelContext";
+
 const mock = [
   {
     title: "Backlog",
@@ -48,6 +50,8 @@ const Panel = () => {
       })),
     }));
   });
+
+  const { state, actions } = React.useContext(LabelContext);
 
   const taskListContextValue = useTaskList(allLists, setAllLists);
 
@@ -97,6 +101,25 @@ const Panel = () => {
     <TaskListContext.Provider value={taskListContextValue}>
       <DndTaskContext.Provider value={dndContextValue}>
         <Container>
+          <LabelFilter>
+            {state.labels.map((label) => (
+              <LabelBtn
+                key={label.id}
+                on={label.selected}
+                color={label.color}
+                onClick={() => actions.toggleSelection(label.id)}
+              >
+                {label.title}
+              </LabelBtn>
+            ))}
+            <LabelBtn
+              on={state.noTagSelected}
+              color="#ccc"
+              onClick={() => actions.toggleNoTag()}
+            >
+              No Tag
+            </LabelBtn>
+          </LabelFilter>
           <ListContainter id="scroll-test" ref={scrollRef}>
             {allLists.map((list, index) => (
               <CardList

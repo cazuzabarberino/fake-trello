@@ -3,7 +3,7 @@ import shortid from "shortid";
 import Label from "../models/Label";
 
 interface LabelState {
-  selected: null | Label;
+  noTagSelected: boolean;
   labels: Label[];
 }
 
@@ -11,6 +11,8 @@ interface LabelActions {
   createLabel: (title: string, color: string) => void;
   deleteLabel: (id: string) => void;
   editLabel: (labelId: string, title: string, color: string) => void;
+  toggleSelection: (labelId: string) => void;
+  toggleNoTag: () => void;
 }
 
 interface LabelContextType {
@@ -19,12 +21,12 @@ interface LabelContextType {
 }
 
 const initialState: LabelState = {
-  selected: null,
+  noTagSelected: true,
   labels: [
-    { color: "red", title: "teste", id: "1" },
-    { color: "blue", title: "teste", id: "2" },
-    { color: "green", title: "teste", id: "3" },
-    { color: "yellow", title: "teste", id: "4" },
+    { color: "red", title: "teste", id: "1", selected: true },
+    { color: "blue", title: "teste", id: "2", selected: true },
+    { color: "green", title: "teste", id: "3", selected: true },
+    { color: "yellow", title: "teste", id: "4", selected: true },
   ],
 };
 
@@ -34,6 +36,8 @@ export const LabelContext = React.createContext<LabelContextType>({
     createLabel: (title: string, color: string) => {},
     deleteLabel: (id: string) => {},
     editLabel: (labelId: string, title: string, color: string) => {},
+    toggleSelection: (labelId: string) => {},
+    toggleNoTag: () => {},
   },
 });
 
@@ -52,6 +56,7 @@ export const LabelProvider = ({ children }: Props) => {
         title,
         color,
         id: shortid.generate(),
+        selected: true,
       };
 
       newState.labels.push(newLabel);
@@ -91,13 +96,33 @@ export const LabelProvider = ({ children }: Props) => {
     [state, setState]
   );
 
+  const toggleSelection = React.useCallback(
+    (labelId: string) => {
+      const newState = {
+        ...state,
+        labels: state.labels.map((label) =>
+          label.id !== labelId ? label : { ...label, selected: !label.selected }
+        ),
+      };
+      setState(newState);
+    },
+    [state, setState]
+  );
+
+  const toggleNoTag = React.useCallback(() => {
+    const newState = { ...state, noTagSelected: !state.noTagSelected };
+    setState(newState);
+  }, [state, setState]);
+
   const actions = React.useMemo<LabelActions>(
     () => ({
       createLabel,
       deleteLabel,
       editLabel,
+      toggleSelection,
+      toggleNoTag,
     }),
-    [createLabel, deleteLabel, editLabel]
+    [createLabel, deleteLabel, editLabel, toggleSelection, toggleNoTag]
   );
 
   return (
