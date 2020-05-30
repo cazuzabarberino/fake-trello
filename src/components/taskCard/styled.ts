@@ -76,7 +76,7 @@ export const Card = styled.div<DragginProps & CardProps>`
     opacity: ${({ dragging }) => (dragging ? 0 : 1)};
   }
 
-  transition: 0.2s ease-out;
+  transition: 0.2s;
 
   & + div {
     margin-top: ${({ hide }) => (hide ? "0" : "8px")};
