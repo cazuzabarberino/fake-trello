@@ -48,7 +48,7 @@ export default ({
   const [page, setPage] = React.useState<LabelMenuPage>(LabelMenuPage.main);
   const [selectedColor, setSelectedColor] = React.useState("");
   const [input, setInput] = React.useState("");
-  const { editLabel } = React.useContext(
+  const { editLabel, deleteEveryLabel } = React.useContext(
     TaskListContext
   ) as TaskListContextValue;
   const changeLabelRef = React.useRef("");
@@ -188,6 +188,8 @@ export default ({
               <ConfirmBtn
                 negative={true}
                 onClick={() => {
+                  deleteEveryLabel(changeLabelRef.current);
+                  actions.deleteLabel(changeLabelRef.current);
                   setPage(LabelMenuPage.main);
                 }}
               >
@@ -251,6 +253,7 @@ export default ({
     editLabel,
     listIndex,
     taskIndex,
+    deleteEveryLabel,
   ]);
 
   return (

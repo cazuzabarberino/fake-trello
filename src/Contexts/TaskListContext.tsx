@@ -14,6 +14,7 @@ export interface TaskListContextValue {
     listIndex: number
   ) => void;
   editLabel: (labelid: string, taskIndex: number, listIndex: number) => void;
+  deleteEveryLabel: (labelid: string) => void;
 }
 
 export const TaskListContext = React.createContext<TaskListContextValue | null>(

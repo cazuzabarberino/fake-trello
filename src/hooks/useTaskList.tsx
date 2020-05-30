@@ -119,6 +119,21 @@ export default function useTaskList(
     [allLists, setAllLists]
   );
 
+  const deleteEveryLabel = React.useCallback(
+    (labelid: string) => {
+      const newList = allLists.map((list) => ({
+        ...list,
+        tasks: list.tasks.map((task) => ({
+          ...task,
+          labels: task.labels.filter((label) => label !== labelid),
+        })),
+      }));
+
+      setAllLists(newList);
+    },
+    [allLists, setAllLists]
+  );
+
   const taskListContextValue: TaskListContextValue = React.useMemo(
     () => ({
       addList,
@@ -130,6 +145,7 @@ export default function useTaskList(
       editTaskDate,
       editCompleteState,
       editLabel,
+      deleteEveryLabel,
     }),
     [
       addList,
@@ -141,6 +157,7 @@ export default function useTaskList(
       editTaskDate,
       editCompleteState,
       editLabel,
+      deleteEveryLabel,
     ]
   );
 
