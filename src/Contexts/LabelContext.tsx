@@ -10,6 +10,7 @@ interface LabelState {
 interface LabelActions {
   createLabel: (title: string, color: string) => void;
   deleteLabel: (id: string) => void;
+  editLabel: (labelId: string, title: string, color: string) => void;
 }
 
 interface LabelContextType {
@@ -32,6 +33,7 @@ export const LabelContext = React.createContext<LabelContextType>({
   actions: {
     createLabel: (title: string, color: string) => {},
     deleteLabel: (id: string) => {},
+    editLabel: (labelId: string, title: string, color: string) => {},
   },
 });
 
@@ -70,12 +72,32 @@ export const LabelProvider = ({ children }: Props) => {
     [state, setState]
   );
 
+  const editLabel = React.useCallback(
+    (labelId: string, title: string, color: string) => {
+      const newState = { ...state };
+
+      newState.labels = newState.labels.map((label) =>
+        label.id !== labelId
+          ? label
+          : {
+              ...label,
+              title,
+              color,
+            }
+      );
+
+      setState(newState);
+    },
+    [state, setState]
+  );
+
   const actions = React.useMemo<LabelActions>(
     () => ({
       createLabel,
       deleteLabel,
+      editLabel,
     }),
-    [createLabel, deleteLabel]
+    [createLabel, deleteLabel, editLabel]
   );
 
   return (

@@ -44,7 +44,7 @@ const Panel = () => {
         title: task,
         date: "",
         complete: false,
-        labels: ["1"],
+        labels: [],
       })),
     }));
   });

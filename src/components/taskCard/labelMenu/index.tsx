@@ -13,6 +13,7 @@ import {
   LabelSelectBox,
   LabelSelectBoxWrapper,
   OptionBtn,
+  ConfirmBtnWrapper,
 } from "./styled";
 import {
   TaskListContext,
@@ -31,6 +32,7 @@ interface Props {
 enum LabelMenuPage {
   main,
   newLabel,
+  changeLabel,
 }
 
 export default ({
@@ -49,6 +51,7 @@ export default ({
   const { editLabel } = React.useContext(
     TaskListContext
   ) as TaskListContextValue;
+  const changeLabelRef = React.useRef("");
 
   // console.log(state);
 
@@ -112,6 +115,15 @@ export default ({
             </button>
           </>
         );
+      case LabelMenuPage.changeLabel:
+        return (
+          <>
+            <p>Change Label</p>
+            <button onClick={() => setPage(LabelMenuPage.main)}>
+              <FiArrowLeft size={16} />
+            </button>
+          </>
+        );
       default:
         return (
           <>
@@ -148,6 +160,42 @@ export default ({
             </ConfirmBtn>
           </>
         );
+      case LabelMenuPage.changeLabel:
+        return (
+          <>
+            <label htmlFor="name">Name</label>
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              id="name"
+            />
+            <p>Select a color</p>
+            <ColorBoxWrapper>{colorBoxes}</ColorBoxWrapper>
+            <ConfirmBtnWrapper>
+              <ConfirmBtn
+                onClick={() => {
+                  if (!input || !selectedColor) return;
+                  actions.editLabel(
+                    changeLabelRef.current,
+                    input,
+                    selectedColor
+                  );
+                  setPage(LabelMenuPage.main);
+                }}
+              >
+                Save
+              </ConfirmBtn>
+              <ConfirmBtn
+                negative={true}
+                onClick={() => {
+                  setPage(LabelMenuPage.main);
+                }}
+              >
+                Delete
+              </ConfirmBtn>
+            </ConfirmBtnWrapper>
+          </>
+        );
       default:
         return (
           <>
@@ -165,14 +213,28 @@ export default ({
                       <FiCheck color="white" size={20} />
                     )}
                   </LabelSelectBox>
-                  <button key={label.id + "btn"}>
+                  <button
+                    onClick={() => {
+                      changeLabelRef.current = label.id;
+                      setInput(label.title);
+                      setSelectedColor(label.color);
+                      setPage(LabelMenuPage.changeLabel);
+                    }}
+                    key={label.id + "btn"}
+                  >
                     <FiEdit2 size={16} />
                   </button>
                 </React.Fragment>
               ))}
             </LabelSelectBoxWrapper>
 
-            <OptionBtn onClick={() => setPage(LabelMenuPage.newLabel)}>
+            <OptionBtn
+              onClick={() => {
+                setInput("");
+                setSelectedColor("");
+                setPage(LabelMenuPage.newLabel);
+              }}
+            >
               Create a new Label
             </OptionBtn>
           </>

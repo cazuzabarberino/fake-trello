@@ -100,21 +100,34 @@ export const ColorSelectBox = styled.div<ColorSelectBoxProps>`
   place-content: center;
 `;
 
-export const ConfirmBtn = styled.button`
+interface ConfirmBtnProps {
+  negative?: boolean;
+}
+
+export const ConfirmBtnWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const ConfirmBtn = styled.button<ConfirmBtnProps>`
   padding: 8px 12px;
   border-radius: 4px;
   border: none;
-  background: ${({ theme }) => theme.green};
+  background: ${({ theme, negative }) => (negative ? theme.red : theme.green)};
   color: white;
   font-size: 14px;
   transition: 0.1s;
 
   :hover {
-    background: ${({ theme }) => lighten(0.1, theme.green)};
+    background: ${({ theme, negative }) =>
+      lighten(0.1, negative ? theme.red : theme.green)};
   }
 
   :active {
-    background: ${({ theme }) => darken(0.1, theme.green)};
+    background: ${({ theme, negative }) =>
+      darken(0.1, negative ? theme.red : theme.green)};
   }
 `;
 
