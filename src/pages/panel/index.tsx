@@ -117,7 +117,7 @@ const Panel = () => {
               color="#ccc"
               onClick={() => actions.toggleNoTag()}
             >
-              No Tag
+              No label
             </LabelBtn>
           </LabelFilter>
           <ListContainter id="scroll-test" ref={scrollRef}>

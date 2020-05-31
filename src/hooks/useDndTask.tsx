@@ -70,16 +70,19 @@ export const useDndTask = (
     window.removeEventListener("mouseup", mouseUp);
   }, [mouseMove]);
 
-  const horizontalCheck = React.useCallback((toIndex: number): boolean => {
-    if (
-      toIndex < 0 ||
-      toIndex > listRects.length - 1 ||
-      !rectInRangeX(listRects[toIndex], mouseCoord.current)
-    )
-      return false;
+  const horizontalCheck = React.useCallback(
+    (toIndex: number): boolean => {
+      if (
+        toIndex < 0 ||
+        toIndex > allLists.length - 1 ||
+        !rectInRangeX(listRects[toIndex], mouseCoord.current)
+      )
+        return false;
 
-    return true;
-  }, []);
+      return true;
+    },
+    [allLists.length]
+  );
 
   const moveTaskHorizontally = React.useCallback(
     (toIndex: number) => {
