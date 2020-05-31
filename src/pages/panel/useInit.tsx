@@ -5,15 +5,15 @@ import { LabelContext } from "../../Contexts/LabelContext";
 import { TaskListContext } from "../../Contexts/TaskListContext";
 
 export default function useInit() {
+  const placeHolderRef = React.useRef(false);
   const responseRef = React.useRef<string[]>([]);
   const theme = React.useContext(ThemeContext);
   const {
+    state,
     actions: { createLabel },
   } = React.useContext(LabelContext);
   const {
-    allLists,
-    setAllLists,
-    taskListActions: { addList },
+    taskListActions: { addList, addNewTask, editLabel },
   } = React.useContext(TaskListContext);
 
   const init = React.useCallback(() => {
@@ -47,14 +47,39 @@ export default function useInit() {
     const numberOfLabels = Math.min(labelText.length, 5);
     for (let i = 0; i < numberOfLabels; i++)
       createLabel(Capitalize(labelText[i]), colors[i]);
-  }, [createLabel, theme]);
+
+    addList("Backlog");
+    addList("Week Tasks");
+    addList("Overdue Tasks");
+
+    const tasksPerList = [];
+    let totalTasks = texts.length;
+    tasksPerList[0] = Math.floor(totalTasks / 2);
+    totalTasks -= Math.floor(totalTasks / 2);
+    tasksPerList[1] = Math.floor(totalTasks / 2);
+    totalTasks -= Math.floor(totalTasks / 2);
+    tasksPerList[2] = totalTasks;
+
+    const allLabels = [...state.labels];
+
+    for (let i = 0; i < 3; i++)
+      for (let j = 0; j < tasksPerList[i]; j++) {
+        const init = i === 0 ? 0 : tasksPerList[i - 1];
+        addNewTask(texts[init + j], i);
+        const nTaskLabels = Math.floor(Math.random() * numberOfLabels);
+        shuffleArray(allLabels);
+        for (let k = 0; k < nTaskLabels; k++) {
+          editLabel(allLabels[k].id, j, i);
+        }
+      }
+  }, [theme, addList, createLabel, addNewTask, editLabel, state.labels]);
 
   React.useEffect(() => {
     async function FetchText() {
       try {
         responseRef.current = (
           await axios.get<string[]>(
-            "https://baconipsum.com/api/?type=meat-and-fille&paras=5&start-with-lorem=1"
+            "https://baconipsum.com/api/?type=meat-and-fille&paras=3&start-with-lorem=1"
           )
         ).data;
 
@@ -63,9 +88,11 @@ export default function useInit() {
         console.log(err);
       }
     }
-
-    FetchText();
-  }, []);
+    if (!placeHolderRef.current) {
+      FetchText();
+      placeHolderRef.current = true;
+    }
+  }, [init]);
 }
 
 function Capitalize(text: string) {
