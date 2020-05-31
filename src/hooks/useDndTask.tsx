@@ -7,6 +7,7 @@ export const useDndTask = (
   setAllLists: React.Dispatch<React.SetStateAction<TaskList[]>>
 ) => {
   const width = React.useRef(0);
+  const height = React.useRef(0);
   const [taskDragging, setTaskDragging] = React.useState(false);
   const [coord, setCoord] = React.useState<Coord>({
     x: 0,
@@ -43,6 +44,7 @@ export const useDndTask = (
       listIndex,
     };
     width.current = rect.width;
+    height.current = rect.height;
     setPosition(event.clientX, event.clientY);
     window.addEventListener("mousemove", mouseMove);
     window.addEventListener("mouseup", mouseUp);
@@ -133,5 +135,6 @@ export const useDndTask = (
     moveTaskVertically,
     moveTaskHorizontally,
     width: width.current,
+    height: height.current,
   };
 };

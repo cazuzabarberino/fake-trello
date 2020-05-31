@@ -12,6 +12,7 @@ export interface DndTaskContextValue {
   ) => void;
   moveTaskVertically: (toTaskIndex: number) => void;
   moveTaskHorizontally: (toIndex: number) => void;
+  height: number;
 }
 
 const DndTaskContext = React.createContext<DndTaskContextValue | null>(null);

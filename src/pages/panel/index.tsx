@@ -72,6 +72,7 @@ const Panel = () => {
     moveTaskVertically,
     width,
     moveTaskHorizontally,
+    height: taskHeight,
   } = useDndTask(allLists, setAllLists);
 
   const { scrollRef, scrollToRight } = useMouseScrollHorizontal(draggingList);
@@ -84,6 +85,7 @@ const Panel = () => {
       listIndex: dragIndexes.listIndex,
       moveTaskVertically,
       moveTaskHorizontally,
+      height: taskHeight,
     }),
     [
       dragIndexes.taskIndex,
@@ -92,6 +94,7 @@ const Panel = () => {
       beginTaskDrag,
       moveTaskVertically,
       moveTaskHorizontally,
+      taskHeight,
     ]
   );
 

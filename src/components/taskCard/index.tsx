@@ -3,13 +3,13 @@ import { FiEdit2 } from "react-icons/fi";
 import DndTaskContext, {
   DndTaskContextValue,
 } from "../../Contexts/DndTaskContext";
+import { LabelContext } from "../../Contexts/LabelContext";
+import Coord from "../../models/Coord";
+import Label from "../../models/Label";
 import Task from "../../models/Task";
 import DateBadge from "./DateBadge";
-import { Card, Shadow, LabelWrapper, LabelMark } from "./styled";
+import { Card, LabelMark, LabelWrapper, Shadow } from "./styled";
 import TaskMenu from "./taskMenu";
-import { LabelContext } from "../../Contexts/LabelContext";
-import Label from "../../models/Label";
-import Coord from "../../models/Coord";
 
 interface Props {
   task: Task;
@@ -17,9 +17,21 @@ interface Props {
   index: number;
 }
 
-export const checkRangeY = (rect: DOMRect, coord: Coord): number => {
-  if (coord.y >= rect.y + rect.height * 0.5) return 0;
-  else if (coord.y <= rect.y + rect.height * 0.5) return -1;
+export const checkRangeY = (
+  rect: DOMRect,
+  coord: Coord,
+  draggedTaskHeight: number
+): number => {
+  if (
+    coord.y > rect.y + rect.height * 0.5 &&
+    coord.y >= rect.y + rect.height - draggedTaskHeight
+  )
+    return 0;
+  else if (
+    coord.y < rect.y + rect.height * 0.5 &&
+    coord.y <= rect.y + draggedTaskHeight
+  )
+    return -1;
   else return 1;
 };
 
@@ -51,6 +63,7 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
     listIndex: draggedListIndex,
     taskIndex: draggedTaskIndex,
     moveTaskVertically,
+    height: draggedTaskHeight,
   } = React.useContext(DndTaskContext) as DndTaskContextValue;
 
   const dragging =
@@ -60,19 +73,25 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
 
   const mouseMoveHandle = React.useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      if (!taskDragging) return;
-      if (dragging) return;
+      if (!taskDragging || dragging) return;
       const rect = (containerRef.current as HTMLDivElement).getBoundingClientRect();
       const coord = {
         x: event.clientX,
         y: event.clientY,
       };
-      const check = checkRangeY(rect, coord);
+      const check = checkRangeY(rect, coord, draggedTaskHeight);
       if (check > 0) return;
       const toIndex = index + check + 1;
       if (toIndex !== draggedTaskIndex) moveTaskVertically(toIndex);
     },
-    [dragging, index, moveTaskVertically, draggedTaskIndex, taskDragging]
+    [
+      dragging,
+      index,
+      moveTaskVertically,
+      draggedTaskIndex,
+      taskDragging,
+      draggedTaskHeight,
+    ]
   );
 
   const handleLeftMouseDown = React.useCallback(
