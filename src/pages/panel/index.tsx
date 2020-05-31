@@ -1,5 +1,4 @@
 import React from "react";
-import { ThemeContext } from "styled-components";
 import CardList from "../../components/cardlist";
 import VisualList from "../../components/cardlist/visualList";
 import NewList from "../../components/newList";
@@ -13,13 +12,13 @@ import useDndList from "../../hooks/useDnDList";
 import { useDndTask } from "../../hooks/useDndTask";
 import useMouseScrollHorizontal from "../../hooks/useMouseScrollHorizontal";
 import { Container, LabelBtn, LabelFilter, ListContainter } from "./styles";
+import useInit from "./useInit";
 
 const Panel = () => {
-  const theme = React.useContext(ThemeContext);
   const { state, actions } = React.useContext(LabelContext);
-  const { allLists , setAllLists} = React.useContext(TaskListContext);
+  const { allLists } = React.useContext(TaskListContext);
 
-  // useInit(taskListContextValue.addList, actions.createLabel, theme);
+  useInit();
 
   const {
     beginDragList,
@@ -28,7 +27,7 @@ const Panel = () => {
     draggedListCoord,
     height,
     moveListHorizontally,
-  } = useDndList(allLists, setAllLists);
+  } = useDndList();
 
   const {
     beginTaskDrag,
@@ -39,7 +38,7 @@ const Panel = () => {
     width,
     moveTaskHorizontally,
     height: taskHeight,
-  } = useDndTask(allLists, setAllLists);
+  } = useDndTask();
 
   const { scrollRef, scrollToRight } = useMouseScrollHorizontal(draggingList);
 
@@ -92,7 +91,7 @@ const Panel = () => {
           </LabelBtn>
         </LabelFilter>
         <ListContainter id="scroll-test" ref={scrollRef}>
-          {allLists.map((list, index) => (
+          {allLists.list.map((list, index) => (
             <CardList
               selfTaskDragging={taskDragging && dragIndexes.listIndex === index}
               key={list.id}
@@ -116,7 +115,9 @@ const Panel = () => {
 
         {taskDragging && (
           <VisualTaskCard
-            task={allLists[dragIndexes.listIndex].tasks[dragIndexes.taskIndex]}
+            task={
+              allLists.list[dragIndexes.listIndex].tasks[dragIndexes.taskIndex]
+            }
             left={coord.x}
             top={coord.y}
             width={width}
@@ -125,7 +126,7 @@ const Panel = () => {
 
         {draggingList && (
           <VisualList
-            list={allLists[draggedListIndex]}
+            list={allLists.list[draggedListIndex]}
             listIndex={draggedListIndex}
             left={draggedListCoord.x}
             top={draggedListCoord.y}

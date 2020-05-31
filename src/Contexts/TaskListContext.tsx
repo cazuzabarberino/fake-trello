@@ -21,13 +21,21 @@ interface TaskListActions {
 }
 
 interface TaskContextType {
-  allLists: TaskList[];
-  setAllLists: React.Dispatch<React.SetStateAction<TaskList[]>>;
+  allLists: {
+    list: TaskList[];
+  };
+  setAllLists: React.Dispatch<
+    React.SetStateAction<{
+      list: TaskList[];
+    }>
+  >;
   taskListActions: TaskListActions;
 }
 
 export const TaskListContext = React.createContext<TaskContextType>({
-  allLists: [],
+  allLists: {
+    list: [],
+  },
   setAllLists: () => {},
   taskListActions: {
     deleteTask: (taskIndex: number, listIndex: number) => {},
@@ -52,12 +60,14 @@ interface Props {
 }
 
 export const TaskListProvider = ({ children }: Props) => {
-  const [allLists, setAllLists] = React.useState<TaskList[]>([]);
+  const [allLists, setAllLists] = React.useState<{ list: TaskList[] }>({
+    list: [],
+  });
   const deleteTask = React.useCallback(
     (taskIndex: number, listIndex: number) => {
-      const newList = [...allLists];
+      const newList = { ...allLists };
 
-      newList[listIndex].tasks.splice(taskIndex, 1);
+      newList.list[listIndex].tasks.splice(taskIndex, 1);
 
       setAllLists(newList);
     },
@@ -66,7 +76,7 @@ export const TaskListProvider = ({ children }: Props) => {
 
   const addNewTask = React.useCallback(
     (title: string, listIndex: number) => {
-      const newList = [...allLists];
+      const newList = { ...allLists };
       const newTask: Task = {
         labels: [],
         title,
@@ -74,7 +84,7 @@ export const TaskListProvider = ({ children }: Props) => {
         date: "",
         complete: false,
       };
-      newList[listIndex].tasks.push(newTask);
+      newList.list[listIndex].tasks.push(newTask);
       setAllLists(newList);
     },
     [allLists, setAllLists]
@@ -82,9 +92,9 @@ export const TaskListProvider = ({ children }: Props) => {
 
   const deleteList = React.useCallback(
     (listIndex: number) => {
-      const newList = [...allLists];
+      const newList = { ...allLists };
 
-      newList.splice(listIndex, 1);
+      newList.list.splice(listIndex, 1);
 
       setAllLists(newList);
     },
@@ -93,13 +103,15 @@ export const TaskListProvider = ({ children }: Props) => {
 
   const addList = React.useCallback(
     (title: string) => {
-      const newList = [...allLists];
+      const newList = { ...allLists };
 
-      newList.push({
+      const list = {
         id: shortid.generate(),
         tasks: [],
         title,
-      });
+      };
+
+      newList.list.push(list);
 
       setAllLists(newList);
     },
@@ -108,8 +120,8 @@ export const TaskListProvider = ({ children }: Props) => {
 
   const editListTitle = React.useCallback(
     (title: string, listIndex: number) => {
-      const newList = [...allLists];
-      newList[listIndex].title = title;
+      const newList = { ...allLists };
+      newList.list[listIndex].title = title;
       setAllLists(newList);
     },
     [allLists, setAllLists]
@@ -117,8 +129,8 @@ export const TaskListProvider = ({ children }: Props) => {
 
   const editTaskTitle = React.useCallback(
     (title: string, taskIndex: number, listIndex: number) => {
-      const newList = [...allLists];
-      newList[listIndex].tasks[taskIndex].title = title;
+      const newList = { ...allLists };
+      newList.list[listIndex].tasks[taskIndex].title = title;
       setAllLists(newList);
     },
     [allLists, setAllLists]
@@ -126,8 +138,8 @@ export const TaskListProvider = ({ children }: Props) => {
 
   const editTaskDate = React.useCallback(
     (date: string, taskIndex: number, listIndex: number) => {
-      const newList = [...allLists];
-      newList[listIndex].tasks[taskIndex].date = date;
+      const newList = { ...allLists };
+      newList.list[listIndex].tasks[taskIndex].date = date;
       setAllLists(newList);
     },
     [allLists, setAllLists]
@@ -135,8 +147,8 @@ export const TaskListProvider = ({ children }: Props) => {
 
   const editCompleteState = React.useCallback(
     (state: boolean, taskIndex: number, listIndex: number) => {
-      const newList = [...allLists];
-      newList[listIndex].tasks[taskIndex].complete = state;
+      const newList = { ...allLists };
+      newList.list[listIndex].tasks[taskIndex].complete = state;
       setAllLists(newList);
     },
     [allLists, setAllLists]
@@ -144,18 +156,18 @@ export const TaskListProvider = ({ children }: Props) => {
 
   const editLabel = React.useCallback(
     (labelid: string, taskIndex: number, listIndex: number) => {
-      const newList = [...allLists];
-      const hasLabel = newList[listIndex].tasks[taskIndex].labels.findIndex(
-        (label) => label === labelid
-      );
+      const newList = { ...allLists };
+      const hasLabel = newList.list[listIndex].tasks[
+        taskIndex
+      ].labels.findIndex((label) => label === labelid);
 
       if (hasLabel >= 0)
-        newList[listIndex].tasks[taskIndex].labels = newList[listIndex].tasks[
-          taskIndex
-        ].labels.filter((label) => label !== labelid);
+        newList.list[listIndex].tasks[taskIndex].labels = newList.list[
+          listIndex
+        ].tasks[taskIndex].labels.filter((label) => label !== labelid);
       else
-        newList[listIndex].tasks[taskIndex].labels = [
-          ...newList[listIndex].tasks[taskIndex].labels,
+        newList.list[listIndex].tasks[taskIndex].labels = [
+          ...newList.list[listIndex].tasks[taskIndex].labels,
           labelid,
         ];
 
@@ -166,7 +178,9 @@ export const TaskListProvider = ({ children }: Props) => {
 
   const deleteEveryLabel = React.useCallback(
     (labelid: string) => {
-      const newList = allLists.map((list) => ({
+      const newList = { ...allLists };
+
+      newList.list = allLists.list.map((list) => ({
         ...list,
         tasks: list.tasks.map((task) => ({
           ...task,

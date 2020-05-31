@@ -1,34 +1,22 @@
 import axios from "axios";
-import { DefaultTheme } from "styled-components";
-import { TaskListContext } from "../../Contexts/TaskListContext";
 import React from "react";
+import { ThemeContext } from "styled-components";
+import { LabelContext } from "../../Contexts/LabelContext";
+import { TaskListContext } from "../../Contexts/TaskListContext";
 
-export default function useInit(
-  addList: (title: string) => void,
-  createLabel: (title: string, color: string) => void,
-  theme: DefaultTheme
-) {
+export default function useInit() {
   const responseRef = React.useRef<string[]>([]);
+  const theme = React.useContext(ThemeContext);
+  const {
+    actions: { createLabel },
+  } = React.useContext(LabelContext);
+  const {
+    allLists,
+    setAllLists,
+    taskListActions: { addList },
+  } = React.useContext(TaskListContext);
 
-  React.useEffect(() => {
-    async function FetchText() {
-      try {
-        responseRef.current = (
-          await axios.get<string[]>(
-            "https://baconipsum.com/api/?type=meat-and-fille&paras=5&start-with-lorem=1"
-          )
-        ).data;
-
-        init();
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
-    FetchText();
-  }, []);
-
-  function init() {
+  const init = React.useCallback(() => {
     const colors = [
       theme.red,
       theme.green,
@@ -59,12 +47,25 @@ export default function useInit(
     const numberOfLabels = Math.min(labelText.length, 5);
     for (let i = 0; i < numberOfLabels; i++)
       createLabel(Capitalize(labelText[i]), colors[i]);
+  }, [createLabel, theme]);
 
-    addList("");
-    addList("");
-    addList("");
-    addList("");
-  }
+  React.useEffect(() => {
+    async function FetchText() {
+      try {
+        responseRef.current = (
+          await axios.get<string[]>(
+            "https://baconipsum.com/api/?type=meat-and-fille&paras=5&start-with-lorem=1"
+          )
+        ).data;
+
+        init();
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    FetchText();
+  }, []);
 }
 
 function Capitalize(text: string) {

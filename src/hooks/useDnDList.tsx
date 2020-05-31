@@ -1,11 +1,9 @@
 import React from "react";
+import { TaskListContext } from "../Contexts/TaskListContext";
 import Coord from "../models/Coord";
-import TaskList from "../models/List";
 
-export const useDnDList = (
-  allLists: TaskList[],
-  setAllLists: React.Dispatch<React.SetStateAction<TaskList[]>>
-) => {
+export const useDnDList = () => {
+  const { allLists, setAllLists } = React.useContext(TaskListContext);
   const height = React.useRef(0);
   const [coord, setCoord] = React.useState<Coord>({
     x: 0,
@@ -65,11 +63,11 @@ export const useDnDList = (
 
   const moveListHorizontally = React.useCallback(
     (toIndex: number) => {
-      const newList = [...allLists];
+      const newList = { ...allLists };
 
-      const temp = newList[listIndexRef.current];
-      newList[listIndexRef.current] = newList[toIndex];
-      newList[toIndex] = temp;
+      const temp = newList.list[listIndexRef.current];
+      newList.list[listIndexRef.current] = newList.list[toIndex];
+      newList.list[toIndex] = temp;
 
       listIndexRef.current = toIndex;
 
