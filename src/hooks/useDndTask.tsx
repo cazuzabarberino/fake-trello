@@ -1,11 +1,9 @@
 import React from "react";
+import { TaskListContext } from "../Contexts/TaskListContext";
 import Coord from "../models/Coord";
-import TaskList from "../models/List";
 
-export const useDndTask = (
-  allLists: TaskList[],
-  setAllLists: React.Dispatch<React.SetStateAction<TaskList[]>>
-) => {
+export const useDndTask = () => {
+  const { allLists, setAllLists } = React.useContext(TaskListContext);
   const width = React.useRef(0);
   const height = React.useRef(0);
   const [taskDragging, setTaskDragging] = React.useState(false);
@@ -75,22 +73,22 @@ export const useDndTask = (
     (toIndex: number) => {
       if (toIndex === dragIndexes.current.listIndex) return;
 
-      const newList = [...allLists];
+      const newList = { ...allLists };
 
-      newList[toIndex].tasks.push(
-        newList[dragIndexes.current.listIndex].tasks[
+      newList.list[toIndex].tasks.push(
+        newList.list[dragIndexes.current.listIndex].tasks[
           dragIndexes.current.taskIndex
         ]
       );
 
-      newList[dragIndexes.current.listIndex].tasks.splice(
+      newList.list[dragIndexes.current.listIndex].tasks.splice(
         dragIndexes.current.taskIndex,
         1
       );
 
       dragIndexes.current = {
         listIndex: toIndex,
-        taskIndex: newList[toIndex].tasks.length - 1,
+        taskIndex: newList.list[toIndex].tasks.length - 1,
       };
 
       setAllLists(newList);
@@ -102,23 +100,27 @@ export const useDndTask = (
     (toTaskIndex: number) => {
       if (
         toTaskIndex < 0 ||
-        toTaskIndex >= allLists[dragIndexes.current.listIndex].tasks.length
+        toTaskIndex >= allLists.list[dragIndexes.current.listIndex].tasks.length
       )
         return;
 
-      const newList = [...allLists];
+      const newList = { ...allLists };
 
       const tmp =
-        newList[dragIndexes.current.listIndex].tasks[
+        newList.list[dragIndexes.current.listIndex].tasks[
           dragIndexes.current.taskIndex
         ];
 
-      newList[dragIndexes.current.listIndex].tasks.splice(
+      newList.list[dragIndexes.current.listIndex].tasks.splice(
         dragIndexes.current.taskIndex,
         1
       );
 
-      newList[dragIndexes.current.listIndex].tasks.splice(toTaskIndex, 0, tmp);
+      newList.list[dragIndexes.current.listIndex].tasks.splice(
+        toTaskIndex,
+        0,
+        tmp
+      );
 
       dragIndexes.current.taskIndex = toTaskIndex;
 

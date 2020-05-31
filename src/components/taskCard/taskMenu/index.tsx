@@ -1,9 +1,6 @@
 import React from "react";
 import { FiArchive, FiClock, FiTag } from "react-icons/fi";
-import {
-  TaskListContext,
-  TaskListContextValue,
-} from "../../../Contexts/TaskListContext";
+import { TaskListContext } from "../../../Contexts/TaskListContext";
 import useFocusInput from "../../../hooks/useFocusInput";
 import useKeyMouseToSaveClose from "../../../hooks/useKeyMouseToSaveClose";
 import Task from "../../../models/Task";
@@ -34,9 +31,9 @@ const TaskMenu = ({
   const [input, setInput] = React.useState("");
   const [dateMenuOpen, setDateMenuOpen] = React.useState(false);
   const [labelMenuOpen, setLabelMenuOpen] = React.useState(false);
-  const { deleteTask, editTaskTitle } = React.useContext(
-    TaskListContext
-  ) as TaskListContextValue;
+  const {
+    taskListActions: { deleteTask, editTaskTitle },
+  } = React.useContext(TaskListContext);
 
   React.useEffect(() => {
     setInput(task.title);

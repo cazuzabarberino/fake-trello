@@ -4,10 +4,7 @@ import { FiX } from "react-icons/fi";
 import { withTheme, DefaultTheme } from "styled-components";
 import useKeyMouseToSaveClose from "../../hooks/useKeyMouseToSaveClose";
 import useFocusInput from "../../hooks/useFocusInput";
-import {
-  TaskListContext,
-  TaskListContextValue,
-} from "../../Contexts/TaskListContext";
+import { TaskListContext } from "../../Contexts/TaskListContext";
 
 interface Props {
   theme: DefaultTheme;
@@ -19,9 +16,9 @@ interface Props {
 const NewTask = ({ theme, closeNewTask, listIndex, scrolDown }: Props) => {
   const [input, setInput] = React.useState("");
   const inputRef = useFocusInput<HTMLInputElement>();
-  const { addNewTask } = React.useContext(
-    TaskListContext
-  ) as TaskListContextValue;
+  const {
+    taskListActions: { addNewTask },
+  } = React.useContext(TaskListContext);
 
   const saveInput = React.useCallback(() => {
     if (!input) return;

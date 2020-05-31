@@ -5,6 +5,7 @@ import { ThemeProvider } from "styled-components";
 import Header from "./components/header";
 import styled from "styled-components";
 import { LabelProvider } from "./Contexts/LabelContext";
+import { TaskListProvider } from "./Contexts/TaskListContext";
 
 function App() {
   return (
@@ -12,10 +13,12 @@ function App() {
       <ThemeProvider theme={defaultTheme}>
         <GlobalStyles />
         <LabelProvider>
-          <Container>
-            <Header />
-            <Panel />
-          </Container>
+          <TaskListProvider>
+            <Container>
+              <Header />
+              <Panel />
+            </Container>
+          </TaskListProvider>
         </LabelProvider>
       </ThemeProvider>
     </>

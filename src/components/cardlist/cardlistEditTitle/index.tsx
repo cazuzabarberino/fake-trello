@@ -2,10 +2,7 @@ import React from "react";
 import styled, { withTheme, DefaultTheme } from "styled-components";
 import useKeyMouseToSaveClose from "../../../hooks/useKeyMouseToSaveClose";
 import useFocusInput from "../../../hooks/useFocusInput";
-import {
-  TaskListContext,
-  TaskListContextValue,
-} from "../../../Contexts/TaskListContext";
+import { TaskListContext } from "../../../Contexts/TaskListContext";
 import { FiX } from "react-icons/fi";
 
 interface Props {
@@ -18,9 +15,9 @@ interface Props {
 const CardlistEditTitle = ({ title, close, listIndex, theme }: Props) => {
   const [input, setInput] = React.useState("");
 
-  const { editListTitle } = React.useContext(
-    TaskListContext
-  ) as TaskListContextValue;
+  const {
+    taskListActions: { editListTitle },
+  } = React.useContext(TaskListContext);
 
   const save = React.useCallback(() => {
     if (!input) return;

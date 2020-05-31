@@ -15,10 +15,7 @@ import {
 } from "./styled";
 import { ThemeContext } from "styled-components";
 import useKeyMouseToSaveClose from "../../../hooks/useKeyMouseToSaveClose";
-import {
-  TaskListContext,
-  TaskListContextValue,
-} from "../../../Contexts/TaskListContext";
+import { TaskListContext } from "../../../Contexts/TaskListContext";
 
 interface Props {
   top: number;
@@ -36,9 +33,9 @@ export default ({ top, left, listIndex, taskIndex, close, date }: Props) => {
   const [calendarView, serCalendarView] = React.useState(
     (date ? moment(date, "DD MM YY") : moment()).date(1)
   );
-  const { editTaskDate } = React.useContext(
-    TaskListContext
-  ) as TaskListContextValue;
+  const {
+    taskListActions: { editTaskDate },
+  } = React.useContext(TaskListContext);
 
   const save = React.useCallback(
     (val: string) => {
