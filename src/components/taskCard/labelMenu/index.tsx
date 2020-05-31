@@ -253,10 +253,12 @@ export default ({
     deleteEveryLabel,
   ]);
 
+  const y = Math.min(top, window.innerHeight - 400);
+
   return (
     <Container
       ref={containerRef}
-      top={top}
+      top={y}
       left={left}
       onMouseDown={(e) => e.stopPropagation()}
     >

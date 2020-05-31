@@ -44,7 +44,7 @@ export const LabelFilter = styled.div`
 
 interface LabelBtnProps {
   color: string;
-  on: boolean;
+  selected: boolean;
 }
 
 export const LabelBtn = styled.button<LabelBtnProps>`
@@ -55,5 +55,5 @@ export const LabelBtn = styled.button<LabelBtnProps>`
   color: white;
   font-weight: 700;
   font-size: 14px;
-  opacity: ${({ on }) => (on ? 1 : 0.5)};
+  opacity: ${({ selected }) => (selected ? 1 : 0.5)};
 `;

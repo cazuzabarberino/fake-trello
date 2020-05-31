@@ -47,12 +47,12 @@ const TaskMenu = ({
 
   const { containerRef, pauseRef } = useKeyMouseToSaveClose(save, close);
 
+  console.log(window.innerHeight);
+
+  const y = Math.min(rect.y, window.innerHeight - 250);
+
   return (
-    <Container
-      onMouseDown={(e) => e.stopPropagation()}
-      top={rect.y}
-      left={rect.x}
-    >
+    <Container onMouseDown={(e) => e.stopPropagation()} top={y} left={rect.x}>
       <div ref={containerRef}>
         <EditZone height={rect.height} width={rect.width}>
           <div>
@@ -107,7 +107,7 @@ const TaskMenu = ({
               setLabelMenuOpen(false);
               pauseRef.current = false;
             }}
-            top={rect.y}
+            top={y}
             left={rect.x + rect.width + 8}
             taskIndex={taskIndex}
             listIndex={listIndex}
@@ -121,7 +121,7 @@ const TaskMenu = ({
               setDateMenuOpen(false);
               pauseRef.current = false;
             }}
-            top={rect.y}
+            top={y}
             left={rect.x + rect.width + 8}
             taskIndex={taskIndex}
             listIndex={listIndex}

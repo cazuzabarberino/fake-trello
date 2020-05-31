@@ -97,10 +97,12 @@ export default ({ top, left, listIndex, taskIndex, close, date }: Props) => {
     return arr;
   };
 
+  const y = Math.min(top, window.innerHeight - 500);
+
   return (
     <Container
       ref={containerRef}
-      top={top}
+      top={y}
       left={left}
       onMouseDown={(e) => e.stopPropagation()}
     >

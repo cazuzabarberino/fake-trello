@@ -75,7 +75,7 @@ const Panel = () => {
           {state.labels.map((label) => (
             <LabelBtn
               key={label.id}
-              on={label.selected}
+              selected={label.selected}
               color={label.color}
               onClick={() => actions.toggleSelection(label.id)}
             >
@@ -83,7 +83,7 @@ const Panel = () => {
             </LabelBtn>
           ))}
           <LabelBtn
-            on={state.noTagSelected}
+            selected={state.noTagSelected}
             color="#ccc"
             onClick={() => actions.toggleNoTag()}
           >
