@@ -4,7 +4,6 @@ import { FiPlus } from "react-icons/fi";
 import useMouseScroll from "../../hooks/useMouseScrollVertical";
 import TaskList from "../../models/List";
 import Coord from "../../models/Coord";
-import { saveListRect } from "../../util";
 import NewTask from "../newTask";
 import TaskCard from "../taskCard";
 import {
@@ -17,6 +16,9 @@ import {
 } from "./styled";
 import CardlistAction from "./cardlistAction";
 import CardListEdit from "./cardlistEditTitle";
+import DndTaskContext, {
+  DndTaskContextValue,
+} from "../../Contexts/DndTaskContext";
 
 interface Props {
   list: TaskList;
@@ -48,6 +50,10 @@ const CardList = ({
   const [menuOpen, setMenuOpen] = React.useState(false);
   const menuBtnRef = React.useRef<HTMLButtonElement | null>(null);
 
+  const { taskDragging, moveTaskHorizontally } = React.useContext(
+    DndTaskContext
+  ) as DndTaskContextValue;
+
   const menuPosition: Coord = React.useMemo(() => {
     if (!menuOpen) return { x: 0, y: 0 };
     const rect = (menuBtnRef.current as HTMLButtonElement).getBoundingClientRect();
@@ -56,13 +62,6 @@ const CardList = ({
       y: rect.y,
     };
   }, [menuOpen]);
-
-  React.useLayoutEffect(() => {
-    saveListRect(
-      listIndex,
-      (contentRef.current as HTMLDivElement).getBoundingClientRect()
-    );
-  }, [listIndex]);
 
   const handleMouseDown = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -78,8 +77,8 @@ const CardList = ({
   };
 
   const handleMouseEnter = () => {
-    if (!draggingList || draggingSelf) return;
-    moveListHorizontally(listIndex);
+    if (draggingList && !draggingSelf) moveListHorizontally(listIndex);
+    else if (taskDragging) moveTaskHorizontally(listIndex);
   };
 
   return (

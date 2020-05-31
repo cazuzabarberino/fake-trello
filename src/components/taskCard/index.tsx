@@ -4,18 +4,24 @@ import DndTaskContext, {
   DndTaskContextValue,
 } from "../../Contexts/DndTaskContext";
 import Task from "../../models/Task";
-import { checkRangeY } from "../../util";
 import DateBadge from "./DateBadge";
 import { Card, Shadow, LabelWrapper, LabelMark } from "./styled";
 import TaskMenu from "./taskMenu";
 import { LabelContext } from "../../Contexts/LabelContext";
 import Label from "../../models/Label";
+import Coord from "../../models/Coord";
 
 interface Props {
   task: Task;
   listIndex: number;
   index: number;
 }
+
+export const checkRangeY = (rect: DOMRect, coord: Coord): number => {
+  if (coord.y >= rect.y + rect.height * 0.5) return 0;
+  else if (coord.y <= rect.y + rect.height * 0.5) return -1;
+  else return 1;
+};
 
 const TaskCard = ({ task, listIndex, index }: Props) => {
   const containerRef = React.useRef<HTMLDivElement | null>(null);

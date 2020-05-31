@@ -1,7 +1,6 @@
 import React from "react";
 import Coord from "../models/Coord";
 import TaskList from "../models/List";
-import { listRects, rectInRangeX, getRectX } from "../util";
 
 export const useDndTask = (
   allLists: TaskList[],
@@ -70,22 +69,10 @@ export const useDndTask = (
     window.removeEventListener("mouseup", mouseUp);
   }, [mouseMove]);
 
-  const horizontalCheck = React.useCallback(
-    (toIndex: number): boolean => {
-      if (
-        toIndex < 0 ||
-        toIndex > allLists.length - 1 ||
-        !rectInRangeX(listRects[toIndex], mouseCoord.current)
-      )
-        return false;
-
-      return true;
-    },
-    [allLists.length]
-  );
-
   const moveTaskHorizontally = React.useCallback(
     (toIndex: number) => {
+      if (toIndex === dragIndexes.current.listIndex) return;
+
       const newList = [...allLists];
 
       newList[toIndex].tasks.push(
@@ -138,29 +125,13 @@ export const useDndTask = (
     [allLists, setAllLists]
   );
 
-  React.useLayoutEffect(() => {
-    if (taskDragging) {
-      const relativeX =
-        mouseCoord.current.x -
-        mouseOffset.current.x -
-        getRectX(dragIndexes.current.listIndex);
-
-      const xDir = relativeX / Math.abs(relativeX) || 0;
-
-      const toListIndex = dragIndexes.current.listIndex + xDir;
-
-      if (xDir && horizontalCheck(toListIndex)) {
-        moveTaskHorizontally(toListIndex);
-      }
-    }
-  }, [taskDragging, coord, horizontalCheck, moveTaskHorizontally]);
-
   return {
     taskDragging,
     coord,
     beginTaskDrag,
     dragIndexes: dragIndexes.current,
     moveTaskVertically,
+    moveTaskHorizontally,
     width: width.current,
   };
 };
