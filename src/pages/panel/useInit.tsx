@@ -3,6 +3,7 @@ import React from "react";
 import { ThemeContext } from "styled-components";
 import { LabelContext } from "../../Contexts/LabelContext";
 import { TaskListContext } from "../../Contexts/TaskListContext";
+import moment from "moment";
 
 export default function useInit() {
   const placeHolderRef = React.useRef(false);
@@ -13,7 +14,13 @@ export default function useInit() {
     actions: { createLabel },
   } = React.useContext(LabelContext);
   const {
-    taskListActions: { addList, addNewTask, editLabel },
+    taskListActions: {
+      addList,
+      addNewTask,
+      editLabel,
+      editTaskDate,
+      editCompleteState,
+    },
   } = React.useContext(TaskListContext);
 
   const init = React.useCallback(() => {
@@ -49,8 +56,8 @@ export default function useInit() {
       createLabel(Capitalize(labelText[i]), colors[i]);
 
     addList("Backlog");
-    addList("Week Tasks");
-    addList("Overdue Tasks");
+    addList("Sprint");
+    addList("Overdue");
 
     const tasksPerList = [];
     let totalTasks = texts.length;
@@ -71,8 +78,26 @@ export default function useInit() {
         for (let k = 0; k < nTaskLabels; k++) {
           editLabel(allLabels[k].id, j, i);
         }
+
+        const dueStatus = Math.floor(Math.random() * 4);
+
+        if (dueStatus > 0) {
+          const offset = Math.floor(Math.random() * 5) - 2;
+          const date = moment().add(offset, "days").format("DD/MM/YY");
+          editTaskDate(date, j, i);
+          if (dueStatus === 1) editCompleteState(true, j, i);
+        }
       }
-  }, [theme, addList, createLabel, addNewTask, editLabel, state.labels]);
+  }, [
+    theme,
+    addList,
+    createLabel,
+    addNewTask,
+    editLabel,
+    state.labels,
+    editTaskDate,
+    editCompleteState,
+  ]);
 
   React.useEffect(() => {
     async function FetchText() {
