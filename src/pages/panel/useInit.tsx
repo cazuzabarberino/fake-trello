@@ -6,6 +6,7 @@ import { TaskListContext } from "../../Contexts/TaskListContext";
 import moment from "moment";
 
 export default function useInit() {
+  const [loading, setLoading] = React.useState(true);
   const placeHolderRef = React.useRef(false);
   const responseRef = React.useRef<string[]>([]);
   const theme = React.useContext(ThemeContext);
@@ -88,6 +89,8 @@ export default function useInit() {
           if (dueStatus === 1) editCompleteState(true, j, i);
         }
       }
+
+    setLoading(false);
   }, [
     theme,
     addList,
@@ -118,6 +121,8 @@ export default function useInit() {
       placeHolderRef.current = true;
     }
   }, [init]);
+
+  return loading;
 }
 
 function Capitalize(text: string) {

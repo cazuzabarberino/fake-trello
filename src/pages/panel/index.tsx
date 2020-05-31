@@ -11,14 +11,20 @@ import { TaskListContext } from "../../Contexts/TaskListContext";
 import useDndList from "../../hooks/useDnDList";
 import { useDndTask } from "../../hooks/useDndTask";
 import useMouseScrollHorizontal from "../../hooks/useMouseScrollHorizontal";
-import { Container, LabelBtn, LabelFilter, ListContainter } from "./styles";
+import {
+  Container,
+  LabelBtn,
+  LabelFilter,
+  ListContainter,
+  Loader,
+} from "./styles";
 import useInit from "./useInit";
 
 const Panel = () => {
   const { state, actions } = React.useContext(LabelContext);
   const { allLists } = React.useContext(TaskListContext);
 
-  useInit();
+  const loading = useInit();
 
   const {
     beginDragList,
@@ -71,48 +77,55 @@ const Panel = () => {
   return (
     <DndTaskContext.Provider value={dndContextValue}>
       <Container>
-        <LabelFilter>
-          {state.labels.map((label) => (
-            <LabelBtn
-              key={label.id}
-              selected={label.selected}
-              color={label.color}
-              onClick={() => actions.toggleSelection(label.id)}
-            >
-              {label.title}
-            </LabelBtn>
-          ))}
-          <LabelBtn
-            selected={state.noTagSelected}
-            color="#ccc"
-            onClick={() => actions.toggleNoTag()}
-          >
-            No label
-          </LabelBtn>
-        </LabelFilter>
-        <ListContainter id="scroll-test" ref={scrollRef}>
-          {allLists.list.map((list, index) => (
-            <CardList
-              selfTaskDragging={taskDragging && dragIndexes.listIndex === index}
-              key={list.id}
-              listIndex={index}
-              list={list}
-              beginDragList={beginDragList}
-              draggingSelf={draggingList && draggedListIndex === index}
-              draggingList={draggingList}
-              moveListHorizontally={moveListHorizontally}
-            />
-          ))}
-          <NewList scrollToRight={scrollToRight} />
-          <div
-            style={{
-              minWidth: "8px",
-              height: "100%",
-              margin: 0,
-            }}
-          />
-        </ListContainter>
-
+        {!loading ? (
+          <>
+            <LabelFilter>
+              {state.labels.map((label) => (
+                <LabelBtn
+                  key={label.id}
+                  selected={label.selected}
+                  color={label.color}
+                  onClick={() => actions.toggleSelection(label.id)}
+                >
+                  {label.title}
+                </LabelBtn>
+              ))}
+              <LabelBtn
+                selected={state.noTagSelected}
+                color="#ccc"
+                onClick={() => actions.toggleNoTag()}
+              >
+                No label
+              </LabelBtn>
+            </LabelFilter>
+            <ListContainter id="scroll-test" ref={scrollRef}>
+              {allLists.list.map((list, index) => (
+                <CardList
+                  selfTaskDragging={
+                    taskDragging && dragIndexes.listIndex === index
+                  }
+                  key={list.id}
+                  listIndex={index}
+                  list={list}
+                  beginDragList={beginDragList}
+                  draggingSelf={draggingList && draggedListIndex === index}
+                  draggingList={draggingList}
+                  moveListHorizontally={moveListHorizontally}
+                />
+              ))}
+              <NewList scrollToRight={scrollToRight} />
+              <div
+                style={{
+                  minWidth: "8px",
+                  height: "100%",
+                  margin: 0,
+                }}
+              />
+            </ListContainter>
+          </>
+        ) : (
+          <Loader />
+        )}
         {taskDragging && (
           <VisualTaskCard
             task={

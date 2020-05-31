@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export const Container = styled.div`
   max-height: calc(100vh - 40px);
@@ -56,4 +56,31 @@ export const LabelBtn = styled.button<LabelBtnProps>`
   font-weight: 700;
   font-size: 14px;
   opacity: ${({ selected }) => (selected ? 1 : 0.5)};
+`;
+
+const loading = keyframes`
+  0%{
+    transform-origin: top left;
+    transform: scaleX(0);
+  }
+  49%{
+    transform-origin: top left;
+    transform: scaleX(1);
+  }
+  50%{
+    transform-origin: top right;
+    transform: scaleX(1);
+  }
+  100%{
+    transform-origin: top right;
+    transform: scaleX(0);
+  }
+`;
+
+export const Loader = styled.div`
+  background: ${({ theme }) => theme.transparencyLight};
+  width: 100%;
+  height: 8px;
+  animation: ${loading} 2s linear infinite;
+  transform-origin: top left;
 `;
