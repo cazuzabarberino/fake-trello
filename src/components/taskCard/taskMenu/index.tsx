@@ -47,8 +47,6 @@ const TaskMenu = ({
 
   const { containerRef, pauseRef } = useKeyMouseToSaveClose(save, close);
 
-  console.log(window.innerHeight);
-
   const y = Math.min(rect.y, window.innerHeight - 250);
 
   return (
