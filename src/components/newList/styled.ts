@@ -7,6 +7,7 @@ interface ContainerProps {
 
 export const Container = styled.div<ContainerProps>`
   min-width: 272px;
+  height: max-content;
   background: ${({ theme, creating }) =>
     creating ? theme.listColor : theme.transparency};
   display: flex;

@@ -8,7 +8,6 @@ interface draggingProps {
 export const Container = styled.div`
   min-width: 272px;
 
-  height: 100%;
 
   & + div {
     margin-left: 8px;

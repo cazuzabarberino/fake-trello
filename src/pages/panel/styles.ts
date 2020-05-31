@@ -11,7 +11,6 @@ export const Container = styled.div`
 export const ListContainter = styled.div`
   display: flex;
   justify-content: flex-start;
-  align-items: flex-start;
   flex: 1;
   overflow-x: auto;
   padding: 8px;
