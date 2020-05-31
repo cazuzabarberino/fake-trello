@@ -2,10 +2,7 @@ import moment from "moment";
 import React from "react";
 import { FiClock, FiSquare, FiCheckSquare } from "react-icons/fi";
 import styled, { css } from "styled-components";
-import {
-  TaskListContext,
-  TaskListContextValue,
-} from "../../../Contexts/TaskListContext";
+import { TaskListContext } from "../../../Contexts/TaskListContext";
 
 enum DueState {
   dueSoon = 0,
@@ -23,9 +20,9 @@ interface Props {
 
 export default ({ date, complete, taskIndex, listIndex }: Props) => {
   const due = React.useMemo(() => moment(date, "DD MM YY"), [date]);
-  const { editCompleteState } = React.useContext(
-    TaskListContext
-  ) as TaskListContextValue;
+  const {
+    taskListActions: { editCompleteState },
+  } = React.useContext(TaskListContext);
 
   const dueState = React.useMemo<DueState>(() => {
     if (complete) return DueState.done;

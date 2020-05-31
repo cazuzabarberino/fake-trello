@@ -15,10 +15,7 @@ import {
   OptionBtn,
   ConfirmBtnWrapper,
 } from "./styled";
-import {
-  TaskListContext,
-  TaskListContextValue,
-} from "../../../Contexts/TaskListContext";
+import { TaskListContext } from "../../../Contexts/TaskListContext";
 
 interface Props {
   top: number;
@@ -48,9 +45,9 @@ export default ({
   const [page, setPage] = React.useState<LabelMenuPage>(LabelMenuPage.main);
   const [selectedColor, setSelectedColor] = React.useState("");
   const [input, setInput] = React.useState("");
-  const { editLabel, deleteEveryLabel } = React.useContext(
-    TaskListContext
-  ) as TaskListContextValue;
+  const {
+    taskListActions: { editLabel, deleteEveryLabel },
+  } = React.useContext(TaskListContext);
   const changeLabelRef = React.useRef("");
 
   // console.log(state);

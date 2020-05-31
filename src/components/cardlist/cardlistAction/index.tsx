@@ -1,9 +1,6 @@
 import React from "react";
 import { FiX } from "react-icons/fi";
-import {
-  TaskListContext,
-  TaskListContextValue,
-} from "../../../Contexts/TaskListContext";
+import { TaskListContext } from "../../../Contexts/TaskListContext";
 import useKeyMouseToSaveClose from "../../../hooks/useKeyMouseToSaveClose";
 import Coord from "../../../models/Coord";
 import { Container, Division } from "./styled";
@@ -22,9 +19,9 @@ const CardlistAction = ({
   listIndex,
 }: Props) => {
   const { containerRef } = useKeyMouseToSaveClose(() => {}, close);
-  const { deleteList } = React.useContext(
-    TaskListContext
-  ) as TaskListContextValue;
+  const {
+    taskListActions: { deleteList },
+  } = React.useContext(TaskListContext);
   return (
     <Container
       ref={containerRef}

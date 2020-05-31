@@ -22,12 +22,7 @@ interface LabelContextType {
 
 const initialState: LabelState = {
   noTagSelected: true,
-  labels: [
-    { color: "red", title: "teste", id: "1", selected: true },
-    { color: "blue", title: "teste", id: "2", selected: true },
-    { color: "green", title: "teste", id: "3", selected: true },
-    { color: "yellow", title: "teste", id: "4", selected: true },
-  ],
+  labels: [],
 };
 
 export const LabelContext = React.createContext<LabelContextType>({
