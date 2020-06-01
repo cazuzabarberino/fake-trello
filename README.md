@@ -6,7 +6,7 @@
 <h1 align="center" >Fake Trello</h1>
 
 <p align="center">
-  <a href="https://www.linkedin.com/in/cazuza/">
+  <a href="https://www.linkedin.com/in/cazuza/" target="_blank">
     <img alt="Author: Cazuza N. Barberino" src="https://img.shields.io/badge/Author-Cazuza N. Barberino-026aa7">
   </a>
 
@@ -17,7 +17,7 @@
 
 <p align="center">
 |&nbsp;&nbsp;&nbsp;
-  <a href="https://cazuzabarberino.github.io/fake-trello/">
+  <a href="https://cazuzabarberino.github.io/fake-trello/" target="_blank">
     Live Demo
   </a>
   &nbsp;&nbsp;&nbsp;|
