@@ -56,9 +56,9 @@ export default function useInit() {
     for (let i = 0; i < numberOfLabels; i++)
       createLabel(Capitalize(labelText[i]), colors[i]);
 
+    addList("Backlog");
     addList("Sprint");
     addList("Overdue");
-    addList("Backlog");
 
     const tasksPerList = [];
     let totalTasks = texts.length;
