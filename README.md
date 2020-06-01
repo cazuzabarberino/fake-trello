@@ -34,7 +34,7 @@
 
 - [Motivation](#Motivation)
 - [Features](#Features)
-- [Libraries & Technologies](#Libraries-&-Technologies)
+- [Libraries & Technologies](#Libraries-Technologies)
 - [Instalation](#Instalation)
 - [Media](#Media)
 
