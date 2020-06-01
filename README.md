@@ -1,9 +1,12 @@
-
 <div align="center">
-  <img  src="mdMedia/trello-logo.jpg" alt="" width="300px" />
+  <img  src="mdMedia/trello-logo.jpg" alt="" width="100%" />
 </div>
 
 <h1 align="center" >Fake Trello</h1>
+
+<blockquote align="center">
+  A simple task manager for pesonal use inspired by trello interface.
+</blockquote>
 
 <p align="center">
   <a href="https://www.linkedin.com/in/cazuza/" target="_blank">
@@ -27,4 +30,18 @@
   <img  src="mdMedia/1.gif" alt="" width="500px" />
 </div>
 
----
+## Contents
+
+* [Motivation](#Motivation)
+* [Features](#Features)
+* [Libraries & Technologies](#Libraries-&-Technologies)
+* [Instalation](#Instalation)
+
+## Motivation
+
+## Features
+
+## Libraries & Technologies
+
+## Instalation
+
