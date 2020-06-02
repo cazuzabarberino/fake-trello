@@ -16,9 +16,10 @@ interface Props {
   listIndex: number;
   date: string;
   complete: boolean;
+  dragging?: boolean;
 }
 
-export default ({ date, complete, taskIndex, listIndex }: Props) => {
+export default ({ date, complete, taskIndex, listIndex, dragging }: Props) => {
   const due = React.useMemo(() => moment(date, "DD MM YY"), [date]);
   const {
     taskListActions: { editCompleteState },
@@ -34,6 +35,7 @@ export default ({ date, complete, taskIndex, listIndex }: Props) => {
 
   return (
     <DateBadge
+      dragging={dragging}
       dueState={dueState}
       onClick={(e) => {
         if (e.button !== 0) return;
@@ -49,10 +51,11 @@ export default ({ date, complete, taskIndex, listIndex }: Props) => {
 
 interface DateBadgeProps {
   dueState: DueState;
+  dragging?: boolean;
 }
 
 const DateBadge = styled.div<DateBadgeProps>`
-  cursor: pointer;
+  cursor: ${({ dragging }) => (dragging ? "inherit" : "pointer")};
   margin-top: 8px;
   display: grid;
   grid-template-columns: auto auto 1fr;

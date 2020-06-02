@@ -141,6 +141,7 @@ const TaskCard = ({ task, listIndex, index }: Props) => {
       <p>{task.title}</p>
       {task.date && !dragging && (
         <DateBadge
+          dragging={taskDragging}
           listIndex={listIndex}
           taskIndex={index}
           complete={task.complete}
